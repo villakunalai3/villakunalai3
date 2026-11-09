@@ -13486,7 +13486,15 @@ async function show(id) {
 }
 (async () => {
   await liff.init({ liffId: CONFIG.LIFF_ID });
-  if (!liff.isLoggedIn()) return liff.login();
+  if (!liff.isLoggedIn()) {
+    // กัน login วนไม่สิ้นสุด: ลอง 1 ครั้ง ถ้ายังไม่ผ่านให้แสดงข้อมูลช่วยแก้ปัญหา
+    let n = 0; try { n = +sessionStorage.getItem('lg') || 0; sessionStorage.setItem('lg', n + 1); } catch (e) {}
+    if (n < 1) return liff.login();
+    try { sessionStorage.removeItem('lg'); } catch (e) {}
+    $('#app').innerHTML = '<div class="card"><h3>เข้าสู่ระบบ LINE ไม่สำเร็จ</h3><p class="mut">LIFF ID: ' + esc(CONFIG.LIFF_ID) + '<br>อยู่ใน LINE: ' + liff.isInClient() + '<br>URL: ' + esc(location.href.split('?')[0]) + '</p><p>ให้เปิดจากลิงก์ https://liff.line.me/' + esc(CONFIG.LIFF_ID) + ' ในแอป LINE บนมือถือ แล้วลองอีกครั้ง</p><button class="btn" onclick="liff.login()">ลองเข้าสู่ระบบอีกครั้ง</button></div>';
+    return;
+  }
+  try { sessionStorage.removeItem('lg'); } catch (e) {}
   const r = await api('me'); ME = r.user; SET = r.settings;
   applyBrand(); $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
   if (ME.role === 'guest') return renderRegister();
