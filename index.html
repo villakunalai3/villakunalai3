@@ -13485,7 +13485,19 @@ async function show(id) {
   }
 }
 (async () => {
-  await liff.init({ liffId: CONFIG.LIFF_ID });
+  try { await liff.init({ liffId: CONFIG.LIFF_ID }); }
+  catch (e) {
+    // เช่น code_verifier does not match: ล้างสถานะ login ค้างแล้วลองใหม่ 1 ครั้ง
+    let t = 0; try { t = +sessionStorage.getItem('ri') || 0; } catch (x) {}
+    if (t < 1) {
+      try { sessionStorage.setItem('ri', '1'); Object.keys(localStorage).filter(k => k.indexOf('LIFF_STORE') === 0).forEach(k => localStorage.removeItem(k)); } catch (x) {}
+      location.replace(location.origin + location.pathname);
+      return new Promise(() => {});
+    }
+    try { sessionStorage.removeItem('ri'); } catch (x) {}
+    throw e;
+  }
+  try { sessionStorage.removeItem('ri'); } catch (x) {}
   if (!liff.isLoggedIn()) {
     // กัน login วนไม่สิ้นสุด: ลอง 1 ครั้ง ถ้ายังไม่ผ่านให้แสดงข้อมูลช่วยแก้ปัญหา
     let n = 0; try { n = +sessionStorage.getItem('lg') || 0; sessionStorage.setItem('lg', n + 1); } catch (e) {}
