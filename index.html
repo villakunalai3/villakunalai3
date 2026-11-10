@@ -12626,7 +12626,7 @@ const actC = act;
 /* ---------- โหมด + PIN ---------- */
 function modesOf() {
   const r = ME.role;
-  if (ME.admin) return ['sys', 'resident', 'committee', 'office', 'guard', 'tech'];   // ผู้ดูแลระบบ: เข้าได้ทุกโหมดเพื่อตั้งค่าและทดสอบ
+  if (ME.admin) return ['resident', 'committee', 'office', 'guard', 'tech', 'sys'];   // ผู้ดูแลระบบ: เข้าได้ทุกโหมด เริ่มที่ลูกบ้าน และโหมดผู้ดูแลระบบอยู่ท้ายสุด
   if (r === 'guard') return ['guard'];
   if (r === 'technician' || r === 'housekeeper') return ['tech'];
   if (r === 'committee') return ME.office ? ['resident', 'committee', 'office'] : ['resident', 'committee'];
