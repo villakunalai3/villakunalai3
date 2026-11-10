@@ -6,7 +6,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.line-scdn.net; style-src 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src https:; frame-src https:; base-uri 'none'; object-src 'none'; form-action 'none'">
 <meta name="theme-color" content="#06c755">
-<title>วิลล่า คุณาลัย 3</title>
+<title>VillaKunalai 3 • หมู่บ้านวิลล่า คุณาลัย 3</title>
 <link rel="preconnect" href="https://static.line-scdn.net">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com">
@@ -104,7 +104,7 @@ nav button span{position:relative}
 </style>
 </head>
 <body>
-<header><div class="brand"><img id="logo" alt="" hidden onerror="this.hidden=true"><div><b id="title">หมู่บ้านวิลล่า คุณาลัย 3</b><i id="title_en"></i></div></div><small id="who"></small></header><div id="modes"></div><div id="toast"></div><div id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="mbody"></div></div>
+<header><div class="brand"><img id="logo" alt="" hidden onerror="this.hidden=true"><div><b id="title">หมู่บ้านวิลล่า คุณาลัย 3</b><i id="title_en">VillaKunalai 3</i></div></div><small id="who"></small></header><div id="modes"></div><div id="toast"></div><div id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="mbody"></div></div>
 <nav id="nav"></nav>
 <main id="app">กำลังโหลด...</main>
 <script type="text/plain" id="lib_qr">
@@ -12512,7 +12512,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 });
 </script>
 <script>
-const CONFIG = { LIFF_ID: 'ใส่_LIFF_ID', API_URL: 'ใส่_URL_Apps_Script_ที่ลงท้ายด้วย_/exec' };
+const CONFIG = { LIFF_ID: '2012507801-kwzVupeV', API_URL: 'https://script.google.com/macros/s/AKfycbzwkZzyN8_9KtgDTJutXjemDldIpSXaZ6Ie_ETuYHY44iTUTH-rgtM2nftlEZguZK10/exec' };
 const ROLES = ['resident','guard','technician','housekeeper'];   // สิทธิ์กรรมการ/นิติฯ เปลี่ยนได้เฉพาะผ่านคำขอแก้ทะเบียนกรรมการ (อนุมัติ + มติที่ประชุม)
 const ROLE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',manager:'นิติฯ',guard:'รปภ.',technician:'ช่าง',housekeeper:'แม่บ้าน'};
 const PLAN_TH = {monthly:'รายเดือน',half:'ราย 6 เดือน',yearly:'รายปี',manual:'ออกบิลเอง'};
@@ -13724,7 +13724,12 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
   openDeepLink();
   setInterval(() => { if (MODE === 'guard' && CUR === 'ggate' && !document.hidden && !BUSY && !document.activeElement.matches('input,textarea')) refreshGate(); }, Math.max(1, SET.gate_refresh_min || 2) * 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && MODE === 'guard' && CUR === 'ggate') refreshGate(); });
-})().catch(e => $('#app').textContent = 'เปิดระบบไม่สำเร็จ: ' + e.message));
+})().catch(e => {
+  const m = String(e.message || e), liffErr = /channel not found|liff|invalid|not found/i.test(m);
+  $('#app').innerHTML = '<div class="card"><h3>เปิดระบบไม่สำเร็จ</h3><p class="mut">' + esc(m) + '</p>' + (liffErr
+    ? '<p><b>ตรวจ LIFF ID:</b> แอปนี้ใช้ <b>' + esc(CONFIG.LIFF_ID) + '</b><br>ต้องตรงกับ LIFF ID ของ LINE Login channel ปัจจุบัน (คอนโซล LINE Developers → LINE Login channel → แท็บ LIFF) และต้องเปิดจากลิงก์ <b>https://liff.line.me/' + esc(CONFIG.LIFF_ID) + '</b> ในแอป LINE</p>' : '')
+    + '<button class="btn sec" onclick="location.reload()">ลองใหม่</button></div>';
+}));
 </script>
 </body>
 </html>
