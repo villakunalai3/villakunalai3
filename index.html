@@ -12513,8 +12513,8 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 </script>
 <script>
 const CONFIG = { LIFF_ID: '2012507801-kwzVupeV', API_URL: 'https://script.google.com/macros/s/AKfycbzwkZzyN8_9KtgDTJutXjemDldIpSXaZ6Ie_ETuYHY44iTUTH-rgtM2nftlEZguZK10/exec' };
-const ROLES = ['resident','guard','technician'];   // สิทธิ์กรรมการ/นิติฯ เปลี่ยนได้เฉพาะผ่านคำขอแก้ทะเบียนกรรมการ (อนุมัติ + มติที่ประชุม)
-const ROLE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',manager:'นิติฯ',guard:'รปภ.',technician:'ช่าง'};
+const ROLES = ['resident','guard','technician','housekeeper'];   // สิทธิ์กรรมการ/นิติฯ เปลี่ยนได้เฉพาะผ่านคำขอแก้ทะเบียนกรรมการ (อนุมัติ + มติที่ประชุม)
+const ROLE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',manager:'นิติฯ',guard:'รปภ.',technician:'ช่าง',housekeeper:'แม่บ้าน'};
 const PLAN_TH = {monthly:'รายเดือน',half:'ราย 6 เดือน',yearly:'รายปี',manual:'ออกบิลเอง'};
 const REQ = {new_card:'ซื้อบัตรใหม่',lost_card:'บัตรหาย/ออกใหม่',cancel_card:'ยกเลิกบัตร',sticker:'สติกเกอร์มอเตอร์ไซค์'};
 const SRC = {manual:'ขออนุมัติ',petty:'เงินสดย่อย',recurring:'ค่าใช้จ่ายประจำ'};
@@ -12523,13 +12523,14 @@ const ST = {unpaid:'ค้างชำระ',partial:'ชำระบางส�
   awaiting:'รอโอน',slip_sent:'รอนิติฯ ตรวจสลิป',confirmed:'ยืนยันแล้ว',expired:'หมดอายุ',cancelled:'ยกเลิก',
   waiting:'รอเจ้าของบ้านอนุญาตให้ออก',denied:'ไม่อนุญาต',delivery:'ส่งของ (ไม่ต้องรออนุมัติ)',prereg:'แขกลงทะเบียนล่วงหน้า',override:'รปภ.ปล่อยตามคำยืนยันทางโทรศัพท์',left:'ออกแล้ว'};
 const CATS = ['รปภ.','เก็บขยะ','แม่บ้าน','โทรศัพท์','อินเทอร์เน็ต','ค่าไฟส่วนกลาง','ค่าน้ำส่วนกลาง','ผู้รับเหมา/ซ่อมบำรุง','วัสดุสิ้นเปลือง (น้ำมัน/ยาฆ่าหญ้า)','อื่นๆ'];
-const MODE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',office:'นิติฯ',guard:'รปภ.',tech:'ช่าง'};
+const MODE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',office:'นิติฯ',guard:'รปภ.',tech:'ช่าง/แม่บ้าน',sys:'ผู้ดูแลระบบ'};
 const TABS = {
   resident: [['home','🏠','หน้าแรก'],['pay','💳','ชำระเงิน'],['gate','🚗','รถเข้า-ออก'],['tickets','🔧','แจ้งซ่อม'],['more','☰','เมนูอื่น']],
   committee: [['inbox','✅','รออนุมัติ'],['reports','📊','รายงาน'],['policy','⚙️','ตั้งค่า'],['roster','🏛️','กรรมการ'],['meetings','📅','ประชุม']],
   office: [['tasks','📋','งานนิติฯ'],['verify','🧾','ตรวจสลิป'],['finance','📒','บัญชีบ้าน'],['expenses','💸','รายจ่าย'],['omore','☰','อื่นๆ']],
   guard: [['ggate','🚧','ป้อมยาม'],['gguests','📅','แขกล่วงหน้า'],['parcels','📦','พัสดุ']],
-  tech: [['tickets','🔧','งานซ่อม']]
+  tech: [['tickets','🔧','งานซ่อม']],
+  sys: [['sys','🛠️','ความพร้อม'],['users','👥','ผู้ใช้/สิทธิ์'],['policy','⚙️','ตั้งค่า'],['adminlog','📜','ประวัติ']]
 };
 const SUB = { more: ['meetings','votes','requests','parcels','house','roster'], omore: ['tickets','meetings','votes','admin','bank','parcels'] };
 const navKey = tab => { for (const [p, subs] of Object.entries(SUB)) if (subs.includes(tab) && !TABS[MODE].some(t => t[0] === tab)) return p; return tab; };
@@ -12579,7 +12580,7 @@ const READ_ACTIONS = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox
 async function post(action, data) {
   busyBar(1);
   try {
-    const r = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify({ action, data, idToken: liff.getIDToken() }) });
+    const r = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify(Object.assign({ action, data, idToken: liff.getIDToken() }, ME && ME.admin ? { as: MODE } : {})) });
     const j = await r.json();
     if (!j.ok) { if (/ยืนยันตัวตน LINE|เข้าสู่ระบบผ่าน LINE/.test(j.error)) { liff.logout(); liff.login(); } throw new Error(j.error); }
     if (!READ_ACTIONS.has(action)) { vcClear(); BADGE_AT = 0; }   // มีการเปลี่ยนข้อมูล: ทิ้งหน้าที่จำไว้
@@ -12625,8 +12626,9 @@ const actC = act;
 /* ---------- โหมด + PIN ---------- */
 function modesOf() {
   const r = ME.role;
+  if (ME.admin) return ['sys', 'resident', 'committee', 'office', 'guard', 'tech'];   // ผู้ดูแลระบบ: เข้าได้ทุกโหมดเพื่อตั้งค่าและทดสอบ
   if (r === 'guard') return ['guard'];
-  if (r === 'technician') return ['tech'];
+  if (r === 'technician' || r === 'housekeeper') return ['tech'];
   if (r === 'committee') return ME.office ? ['resident', 'committee', 'office'] : ['resident', 'committee'];
   if (r === 'manager') return ['resident', 'office'];
   return ['resident'];
@@ -13242,7 +13244,7 @@ function renderRegister() {
   if (i && i.exists && !r.type) r.type = canMain ? 'main' : canBack ? 'backup' : '';
   $('#app').innerHTML = `<div class="card"><h3>ลงทะเบียนครั้งแรก</h3><div class="mut">ยืนยันตัวตนด้วย LINE แล้ว • ระบบเก็บชื่อและเบอร์เพื่อการบริหารหมู่บ้านเท่านั้น (PDPA)</div>
     <input id="rg_name" placeholder="ชื่อ-นามสกุลจริง" value="${esc(r.name || '')}" oninput="REG.name=this.value"><input id="rg_phone" inputmode="tel" placeholder="เบอร์โทร" value="${esc(r.phone || '')}" oninput="REG.phone=this.value">
-    <label class="chk"><input type="checkbox" ${r.staff ? 'checked' : ''} onchange="REG.staff=this.checked;renderRegister()"> ฉันเป็นเจ้าหน้าที่ (รปภ./ช่าง)</label>
+    <label class="chk"><input type="checkbox" ${r.staff ? 'checked' : ''} onchange="REG.staff=this.checked;renderRegister()"> ฉันเป็นเจ้าหน้าที่ (รปภ./ช่าง/แม่บ้าน)</label>
     ${r.staff ? '' : `<label class="lb">บ้านเลขที่</label><input id="rg_house" inputmode="numeric" value="${esc(r.house)}" onchange="REG.house=this.value.trim();REG.type='';lookupHouse()">${info}
       ${i && i.exists ? `<label class="lb">ประเภทบัญชี</label><div class="seg"><button class="${r.type === 'main' ? 'on' : ''}" ${canMain ? '' : 'disabled'} onclick="REG.type='main';renderRegister()">บัญชีหลัก</button><button class="${r.type === 'backup' ? 'on' : ''}" ${canBack ? '' : 'disabled'} onclick="REG.type='backup';renderRegister()">บัญชีสำรอง</button></div>
         ${!canMain && !canBack ? '<div class="note warn">บ้านนี้มีบัญชีครบหรือรอยืนยันอยู่ กรุณาติดต่อนิติฯ</div>' : ''}
@@ -13362,7 +13364,8 @@ async function previewBiller() {
 function reqQr() { act('requestChange', { kind: 'promptpay', payload: QRP.payload, reason: val('qr_reason') }, 'ส่งขออนุมัติแล้ว ไปที่แท็บ "รออนุมัติ"'); QRP = null; }
 
 /* ================= กรรมการ: ทะเบียน ================= */
-async function vRoster() {
+async function vRoster() { return (await vRosterBase()) + `<div class="card tile" onclick="show('adminlog')"><b>📜 ประวัติการกระทำของผู้ดูแลระบบ</b><div class="mut">ตรวจรายการที่ผู้ดูแลระบบทำโดยไม่ผ่านการอนุมัติ</div></div>`; }
+async function vRosterBase() {
   const list = await api('roster');
   let form = '';
   if (ISCOM()) {
@@ -13466,6 +13469,38 @@ async function vAdmin() {
     ${x.acct_type ? `<div class="row" style="gap:8px">${x.active !== 'TRUE' ? `<button class="btn" onclick="act('decideAccount',{uid:'${esc(x.line_user_id)}',ok:true},'ยืนยันแล้ว')">ยืนยันบัญชี</button><button class="btn sec" onclick="act('decideAccount',{uid:'${esc(x.line_user_id)}',ok:false},'ปฏิเสธแล้ว')">ปฏิเสธ</button>` : `<button class="btn sec" onclick="setUser('${esc(x.line_user_id)}',false)">ระงับ</button>`}</div>`
       : `<select id="ur_${esc(x.line_user_id)}">${ROLES.map(r => `<option value="${r}" ${r === x.role ? 'selected' : ''}>${ROLE_TH[r]}</option>`).join('')}</select><button class="btn" onclick="setUser('${esc(x.line_user_id)}',true)">ยืนยัน/บันทึก</button><button class="btn sec" onclick="setUser('${esc(x.line_user_id)}',false)">ระงับ</button>`}`}</div>`).join('')}`;
 }
+/* ---------- ผู้ดูแลระบบ ---------- */
+const ROLE_OPTS = [['resident', 'ลูกบ้าน'], ['committee', 'กรรมการ'], ['committee_office', 'กรรมการ + นิติฯ'], ['manager', 'นิติฯ'], ['housekeeper', 'แม่บ้าน'], ['guard', 'รปภ.'], ['technician', 'ช่าง']];
+let UFILTER = 'pending';
+async function vSys() {
+  const d = await api('sysStatus'), bad = d.checks.filter(c => !c.ok).length;
+  return `<div class="card hero"><small>ผู้ดูแลระบบ${d.admin_until ? ' • สิทธิ์ถึง ' + esc(d.admin_until) : ''}</small><h1>${bad ? bad + ' รายการต้องตั้งค่า' : 'พร้อมใช้งาน'}</h1>
+    <div class="chips"><span>รอยืนยันผู้ใช้ ${d.pending}</span><span>LINE ${d.line.used}/${d.line.quota} ข้อความ</span></div></div>
+  <div class="card"><b>ตรวจความพร้อมการติดตั้ง</b>${d.checks.map(c => `<div class="item"><span>${c.ok ? '✅' : '⚠️'} ${esc(c.label)}${c.fix ? `<br><small class="mut">${esc(c.fix)}</small>` : ''}</span></div>`).join('')}</div>
+  <div class="note warn">สิทธิ์ผู้ดูแลระบบข้ามขั้นตอนอนุมัติได้ ทุกการกระทำถูกบันทึกและกรรมการตรวจได้ · ทดสอบหน้าของแต่ละบทบาทได้จากปุ่มโหมดด้านบน · เมื่อติดตั้งเสร็จควรตั้งวันหมดสิทธิ์ (ADMIN_UNTIL) หรือลบออกจาก ADMIN_LINE_IDS</div>
+  <button class="btn" onclick="show('users')">อนุมัติผู้ใช้ / ตั้งสิทธิ์</button>`;
+}
+async function vUsers() {
+  const us = await api('listUsers'), pend = us.filter(x => x.active !== 'TRUE');
+  const list = UFILTER === 'pending' ? pend : UFILTER === 'staff' ? us.filter(x => x.active === 'TRUE' && x.role !== 'resident') : us;
+  const cur = x => x.role === 'committee' && x.office === 'TRUE' ? 'committee_office' : x.role;
+  return `<div class="chips2">${[['pending', 'รออนุมัติ ' + pend.length], ['staff', 'เจ้าหน้าที่/กรรมการ'], ['all', 'ทั้งหมด ' + us.length]].map(([k, t]) => `<button class="${UFILTER === k ? 'on' : ''}" onclick="UFILTER='${k}';show('users')">${t}</button>`).join('')}</div>
+  ${list.length ? list.map(x => `<div class="card"><div class="row"><b>${esc(x.display_name)}</b><span class="badge ${x.active === 'TRUE' ? 'done' : 'pending'}">${x.active === 'TRUE' ? (ROLE_OPTS.find(o => o[0] === cur(x)) || [0, x.role])[1] : 'รออนุมัติ'}</span></div>
+    <small class="mut">บ้าน ${esc(x.house_no) || '-'} • ${x.acct_type === 'main' ? 'บัญชีหลัก' : x.acct_type === 'backup' ? 'บัญชีสำรอง' : '-'} • ${esc(x.phone) || '-'} • ลงทะเบียน ${esc(String(x.created_at).slice(0, 10))}</small>
+    <div class="row" style="gap:8px;margin-top:6px"><select id="ur_${esc(x.line_user_id)}" style="flex:2">${ROLE_OPTS.map(([k, t]) => `<option value="${k}" ${k === cur(x) ? 'selected' : ''}>${t}</option>`).join('')}</select>
+      <input id="uh_${esc(x.line_user_id)}" style="flex:1" placeholder="บ้านเลขที่" value="${esc(x.house_no)}"></div>
+    <div class="row" style="gap:8px"><button class="btn" onclick="adminSetUser('${esc(x.line_user_id)}',true)">${x.active === 'TRUE' ? 'บันทึกสิทธิ์' : 'อนุมัติ'}</button>
+      ${x.active === 'TRUE' ? `<button class="btn sec" onclick="adminSetUser('${esc(x.line_user_id)}',false)">ระงับ</button>` : `<button class="btn sec" onclick="act('decideAccount',{uid:'${esc(x.line_user_id)}',ok:false},'ปฏิเสธแล้ว')">ปฏิเสธ</button>`}</div></div>`).join('') : '<div class="card mut">ไม่มีรายการ</div>'}`;
+}
+function adminSetUser(id, active) {
+  const v = val('ur_' + id), role = v === 'committee_office' ? 'committee' : v;
+  act('setUser', { line_user_id: id, role, office: v === 'committee_office', house_no: val('uh_' + id), active }, active ? 'บันทึกแล้ว' : 'ระงับแล้ว');
+}
+async function vAdminLog() {
+  const l = await api('adminLog');
+  return `<div class="card"><b>ประวัติการกระทำของผู้ดูแลระบบ</b><div class="mut">ทุกการกระทำที่ข้ามขั้นตอนอนุมัติ กรรมการตรวจย้อนหลังได้</div></div>
+  ${l.length ? `<div class="card"><table><tr><th>เวลา</th><th>ผู้ดูแล</th><th>การกระทำ</th></tr>${l.map(a => `<tr><td>${esc(String(a.time).slice(0, 16).replace('T', ' '))}</td><td>${esc(a.user)}</td><td>${esc(String(a.action).replace('ADMIN:', ''))}</td></tr>`).join('')}</table></div>` : '<div class="card mut">ยังไม่มีรายการ</div>'}`;
+}
 function setUser(id, active) { const sel = document.getElementById('ur_' + id), u = id; act('setUser', { line_user_id: id, role: sel ? sel.value : 'resident', active }, 'บันทึกแล้ว'); }
 
 /* ================= รปภ.: ป้อมยาม ================= */
@@ -13540,7 +13575,7 @@ async function saveBrand() {
 }
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
-  ggate: vGuardGate, gguests: vGuests };
+  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog };
 // ลิงก์จากข้อความ LINE: ?receipt=<pay_id> เปิดใบเสร็จ · ?go=pay ไปหน้าชำระเงิน
 async function openDeepLink() {
   let q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
@@ -13607,7 +13642,7 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
     const old = vcGet(CUR); if (old) $('#app').innerHTML = '<div class="stale">' + old + '</div>';
   }
   const r = await api('me'); ME = r.user; SET = r.settings;
-  try { localStorage.setItem(meKey(), JSON.stringify({ user: { display_name: ME.display_name, house_no: ME.house_no, role: ME.role, office: ME.office, acct_type: ME.acct_type, hasPin: ME.hasPin }, settings: SET })); } catch (e) {}
+  try { localStorage.setItem(meKey(), JSON.stringify({ user: { display_name: ME.display_name, house_no: ME.house_no, role: ME.role, office: ME.office, acct_type: ME.acct_type, hasPin: ME.hasPin, admin: ME.admin }, settings: SET })); } catch (e) {}
   applyBrand(); $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
   if (ME.role === 'guest') return renderRegister();
   if (ME.role === 'pending') { $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
