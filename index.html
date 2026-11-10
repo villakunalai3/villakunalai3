@@ -7,7 +7,11 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.line-scdn.net; style-src 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src https:; frame-src https:; base-uri 'none'; object-src 'none'; form-action 'none'">
 <meta name="theme-color" content="#06c755">
 <title>วิลล่า คุณาลัย 3</title>
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<link rel="preconnect" href="https://static.line-scdn.net">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preconnect" href="https://api.line.me">
+<script defer src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <style>
 :root{--bg:#f3f5f7;--card:#fff;--tx:#18222d;--mut:#667585;--pri:#06c755;--pri2:#049a42;--bd:#e6eaee;--red:#d93c3c;--amb:#e08a00;--blu:#2a7de1;--sh:0 1px 3px #0001,0 4px 14px #0000000a}
 @media(prefers-color-scheme:dark){:root{--bg:#10151a;--card:#1a2128;--tx:#e8eef3;--mut:#93a1ae;--bd:#2a343d;--red:#ff7d7d;--amb:#f2b54d;--blu:#6aa8ff;--sh:none}}
@@ -57,6 +61,21 @@ tr.click{cursor:pointer}.red{color:var(--red)}
 #modal .in{background:var(--card);border-radius:16px;padding:12px;max-width:640px;margin:auto}
 .sk{height:84px;border-radius:16px;background:linear-gradient(90deg,#8881,#8883,#8881);background-size:200% 100%;animation:sk 1.2s infinite;margin-bottom:12px}
 @keyframes sk{to{background-position:-200% 0}}
+.sk.hero-sk{height:150px;background:linear-gradient(90deg,var(--pri)22,var(--pri)44,var(--pri)22);background-size:200% 100%}
+body::before{content:"";position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:linear-gradient(90deg,var(--pri),#7be3a8,var(--pri));background-size:200% 100%;opacity:0;transition:opacity .2s}
+body.loading::before{opacity:1;width:100%;animation:bar 1s linear infinite}
+@keyframes bar{to{background-position:-200% 0}}
+.stale{pointer-events:none;opacity:.72;filter:saturate(.85);transition:opacity .2s}
+.fade>*{animation:up .28s ease both}.fade>*:nth-child(2){animation-delay:.04s}.fade>*:nth-child(3){animation-delay:.08s}.fade>*:nth-child(n+4){animation-delay:.12s}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+header{backdrop-filter:saturate(1.4) blur(8px);box-shadow:0 2px 12px #0002}
+nav{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--card) 88%,transparent);box-shadow:0 -4px 18px #0000000f}
+nav button{transition:color .15s}nav button span{transition:transform .2s}
+nav button.on::after{content:"";display:block;width:22px;height:3px;border-radius:3px;background:var(--pri);margin-top:2px}
+.card{transition:transform .12s,box-shadow .2s}.card[onclick]:active,.card.tile:active{transform:scale(.985)}
+.btn{transition:filter .15s,transform .1s;box-shadow:0 2px 8px color-mix(in srgb,var(--pri) 35%,transparent)}.btn:active{transform:scale(.98)}
+.btn.sec{box-shadow:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 #modes{display:flex;gap:6px;align-items:center;padding:10px 14px 0;max-width:760px;margin:auto;flex-wrap:wrap}
 #modes button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:99px;padding:6px 14px;font:inherit;font-size:13px}
@@ -88,7 +107,7 @@ nav button span{position:relative}
 <header><div class="brand"><img id="logo" alt="" hidden><div><b id="title">หมู่บ้านวิลล่า คุณาลัย 3</b><i id="title_en"></i></div></div><small id="who"></small></header><div id="modes"></div><div id="toast"></div><div id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="mbody"></div></div>
 <nav id="nav"></nav>
 <main id="app">กำลังโหลด...</main>
-<script>
+<script type="text/plain" id="lib_qr">
 //---------------------------------------------------------------------
 //
 // QR Code Generator for JavaScript
@@ -2388,7 +2407,7 @@ var qrcode = function() {
 }));
 
 </script>
-<script>
+<script type="text/plain" id="lib_jsqr">
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -12493,7 +12512,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 });
 </script>
 <script>
-const CONFIG = { LIFF_ID: '2012507801-kwzVupeV', API_URL: 'https://script.google.com/macros/s/AKfycbzwkZzyN8_9KtgDTJutXjemDldIpSXaZ6Ie_ETuYHY44iTUTH-rgtM2nftlEZguZK10/exec' };
+const CONFIG = { LIFF_ID: 'ใส่_LIFF_ID', API_URL: 'ใส่_URL_Apps_Script_ที่ลงท้ายด้วย_/exec' };
 const ROLES = ['resident','guard','technician'];   // สิทธิ์กรรมการ/นิติฯ เปลี่ยนได้เฉพาะผ่านคำขอแก้ทะเบียนกรรมการ (อนุมัติ + มติที่ประชุม)
 const ROLE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',manager:'นิติฯ',guard:'รปภ.',technician:'ช่าง'};
 const PLAN_TH = {monthly:'รายเดือน',half:'ราย 6 เดือน',yearly:'รายปี',manual:'ออกบิลเอง'};
@@ -12547,12 +12566,37 @@ const thumb = id => id ? `<img src="https://drive.google.com/thumbnail?id=${id}&
 const badge = s => `<span class="badge ${s}">${ST[s] || s}</span>`;
 
 function modal(h) { $('#mbody').innerHTML = h; $('#modal').style.display = 'block'; }
-async function api(action, data = {}) {
-  const r = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify({ action, data, idToken: liff.getIDToken() }) });
-  const j = await r.json();
-  if (!j.ok) { if (/ยืนยันตัวตน LINE|เข้าสู่ระบบผ่าน LINE/.test(j.error)) { liff.logout(); liff.login(); } throw new Error(j.error); }
-  return j.data;
+/* ---------- ความเร็ว: โหลดไลบรารีเมื่อใช้ · แถบโหลด · รวมคำขอ · แคชหน้า ---------- */
+function needLib(id) {   // ไลบรารี QR เก็บเป็นข้อความ ไม่ต้องประมวลผลตอนเปิดแอป รันครั้งแรกที่ใช้
+  const el = document.getElementById(id); if (!el || el.dataset.done) return;
+  const sc = document.createElement('script'); sc.textContent = el.textContent; document.head.appendChild(sc); el.dataset.done = '1';
 }
+let INFLIGHT = 0;
+function busyBar(d) { INFLIGHT = Math.max(0, INFLIGHT + d); document.body.classList.toggle('loading', INFLIGHT > 0); }
+const READ_ACTIONS = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'listBank', 'houseBalances', 'houseAccount',
+  'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
+  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'getFile', 'payOptions', 'batch']);
+async function post(action, data) {
+  busyBar(1);
+  try {
+    const r = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify({ action, data, idToken: liff.getIDToken() }) });
+    const j = await r.json();
+    if (!j.ok) { if (/ยืนยันตัวตน LINE|เข้าสู่ระบบผ่าน LINE/.test(j.error)) { liff.logout(); liff.login(); } throw new Error(j.error); }
+    if (!READ_ACTIONS.has(action)) { vcClear(); BADGE_AT = 0; }   // มีการเปลี่ยนข้อมูล: ทิ้งหน้าที่จำไว้
+    return j.data;
+  } finally { busyBar(-1); }
+}
+function meKey() { let sub = ''; try { sub = (liff.getDecodedIDToken() || {}).sub || ''; } catch (e) {} return 'me_cache:' + sub; }   // แยกตามบัญชี LINE
+async function api(action, data = {}) { return post(action, data); }
+// รวมหลายคำขออ่านเป็นรอบเดียว คืนค่า [{ok,data}|{ok:false,error}]
+async function apiBatch(calls) { return post('batch', { calls: calls.map(c => ({ action: c[0], data: c[1] || {} })) }); }
+const okOr = (r, dflt) => (r && r.ok) ? r.data : dflt;
+// แคชหน้าที่เคยเปิด: แสดงทันทีระหว่างรอข้อมูลใหม่ (เก็บใน sessionStorage หายเมื่อปิดแอป)
+const VC = {};
+function vcKey(id) { return MODE + ':' + id; }
+function vcGet(id) { if (VC[vcKey(id)]) return VC[vcKey(id)]; try { return sessionStorage.getItem('vc:' + vcKey(id)); } catch (e) { return null; } }
+function vcPut(id, h) { VC[vcKey(id)] = h; try { if (h.length < 200000) sessionStorage.setItem('vc:' + vcKey(id), h); } catch (e) {} }
+function vcClear() { Object.keys(VC).forEach(k => delete VC[k]); try { Object.keys(sessionStorage).filter(k => k.indexOf('vc:') === 0).forEach(k => sessionStorage.removeItem(k)); } catch (e) {} }
 // เรียก API พร้อมจัดการคำถามจากเซิร์ฟเวอร์: CONFIRM:<flag>|<ข้อความ> (ให้ยืนยัน) และ NEEDTEXT:<field>|<ข้อความ> (ให้พิมพ์เหตุผล)
 async function callX(action, data) {
   for (;;) {
@@ -12618,11 +12662,15 @@ async function doPin(target) {
     MODE = target; renderModes(); CUR = TABS[target][0][0]; renderNav(); show(CUR);
   } catch (e) { alert('ไม่สำเร็จ: ' + e.message); }
 }
-async function loadBadges() {
-  const set = (k, n) => { const el = document.getElementById('bd_' + k); if (el) { el.textContent = n > 0 ? n : ''; el.style.display = n > 0 ? '' : 'none'; } };
+let BADGE_AT = 0, BADGE_N = {};
+async function loadBadges(force) {
+  const set = (k, n) => { BADGE_N[k] = n; const el = document.getElementById('bd_' + k); if (el) { el.textContent = n > 0 ? n : ''; el.style.display = n > 0 ? '' : 'none'; } };
+  Object.keys(BADGE_N).forEach(k => set(k, BADGE_N[k]));
+  if (!force && Date.now() - BADGE_AT < 45000) return;   // ไม่ถามเซิร์ฟเวอร์ถี่เกินไป
+  BADGE_AT = Date.now();
   try {
-    if (MODE === 'committee') { const d = await api('inbox'); set('inbox', d.items.filter(i => i.can_vote).length); }
-    if (MODE === 'office') { const t = await api('listTasks'), p = await api('pendingPayments'); set('tasks', t.tasks.length); set('verify', p.payments.length); }
+    if (MODE === 'committee') { const [d] = await apiBatch([['inbox']]); if (d.ok) set('inbox', d.data.items.filter(i => i.can_vote).length); }
+    if (MODE === 'office') { const [t, p] = await apiBatch([['listTasks'], ['pendingPayments']]); if (t.ok) set('tasks', t.data.tasks.length); if (p.ok) set('verify', p.data.payments.length); }
   } catch (e) {}
 }
 
@@ -13018,16 +13066,20 @@ function newAnn() { if (confirm('ส่งประกาศถึงทุก�
 
 /* ================= ลูกบ้าน: หน้าแรก ================= */
 async function vHome() {
-  const d = await api('dashboard', STAFFMODE() ? {} : { as: 'resident' });
+  const calls = [['dashboard', STAFFMODE() ? {} : { as: 'resident' }]];
+  if (ME.house_no) calls.push(['myAccount'], ['myVisits']);
+  const R = await apiBatch(calls);
+  if (!R[0].ok) throw new Error(R[0].error);
+  const d = R[0].data;
   const pct = d.collection.total ? Math.round(d.collection.paid / d.collection.total * 100) : 0;
   const max = Math.max(1, ...d.months.flatMap(m => [m.income, m.expense]));
   let me = '', alertV = '';
   if (ME.house_no) {
-    try { const a = await api('myAccount'), tt = a.current + a.arrears;
+    try { if (!R[1].ok) throw new Error(R[1].error); const a = R[1].data, tt = a.current + a.arrears;
       me = `<div class="card hero" onclick="show('pay')" style="cursor:pointer"><small>บ้านของฉัน • ${esc(a.house.house_no)}</small>
         <h1>${tt > 0 ? baht(tt) : 'ไม่มียอดค้าง'} ${tt > 0 ? '<small>บาท</small>' : ''}</h1>
         <div class="chips"><span>${a.arrears > 0 ? '🔴 ค้างจ่าย ' + baht(a.arrears) : '🟢 ไม่มียอดค้างจ่าย'}</span><span>เครดิต ${baht(a.house.credit)}</span></div><div class="cta">ไปชำระเงิน ›</div></div>`; } catch (e) {}
-    try { const v = await api('myVisits'); if (v.waiting.length) alertV = `<div class="card alert" onclick="show('gate')"><b>🚗 มีรถรอคุณอนุญาตให้ออก ${v.waiting.length} คัน</b><div class="mut">แตะเพื่อดูและอนุมัติ</div></div>`; } catch (e) {}
+    try { if (!R[2].ok) throw new Error(R[2].error); const v = R[2].data; if (v.waiting.length) alertV = `<div class="card alert" onclick="show('gate')"><b>🚗 มีรถรอคุณอนุญาตให้ออก ${v.waiting.length} คัน</b><div class="mut">แตะเพื่อดูและอนุมัติ</div></div>`; } catch (e) {}
   }
   const bal = d.balance !== null && d.balance !== undefined
     ? `<div class="card"><small>เงินคงเหลือของนิติบุคคล${d.balance_note ? ' • ' + esc(d.balance_note) : ' • ตัวเลขสด'}</small><h2 style="margin:4px 0">${baht(d.balance)} บาท</h2><small class="mut">การเปิด/ปิดการแสดงผลนี้ตัดสินโดยคณะกรรมการ (อนุมัติครบตามเกณฑ์)</small></div>`
@@ -13049,7 +13101,7 @@ async function vHome() {
 /* ================= ลูกบ้าน: ชำระเงิน (ใบแจ้งชำระ + QR) ================= */
 let PAY = { mode: 'sel', sel: new Set(), pkg: null, custom: '', step: 'choose', intent: null }, POPT = null, PACC = null, PCM = [], BF = 'all';
 const resetPay = () => { PAY = { mode: 'sel', sel: new Set(), pkg: null, custom: '', step: 'choose', intent: null }; };
-function qrSvg(text) { const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 5, margin: 2, scalable: true }); }
+function qrSvg(text) { needLib('lib_qr'); const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 5, margin: 2, scalable: true }); }
 const itemLabel = i => i.kind === 'month' ? 'ค่าส่วนกลาง ' + mlabel(i.month) : i.kind === 'package' ? 'แพ็กเกจ ' + i.period : 'บิล ' + i.period + (i.note ? ' (' + i.note + ')' : '');
 function payTotals() {
   const pk = POPT.packages.find(x => x.id === PAY.pkg), cov = new Set(pk ? pk.months : []);
@@ -13286,7 +13338,7 @@ async function onQrPicked() {
     const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => rej(new Error('เปิดรูปไม่ได้')); im.src = URL.createObjectURL(f); });
     const k = Math.min(1, 1400 / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = img.width * k; c.height = img.height * k;
     const g = c.getContext('2d'); g.drawImage(img, 0, 0, c.width, c.height);
-    const code = jsQR(g.getImageData(0, 0, c.width, c.height).data, c.width, c.height);
+    needLib('lib_jsqr'); const code = jsQR(g.getImageData(0, 0, c.width, c.height).data, c.width, c.height);
     if (!code) { QRP = { info: { ok: false, why: 'อ่าน QR จากรูปไม่ได้ ลองถ่าย/บันทึกภาพใหม่ให้ชัดและเห็น QR ทั้งอัน' } }; }
     else QRP = { payload: code.data, info: await api('qrPreview', { payload: code.data }) };
   } catch (e) { QRP = { info: { ok: false, why: e.message } }; }
@@ -13474,17 +13526,29 @@ async function saveBrand() {
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
   ggate: vGuardGate, gguests: vGuests };
+let SHOWSEQ = 0;
 async function show(id) {
-  CUR = id;
+  CUR = id; const seq = ++SHOWSEQ, app = $('#app');
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.id === 'tab_' + navKey(id)));
-  $('#app').innerHTML = '<div class="sk"></div><div class="sk"></div><div class="sk"></div>'; window.scrollTo(0, 0);
-  try { $('#app').innerHTML = await VIEWS[id](); loadBadges(); }
+  const old = vcGet(id);
+  // มีของเดิม: แสดงทันที (กดไม่ได้จนกว่าข้อมูลใหม่มา) · ไม่มี: โครงร่างกำลังโหลด
+  app.innerHTML = old ? '<div class="stale">' + old + '</div>' : '<div class="sk hero-sk"></div><div class="sk"></div><div class="sk"></div>';
+  window.scrollTo(0, 0);
+  try {
+    const h = await VIEWS[id]();
+    if (seq !== SHOWSEQ) return;          // ผู้ใช้เปลี่ยนหน้าไปแล้ว
+    app.innerHTML = h;
+    if (!old) { app.classList.remove('fade'); void app.offsetWidth; app.classList.add('fade'); }   // เลื่อนเข้านุ่ม ๆ เฉพาะครั้งแรก
+    vcPut(id, app.innerHTML);
+    loadBadges();
+  }
   catch (e) {
+    if (seq !== SHOWSEQ) return;
     if (/ยืนยัน PIN/.test(e.message)) { ME.pinOK = false; renderModes(); $('#app').innerHTML = '<div class="card">กรุณายืนยัน PIN เพื่อใช้โหมดนี้</div>'; showPin(MODE); return; }
-    $('#app').innerHTML = `<div class="card">โหลดไม่สำเร็จ: ${esc(e.message)}</div>`;
+    $('#app').innerHTML = `<div class="card">โหลดไม่สำเร็จ: ${esc(e.message)}<button class="btn sec" onclick="show(CUR)">ลองใหม่</button></div>`;
   }
 }
-(async () => {
+window.addEventListener('DOMContentLoaded', () => (async () => {
   try { await liff.init({ liffId: CONFIG.LIFF_ID }); }
   catch (e) {
     // เช่น code_verifier does not match: ล้างสถานะ login ค้างแล้วลองใหม่ 1 ครั้ง
@@ -13507,14 +13571,23 @@ async function show(id) {
     return;
   }
   try { sessionStorage.removeItem('lg'); } catch (e) {}
+  // แสดงหน้าหลักจากข้อมูลที่จำไว้ทันที แล้วค่อยยืนยันกับเซิร์ฟเวอร์ (สิทธิ์จริงตรวจที่เซิร์ฟเวอร์ทุกครั้ง)
+  let cached = null; try { cached = JSON.parse(localStorage.getItem(meKey()) || 'null'); } catch (e) {}
+  if (cached && cached.user && !['guest', 'pending'].includes(cached.user.role)) {
+    ME = cached.user; SET = cached.settings || {}; applyBrand();
+    $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
+    MODE = modesOf()[0]; CUR = TABS[MODE][0][0]; renderModes(); renderNav();
+    const old = vcGet(CUR); if (old) $('#app').innerHTML = '<div class="stale">' + old + '</div>';
+  }
   const r = await api('me'); ME = r.user; SET = r.settings;
+  try { localStorage.setItem(meKey(), JSON.stringify({ user: { display_name: ME.display_name, house_no: ME.house_no, role: ME.role, office: ME.office, acct_type: ME.acct_type, hasPin: ME.hasPin }, settings: SET })); } catch (e) {}
   applyBrand(); $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
   if (ME.role === 'guest') return renderRegister();
   if (ME.role === 'pending') { $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
   MODE = modesOf()[0]; CUR = TABS[MODE][0][0]; renderModes(); renderNav(); show(CUR);
   setInterval(() => { if (MODE === 'guard' && CUR === 'ggate' && !document.hidden && !BUSY && !document.activeElement.matches('input,textarea')) refreshGate(); }, Math.max(1, SET.gate_refresh_min || 2) * 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && MODE === 'guard' && CUR === 'ggate') refreshGate(); });
-})().catch(e => $('#app').textContent = 'เปิดระบบไม่สำเร็จ: ' + e.message);
+})().catch(e => $('#app').textContent = 'เปิดระบบไม่สำเร็จ: ' + e.message));
 </script>
 </body>
 </html>
