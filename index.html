@@ -13156,7 +13156,7 @@ async function makeIntent() {
   if (BUSY) return; BUSY = true;
   try {
     PAY.intent = await api('createIntent', PAY.mode === 'custom' ? { mode: 'custom', amount: PAY.custom } : { invoice_ids: [...PAY.sel], pkg: PAY.pkg || undefined });
-    PAY.step = 'qr'; payRender(); window.scrollTo(0, 0);
+    PAY.step = PAY.intent.qr_payload ? 'qr' : 'slip'; payRender(); window.scrollTo(0, 0);   // ปิด QR: ไปหน้าแนบสลิปเลย
   } catch (e) { alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
 }
 function payQR() {
@@ -13164,6 +13164,7 @@ function payQR() {
   return `<div class="card center"><b>${has ? 'สแกนจ่ายด้วยแอปธนาคาร' : 'โอนเข้าบัญชีนิติบุคคล'}</b>
     ${has ? `<div class="qr">${qrSvg(it.qr_payload)}</div>` : `<p>${esc(POPT.bank)}</p><div class="note warn">นิติบุคคลยังไม่ได้ตั้งค่า QR รับเงิน กรุณาโอนเข้าบัญชีด้านบนตามยอดนี้</div>`}
     <h2 style="margin:6px 0">${baht(it.total)} บาท</h2><small class="mut">เลขที่ใบแจ้ง ${esc(it.intent_id)} • ใช้ได้ถึง ${esc(it.expires_at)}${has ? ' • QR ล็อกยอดแล้ว' : ''}</small>
+    ${has && it.bill ? `<div class="note">Bill Payment • Ref1 (บ้าน): <b>${esc(it.ref1)}</b> • Ref2 (ใบแจ้ง): <b>${esc(it.ref2)}</b></div>` : ''}
     ${has && POPT.qr_label ? `<div class="note">ผู้รับ: ${esc(POPT.qr_label)} — ตรวจชื่อผู้รับในแอปธนาคารก่อนยืนยันโอนทุกครั้ง</div>` : ''}</div>
   <div class="card"><b>รายการที่ชำระ</b>${it.items.map(i => `<div class="row"><span>${esc(i.label)}</span><b>${baht(i.amount)}</b></div>`).join('')}</div>
   <div class="note">โอนแล้วให้แนบสลิป นิติฯ จะตรวจกับรายการเดินบัญชีก่อนยืนยัน และตัดยอดตามรายการที่คุณเลือกเท่านั้น</div>
@@ -13172,11 +13173,14 @@ function payQR() {
 }
 function paySlip() {
   const it = PAY.intent;
-  return `<div class="card"><b>แนบสลิปการโอน • ${esc(it.intent_id)}</b><div class="mut">ยอด ${baht(it.total)} บาท</div>
+  const noQr = !it.qr_payload;
+  return `${noQr ? `<div class="card"><b>โอนเข้าบัญชีนิติบุคคล</b><p>${esc(POPT.bank || '-')}</p><h2 style="margin:4px 0">${baht(it.total)} บาท</h2>
+    <div class="note">โอนตามยอดนี้ แล้วแนบสลิปด้านล่าง · นิติฯ จะตรวจสลิปและยอดเงินเข้าบัญชี แล้วแจ้งผลพร้อมใบเสร็จทาง LINE</div></div>` : ''}
+  <div class="card"><b>แนบสลิปการโอน • ${esc(it.intent_id)}</b><div class="mut">ยอด ${baht(it.total)} บาท</div>
     <label class="lb">เลขที่รายการ/เลขอ้างอิงบนสลิป (บังคับ)</label><input id="sl_ref" autocomplete="off" autocapitalize="characters">
     <label class="lb">วันที่โอนตามสลิป (ใช้ตัดสินส่วนลดแพ็กเกจ)</label><input id="sl_date" type="date" value="${today()}" max="${today()}">
     <label class="lb">รูปสลิป</label><input type="file" id="sl_file" accept="image/*">
-    <button class="btn" onclick="sendSlip()">ส่งสลิป</button><button class="btn sec" onclick="PAY.step='qr';payRender()">‹ กลับ</button></div>`;
+    <button class="btn" onclick="sendSlip()">ส่งสลิป</button><button class="btn sec" onclick="${noQr ? "resetPay();show('pay')" : "PAY.step='qr';payRender()"}">‹ กลับ</button></div>`;
 }
 async function sendSlip() {
   const f = await fileOf('sl_file'); if (!f) return alert('กรุณาแนบรูปสลิป');
@@ -13320,14 +13324,20 @@ function policyHtml() {
   const sel = SV.rules.find(r => r.key === (PKEY || SV.rules[0].key));
   const input = sel.kind === 'bool' ? '<select id="pv"><option value="TRUE">เปิด</option><option value="FALSE">ปิด</option></select>' : sel.kind === 'oneOf' ? `<select id="pv">${sel.options.map(o => `<option value="${o}">${{ live: 'ตัวเลขสด', monthly: 'สรุปรายเดือนที่รับรอง' }[o] || o}</option>`).join('')}</select>` :
     `<input id="pv" ${sel.kind === 'num' ? 'type="number" step="0.01" min="' + sel.min + '" max="' + sel.max + '"' : sel.kind === 'month' ? 'placeholder="yyyy-mm เช่น 2026-10"' : ''}>`;
-  return `<div class="card"><b>ตั้งค่าปัจจุบัน (อ่านอย่างเดียว)</b><div class="mut">ทุกการเปลี่ยนต้องกรรมการอนุมัติ แล้วนิติฯ เป็นผู้ดำเนินการ</div>
+  return `<div class="card"><b>การตั้งค่าปัจจุบัน (อ่านอย่างเดียว)</b><div class="mut">ทุกการเปลี่ยนต้องกรรมการอนุมัติ แล้วนิติฯ เป็นผู้ดำเนินการ</div>
     ${SV.rules.map(r => `<div class="row"><span>${esc(r.label)}${r.critical ? ' ⚠' : ''}</span><b>${showVal(r)}</b></div>`).join('')}</div>
-  <div class="card"><b>ขอเปลี่ยนตั้งค่า</b><select id="pk" onchange="PKEY=this.value;policyRender()">${SV.rules.map(r => `<option value="${r.key}" ${r.key === sel.key ? 'selected' : ''}>${esc(r.label)}</option>`).join('')}</select>
+  <div class="card"><b>ขอเปลี่ยนการตั้งค่า</b><select id="pk" onchange="PKEY=this.value;policyRender()">${SV.rules.map(r => `<option value="${r.key}" ${r.key === sel.key ? 'selected' : ''}>${esc(r.label)}</option>`).join('')}</select>
     ${input}<input id="pr" placeholder="เหตุผล (จำเป็น)"><button class="btn" onclick="reqSetting()">ส่งขออนุมัติ</button><div class="note">คุณเป็นผู้ขอ จึงอนุมัติรายการนี้เองไม่ได้ ต้องให้กรรมการท่านอื่นอนุมัติ</div></div>
   <div class="card crit"><b>🏦 บัญชีรับเงิน / QR PromptPay ของนิติบุคคล</b><div class="mut">ปัจจุบัน: ${SV.qr.configured ? esc(SV.qr.label || 'ตั้งค่าแล้ว') : 'ยังไม่ได้ตั้งค่า'}</div>
     <div class="note warn">การเปลี่ยนบัญชีรับเงินเสี่ยงสูงสุด ต้องกรรมการอนุมัติครบ และระบบจะแจ้งลูกบ้านทุกคนเมื่อมีผล หลังเปลี่ยนให้ทดลองโอน 1 บาทเพื่อตรวจชื่อผู้รับ</div>
     <label class="lb">อัปโหลดรูป QR รับเงินที่ได้จากธนาคาร (QR ของนิติบุคคล)</label><input type="file" id="qr_file" accept="image/*" onchange="onQrPicked()">
-    ${QRP ? (QRP.info.ok ? `<div class="note">✔ อ่าน QR ได้ • ผู้รับ: <b>${esc(QRP.info.name || '(ไม่ระบุชื่อ)')}</b> • บัญชี/เลขนิติบุคคล: <b>${esc(QRP.info.account)}</b>${QRP.info.has_amount ? ' • (QR นี้มียอดในตัว ระบบจะแทนยอดให้อัตโนมัติ)' : ''}</div>
+    <h4 style="margin:14px 0 4px">หรือ Bill Payment (ต้องสมัครกับธนาคารก่อน)</h4>
+    <div class="note">ธนาคารจะให้ <b>Biller ID</b> = เลขประจำตัวผู้เสียภาษีของนิติบุคคล 13 หลัก + Suffix 2 หลัก และแจ้งรูปแบบ Ref 1 / Ref 2 ที่ต้องใช้ (ตั้ง Ref ได้ที่ "ขอเปลี่ยนการตั้งค่า" ด้านบน)</div>
+    <label class="lb">เลขประจำตัวผู้เสียภาษี (13 หลัก)</label><input id="qr_tax" inputmode="numeric" maxlength="17" placeholder="เช่น 0105500000123">
+    <div class="row"><div style="flex:1"><label class="lb">Suffix (2 หลัก)</label><input id="qr_suffix" inputmode="numeric" maxlength="2" placeholder="เช่น 00"></div>
+      <div style="flex:2"><label class="lb">ชื่อผู้รับ (อังกฤษ ไม่บังคับ)</label><input id="qr_bname" placeholder="NITI KUNALAI 3"></div></div>
+    <button class="btn sec" onclick="previewBiller()">ตรวจข้อมูล Bill Payment</button>
+    ${QRP ? (QRP.info.ok ? `<div class="note">✔ อ่าน QR ได้ • ผู้รับ: <b>${esc(QRP.info.name || '(ไม่ระบุชื่อ)')}</b> • บัญชี/เลขนิติบุคคล: <b>${esc(QRP.info.account)}</b>${QRP.info.kind === 'bill' ? ' • <b>Bill Payment</b>' : ''}${QRP.info.has_amount ? ' • (QR นี้มียอดในตัว ระบบจะแทนยอดให้อัตโนมัติ)' : ''}</div>
       <input id="qr_reason" placeholder="เหตุผล เช่น ย้ายบัญชีนิติบุคคล"><button class="btn" onclick="reqQr()">ส่งขออนุมัติใช้ QR นี้</button>` : `<div class="note warn">${esc(QRP.info.why)}</div>`) : ''}</div>
   <div class="card"><b>🔤 เมื่อกรรมการ 1 ท่านไม่อยู่</b><p class="mut">ถ้าผู้ขอ/กรรมการเจ้าของบ้านในรายการลงมติไม่ได้จนเหลือน้อยกว่าเกณฑ์ ใช้เกณฑ์สำรอง (ทุกท่านที่มีสิทธิ์อนุมัติ + อ้างอิงมติที่ประชุม) ดูที่หน้ารออนุมัติ</p></div>`;
 }
@@ -13342,6 +13352,11 @@ async function onQrPicked() {
     if (!code) { QRP = { info: { ok: false, why: 'อ่าน QR จากรูปไม่ได้ ลองถ่าย/บันทึกภาพใหม่ให้ชัดและเห็น QR ทั้งอัน' } }; }
     else QRP = { payload: code.data, info: await api('qrPreview', { payload: code.data }) };
   } catch (e) { QRP = { info: { ok: false, why: e.message } }; }
+  policyRender();
+}
+async function previewBiller() {
+  try { const r = await api('qrPreview', { tax_id: val('qr_tax'), suffix: val('qr_suffix'), name: val('qr_bname') }); QRP = { payload: r.payload, info: r }; }
+  catch (e) { QRP = { info: { ok: false, why: e.message } }; }
   policyRender();
 }
 function reqQr() { act('requestChange', { kind: 'promptpay', payload: QRP.payload, reason: val('qr_reason') }, 'ส่งขออนุมัติแล้ว ไปที่แท็บ "รออนุมัติ"'); QRP = null; }
@@ -13443,7 +13458,7 @@ async function vAdmin() {
   <div class="card"><b>ตั้งค่าทั่วไป (ไม่ต้องผ่านอนุมัติ)</b>
     ${sv.simple.map(s => `<label class="lb">${esc(s.label)} (${s.min}–${s.max})</label><div class="row" style="gap:8px"><input id="ss_${s.key}" type="number" value="${esc(s.value)}" min="${s.min}" max="${s.max}"><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'${s.key}',value:val('ss_${s.key}')},'บันทึกแล้ว')">บันทึก</button></div>`).join('')}
     <label class="lb">ระดับการแจ้งเตือน LINE (ประหยัดโควตา)</label><div class="row" style="gap:8px"><select id="ss_lvl">${[['essential', 'เฉพาะสำคัญ (รถเข้า-ออก/พัสดุ/ยืนยันบัญชี)'], ['normal', 'ปกติ (+บิล/ผลชำระ/ประกาศ)'], ['all', 'ทั้งหมด (+แจ้งเตือนภายในกรรมการ)']].map(([k, t]) => `<option value="${k}" ${sv.line_level === k ? 'selected' : ''}>${t}</option>`).join('')}</select><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'LINE_NOTIFY_LEVEL',value:val('ss_lvl')},'บันทึกแล้ว')">บันทึก</button></div>
-    <div class="mut">ตั้งค่าอื่น (อัตราค่าส่วนกลาง ส่วนลด วงเงิน บัญชีรับเงิน ฯลฯ) ต้องให้กรรมการอนุมัติที่โหมดกรรมการ → แท็บตั้งค่า</div></div>
+    <div class="mut">การตั้งค่าอื่น (อัตราค่าส่วนกลาง ส่วนลด วงเงิน บัญชีรับเงิน ฯลฯ) ต้องให้กรรมการอนุมัติที่โหมดกรรมการ → แท็บตั้งค่า</div></div>
   <h4>ผู้ใช้งาน (${us.length}) • รอยืนยัน ${pend.length}</h4>
   ${us.map(x => `<div class="card"><div class="row"><b>${esc(x.display_name)}</b><span class="badge ${x.active === 'TRUE' ? 'done' : 'pending'}">${x.active === 'TRUE' ? 'ใช้งาน' : 'รอยืนยัน/ระงับ'}</span></div>
     <small class="mut">บ้าน ${esc(x.house_no) || '-'} • ${x.acct_type === 'main' ? 'บัญชีหลัก' : x.acct_type === 'backup' ? 'บัญชีสำรอง' : ROLE_TH[x.role] || x.role} • ${esc(x.phone)}</small>
@@ -13495,7 +13510,7 @@ const PRESETS = ['#06c755', '#1a73e8', '#00897b', '#7b1fa2', '#e65100', '#c2185b
 let BRC = null;
 function shade(hex, k) { const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, f = k < 0 ? 0 : 255, t = Math.abs(k), m = v => Math.round((f - v) * t + v); return '#' + [m(r), m(g), m(b)].map(v => v.toString(16).padStart(2, '0')).join(''); }
 const lum = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
-function applyBrand() {   // สี โลโก้ ชื่อไทย/อังกฤษ จากตั้งค่าของนิติบุคคล
+function applyBrand() {   // สี โลโก้ ชื่อไทย/อังกฤษ จากการตั้งค่าของนิติบุคคล
   const p = /^#[0-9a-fA-F]{6}$/.test(SET.theme_primary || '') ? SET.theme_primary : '#06c755', st = document.documentElement.style;
   st.setProperty('--pri', p); st.setProperty('--pri2', shade(p, -0.22)); st.setProperty('--hero1', shade(p, -0.65)); st.setProperty('--hero2', shade(p, -0.25));
   st.setProperty('--on-pri', lum(p) > 0.65 ? '#111' : '#fff');
@@ -13526,6 +13541,18 @@ async function saveBrand() {
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
   ggate: vGuardGate, gguests: vGuests };
+// ลิงก์จากข้อความ LINE: ?receipt=<pay_id> เปิดใบเสร็จ · ?go=pay ไปหน้าชำระเงิน
+async function openDeepLink() {
+  let q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
+  const rc = q.get('receipt'), go = q.get('go');
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  if (go === 'pay' && TABS[MODE].some(t => t[0] === 'pay')) show('pay');
+  if (!rc) return;
+  try {
+    const a = await api('myAccount'), p = (a.payments || []).find(x => x.pay_id === rc);
+    if (p && p.receipt_file) viewFile(p.receipt_file); else toast('ไม่พบใบเสร็จนี้ในบ้านของคุณ', true);
+  } catch (e) { toast('เปิดใบเสร็จไม่สำเร็จ: ' + e.message, true); }
+}
 let SHOWSEQ = 0;
 async function show(id) {
   CUR = id; const seq = ++SHOWSEQ, app = $('#app');
@@ -13585,6 +13612,7 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
   if (ME.role === 'guest') return renderRegister();
   if (ME.role === 'pending') { $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
   MODE = modesOf()[0]; CUR = TABS[MODE][0][0]; renderModes(); renderNav(); show(CUR);
+  openDeepLink();
   setInterval(() => { if (MODE === 'guard' && CUR === 'ggate' && !document.hidden && !BUSY && !document.activeElement.matches('input,textarea')) refreshGate(); }, Math.max(1, SET.gate_refresh_min || 2) * 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && MODE === 'guard' && CUR === 'ggate') refreshGate(); });
 })().catch(e => $('#app').textContent = 'เปิดระบบไม่สำเร็จ: ' + e.message));
