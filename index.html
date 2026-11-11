@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://static.line-scdn.net; style-src 'unsafe-inline'; manifest-src 'self'; img-src 'self' data: blob: https:; connect-src https:; frame-src https:; base-uri 'none'; object-src 'none'; form-action 'none'">
-<meta name="theme-color" content="#06c755">
+<meta name="theme-color" content="#e03f8b">
 <title>VillaKunalai 3 • หมู่บ้านวิลล่า คุณาลัย 3</title>
 <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://api.line.me">
 <script defer src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <style>
-:root{--bg:#f3f5f7;--card:#fff;--tx:#18222d;--mut:#667585;--pri:#06c755;--pri2:#049a42;--bd:#e6eaee;--red:#d93c3c;--amb:#e08a00;--blu:#2a7de1;--sh:0 1px 3px #0001,0 4px 14px #0000000a}
+:root{--bg:#f3f5f7;--card:#fff;--tx:#18222d;--mut:#667585;--pri:#e03f8b;--pri2:#b8266d;--bd:#e6eaee;--red:#d93c3c;--amb:#e08a00;--blu:#2a7de1;--sh:0 1px 3px #0001,0 4px 14px #0000000a}
 @media(prefers-color-scheme:dark){:root{--bg:#10151a;--card:#1a2128;--tx:#e8eef3;--mut:#93a1ae;--bd:#2a343d;--red:#ff7d7d;--amb:#f2b54d;--blu:#6aa8ff;--sh:none}}
 *{box-sizing:border-box}
 body{font-family:system-ui,"Sarabun","Noto Sans Thai",sans-serif;margin:0;background:var(--bg);color:var(--tx);padding-bottom:calc(76px + env(safe-area-inset-bottom));line-height:1.5}
@@ -36,14 +36,14 @@ nav button.on{color:var(--pri2);font-weight:700}
 nav button.on span{transform:scale(1.15)}
 main{padding:14px;max-width:760px;margin:auto}
 .card{background:var(--card);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--sh);border:1px solid var(--bd)}
-.hero{background:linear-gradient(135deg,var(--hero1,#0b3d2e),var(--hero2,#0a7d52));color:#fff;border:0}
+.hero{background:linear-gradient(135deg,var(--hero1,#5a1236),var(--hero2,#a02062));color:#fff;border:0}
 .hero small{color:#ffffffbb}.hero h1{margin:2px 0 6px;font-size:30px}
 .hero .chips span{background:#ffffff26;border-radius:99px;padding:3px 10px;font-size:12.5px;margin-right:6px;display:inline-block;margin-top:4px}
 .row{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .badge{font-size:12px;padding:2px 10px;border-radius:99px;background:#8881;color:var(--mut);white-space:nowrap;font-weight:600;border:1px solid var(--bd)}
 .unpaid,.pending,.new{background:#e08a0022;color:var(--amb);border-color:#e08a0044}
 .partial,.doing{background:#2a7de122;color:var(--blu);border-color:#2a7de144}
-.paid,.done,.approved,.verified,.credit_applied{background:#06c75522;color:var(--pri2);border-color:#06c75544}
+.paid,.done,.approved,.verified,.credit_applied{background:#e03f8b22;color:var(--pri2);border-color:#e03f8b44}
 .rejected,.void,.late{background:#d93c3c22;color:var(--red);border-color:#d93c3c44}
 .late{font-weight:800}
 input,select,textarea{width:100%;padding:11px 12px;margin:5px 0;font:inherit;font-size:15px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx)}
@@ -54,6 +54,10 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);outline-off
 small,.mut{color:var(--mut)}
 h4{margin:18px 2px 8px}
 .track{background:#8882;border-radius:99px;overflow:hidden}.bar{height:9px;background:var(--pri);border-radius:99px}
+.helpfab{position:fixed;right:12px;bottom:84px;z-index:30;width:42px;height:42px;border-radius:50%;border:0;background:var(--pri);color:#fff;font-size:22px;display:none;align-items:center;justify-content:center;box-shadow:0 3px 10px #0004}
+details.hl{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin:6px 0}details.hl summary{cursor:pointer}
+.card.empty{text-align:center;padding:28px 16px;color:var(--mut)}
+.chips2.wrap{flex-wrap:wrap;overflow:visible}
 .chips2{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
 .chips2 button{flex:none;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:99px;padding:6px 14px;font:inherit;font-size:13px}
 .chips2 button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
@@ -68,7 +72,7 @@ tr.click{cursor:pointer}.red{color:var(--red)}
 .sk{height:84px;border-radius:16px;background:linear-gradient(90deg,#8881,#8883,#8881);background-size:200% 100%;animation:sk 1.2s infinite;margin-bottom:12px}
 @keyframes sk{to{background-position:-200% 0}}
 .sk.hero-sk{height:150px;background:linear-gradient(90deg,var(--pri)22,var(--pri)44,var(--pri)22);background-size:200% 100%}
-body::before{content:"";position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:linear-gradient(90deg,var(--pri),#7be3a8,var(--pri));background-size:200% 100%;opacity:0;transition:opacity .2s}
+body::before{content:"";position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:linear-gradient(90deg,var(--pri),#f7a8cd,var(--pri));background-size:200% 100%;opacity:0;transition:opacity .2s}
 body.loading::before{opacity:1;width:100%;animation:bar 1s linear infinite}
 @keyframes bar{to{background-position:-200% 0}}
 .stale{pointer-events:none;opacity:.72;filter:saturate(.85);transition:opacity .2s}
@@ -90,7 +94,7 @@ nav button.on::after{content:"";display:block;width:22px;height:3px;border-radiu
 .bd{position:absolute;top:-4px;right:-10px;background:var(--red);color:#fff;font-style:normal;font-size:10px;border-radius:99px;padding:0 5px;min-width:16px;text-align:center;line-height:16px;font-weight:700}
 nav button span{position:relative}
 .card.alert{border-color:var(--amb);background:#e08a0014;cursor:pointer}.card.crit{border-color:var(--red)}
-.card.pkg{cursor:pointer;border:2px solid var(--bd)}.card.pkg.on{border-color:var(--pri);background:#06c75512}.card.center{text-align:center}.card.tile{text-align:center;cursor:pointer}
+.card.pkg{cursor:pointer;border:2px solid var(--bd)}.card.pkg.on{border-color:var(--pri);background:#e03f8b12}.card.center{text-align:center}.card.tile{text-align:center;cursor:pointer}
 .cta{margin-top:8px;font-weight:700}
 .note{background:#2a7de114;border:1px solid #2a7de133;border-radius:12px;padding:9px 12px;font-size:13px;margin:8px 0}.note.warn{background:#e08a0018;border-color:#e08a0055}
 .lb{font-size:13px;color:var(--mut);display:block;margin-top:8px}.mut{color:var(--mut);font-size:13px}
@@ -104,13 +108,13 @@ nav button span{position:relative}
 .bars.lab{height:auto;margin:2px 0 6px}.bars.lab span{flex:1;text-align:center;font-size:11px;color:var(--mut)}
 .doc{border:1px dashed var(--bd);border-radius:12px;padding:12px;margin-bottom:8px}
 .prog .track{margin-top:6px}
-.badge.pending{background:#e08a0022;color:var(--amb);border-color:#e08a0044}.badge.paid{background:#06c75522;color:var(--pri2);border-color:#06c75544}
+.badge.pending{background:#e08a0022;color:var(--amb);border-color:#e08a0044}.badge.paid{background:#e03f8b22;color:var(--pri2);border-color:#e03f8b44}
 .badge.partial{background:#2a7de122;color:var(--blu);border-color:#2a7de144}.badge.late{background:#d93c3c22;color:var(--red);border-color:#d93c3c44;font-weight:800}
 .paid{color:var(--pri2)}.open{color:var(--amb)}.late{color:var(--red)}
 </style>
 </head>
 <body>
-<header><div class="brand"><img id="logo" alt="" hidden onerror="this.hidden=true"><div><b id="title">หมู่บ้านวิลล่า คุณาลัย 3</b><i id="title_en">VillaKunalai 3</i></div></div><small id="who"></small></header><div id="modes"></div><div id="toast"></div><div id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="mbody"></div></div>
+<header><div class="brand"><img id="logo" alt="" hidden onerror="this.hidden=true"><div><b id="title">หมู่บ้านวิลล่า คุณาลัย 3</b><i id="title_en">VillaKunalai 3</i></div></div><small id="who"></small></header><div id="modes"></div><button id="helpfab" class="helpfab" onclick="showHelp(CUR)" aria-label="ช่วยเหลือหน้านี้">ⓘ</button><div id="toast"></div><div id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="mbody"></div></div>
 <nav id="nav"></nav>
 <main id="app">กำลังโหลด...</main>
 <script type="text/plain" id="lib_qr">
@@ -12518,7 +12522,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 });
 </script>
 <script>
-const CONFIG = { LIFF_ID: '2012507801-kwzVupeV', API_URL: 'https://script.google.com/macros/s/AKfycbzwkZzyN8_9KtgDTJutXjemDldIpSXaZ6Ie_ETuYHY44iTUTH-rgtM2nftlEZguZK10/exec' };
+const CONFIG = { LIFF_ID: 'ใส่_LIFF_ID', API_URL: 'ใส่_URL_Apps_Script_ที่ลงท้ายด้วย_/exec' };
 const ROLES = ['resident','guard','technician','housekeeper'];   // สิทธิ์กรรมการ/นิติฯ เปลี่ยนได้เฉพาะผ่านคำขอแก้ทะเบียนกรรมการ (อนุมัติ + มติที่ประชุม)
 const ROLE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',manager:'นิติฯ',guard:'รปภ.',technician:'ช่าง',housekeeper:'แม่บ้าน'};
 const PLAN_TH = {monthly:'รายเดือน',half:'ราย 6 เดือน',yearly:'รายปี',manual:'ออกบิลเอง'};
@@ -12534,12 +12538,25 @@ const TABS = {
   resident: [['home','🏠','หน้าแรก'],['pay','💳','ชำระเงิน'],['gate','🚗','รถเข้า-ออก'],['tickets','🔧','แจ้งซ่อม'],['more','☰','เมนูอื่น']],
   committee: [['inbox','✅','รออนุมัติ'],['reports','📊','รายงาน'],['policy','⚙️','ตั้งค่า'],['roster','🏛️','กรรมการ'],['meetings','📅','ประชุม']],
   office: [['tasks','📋','งานนิติฯ'],['verify','🧾','ตรวจสลิป'],['finance','📒','บัญชีบ้าน'],['expenses','💸','รายจ่าย'],['omore','☰','อื่นๆ']],
-  guard: [['ggate','🚧','ป้อมยาม'],['gguests','📅','แขกล่วงหน้า'],['parcels','📦','พัสดุ'],['cctv','🎥','ขอดูกล้อง']],
-  tech: [['tickets','🔧','งานซ่อม']],
+  guard: [['ggate','🚧','ป้อมยาม'],['gguests','📅','แขกล่วงหน้า'],['parcels','📦','พัสดุ'],['cctv','🎥','ขอดูกล้อง'],['kb','📖','ติดต่อ']],
+  tech: [['tickets','🧹','งานของฉัน'],['kb','📖','ติดต่อ']],
   sys: [['sys','🛠️','ความพร้อม'],['users','👥','ผู้ใช้/สิทธิ์'],['opening','📥','ยกมา'],['policy','⚙️','ตั้งค่า'],['adminlog','📜','ประวัติ']]
 };
-const SUB = { more: ['meetings','votes','requests','parcels','house','roster'], omore: ['tickets','meetings','votes','admin','bank','parcels','opening'] };
+const SUB = { sys: ['features','kb','matrix','help'], policy: ['kb','matrix','help'], more: ['meetings','votes','requests','parcels','house','roster','kb','matrix','help'], omore: ['tickets','meetings','votes','admin','bank','parcels','opening','kb','matrix','help'] };
 const navKey = tab => { for (const [p, subs] of Object.entries(SUB)) if (subs.includes(tab) && !TABS[MODE].some(t => t[0] === tab)) return p; return tab; };
+// เปิด/ปิดฟีเจอร์โดยผู้ดูแลระบบ (SET.features มาจากเซิร์ฟเวอร์ ถ้าไม่มี = เปิด)
+const FT = { gate: 'vehicles', ggate: 'vehicles', gguests: 'vehicles', parcels: 'parcels', votes: 'voting', roster: 'committee_list', cctv: 'guard' };
+const featOn = k => !(SET.features && SET.features[k] === false);
+const tabOk = k => !FT[k] || featOn(FT[k]);
+const tabsOf = m => TABS[m].filter(t => tabOk(t[0]));
+const firstTab = m => (tabsOf(m)[0] || TABS[m][0])[0];
+const emptyCard = (m = 'ยังไม่มีข้อมูล') => `<div class="card empty">${m}</div>`;
+function featBlocked(id) {
+  if (MODE === 'guard' && !featOn('guard')) return 'ระบบ รปภ. ปิดใช้งานอยู่';
+  if (MODE === 'tech' && ME && ME.role === 'housekeeper' && !featOn('housekeeper')) return 'ระบบแม่บ้านปิดใช้งานอยู่';
+  if (FT[id] && !featOn(FT[id])) return 'ฟีเจอร์นี้ปิดใช้งานอยู่';
+  return '';
+}
 let ME = null, SET = {}, CUR = 'home', MODE = 'resident', BUSY = false, AGS = [], EXPS = [];
 const ISCOM = () => MODE === 'committee', ISOFF = () => MODE === 'office', STAFFMODE = () => MODE === 'committee' || MODE === 'office';
 const TH_M = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
@@ -12646,11 +12663,11 @@ function renderModes() {
 }
 function renderNav() {
   const nk = navKey(CUR);
-  $('#nav').innerHTML = TABS[MODE].map(([k, ic, t]) => `<button id="tab_${k}" class="${k === nk ? 'on' : ''}" onclick="show('${k}')"><span>${ic}<i class="bd" id="bd_${k}"></i></span>${t}</button>`).join('');
+  $('#nav').innerHTML = tabsOf(MODE).map(([k, ic, t]) => `<button id="tab_${k}" class="${k === nk ? 'on' : ''}" onclick="show('${k}')"><span>${ic}<i class="bd" id="bd_${k}"></i></span>${t}</button>`).join('');
 }
 function setMode(m) {
   if (m !== 'resident' && !ME.pinOK) return showPin(m);
-  MODE = m; renderModes(); CUR = TABS[m][0][0]; renderNav(); show(CUR);
+  MODE = m; renderModes(); CUR = firstTab(m); renderNav(); show(CUR);
 }
 async function lockStaff() { try { await api('lockPin'); } catch (e) {} ME.pinOK = false; setMode('resident'); }
 function showPin(target) {
@@ -12667,7 +12684,7 @@ async function doPin(target) {
     if (!ME.hasPin) { if (p !== val('pin2')) throw new Error('PIN สองครั้งไม่ตรงกัน'); await api('setPin', { pin: p }); }
     else await api('verifyPin', { pin: p });
     const r = await api('me'); ME = r.user; closeModal();
-    MODE = target; renderModes(); CUR = TABS[target][0][0]; renderNav(); show(CUR);
+    MODE = target; renderModes(); CUR = firstTab(target); renderNav(); show(CUR);
   } catch (e) { alert('ไม่สำเร็จ: ' + e.message); }
 }
 let BADGE_AT = 0, BADGE_N = {};
@@ -12677,7 +12694,7 @@ async function loadBadges(force) {
   if (!force && Date.now() - BADGE_AT < 45000) return;   // ไม่ถามเซิร์ฟเวอร์ถี่เกินไป
   BADGE_AT = Date.now();
   try {
-    if (MODE === 'committee') { const [d] = await apiBatch([['inbox']]); if (d.ok) set('inbox', d.data.items.filter(i => i.can_vote).length); }
+    if (MODE === 'committee') { const [d, e] = await apiBatch([['inbox'], ['listExceptions']]); if (d.ok) set('inbox', d.data.items.filter(i => i.can_vote).length + (e && e.ok ? e.data.filter(x => x.can_decide).length : 0)); }
     if (MODE === 'office') { const [t, p] = await apiBatch([['listTasks'], ['pendingPayments']]); if (t.ok) set('tasks', t.data.tasks.length); if (p.ok) set('verify', p.data.payments.length); }
   } catch (e) {}
 }
@@ -12855,7 +12872,8 @@ async function vTickets() {
     <textarea id="t_detail" rows="3" placeholder="รายละเอียด"></textarea>
     <input id="t_loc" placeholder="ตำแหน่ง เช่น เสาไฟหน้าบ้านเลขที่ 12">
     <input type="file" id="t_file" accept="image/*"><button class="btn" onclick="newTicket()">ส่งเรื่อง</button></div>` : '';
-  return form + list.map(t => `<div class="card">
+  if (!list.length && MODE === 'tech') return emptyCard();
+  return form + (list.length || MODE === 'tech' ? '' : emptyCard()) + list.map(t => `<div class="card">
     <div class="row"><b>${t.type === 'repair' ? '🔧 แจ้งซ่อม' : t.type === 'cctv' ? '🎥 ขอดูกล้องวงจรปิด' : '📝 ร้องเรียน'}</b>${badge(t.status)}</div>
     <div style="white-space:pre-line">${esc(t.detail)}</div>
     <small>📍 ${esc(t.location) || '-'} ${t.house_no ? '| บ้าน ' + esc(t.house_no) : ''} | ${dt(t.created_at)}</small>
@@ -12912,7 +12930,7 @@ async function vParcels() {
       <button class="btn" onclick="pickParcel('${p.parcel_id}')">ลูกบ้านรับแล้ว</button></div>`).join('');
   return list.map(p => `<div class="card"><div class="row"><b>📦 ${dt(p.created_at)}</b>
     <span class="badge ${p.picked_up_at ? 'done' : 'pending'}">${p.picked_up_at ? 'รับแล้ว' : 'รอรับที่ป้อมยาม'}</span></div>
-    ${thumb(p.photo_file)}<small>${esc(p.note)}</small></div>`).join('') || '<p>ไม่มีพัสดุฝาก</p>';
+    ${thumb(p.photo_file)}<small>${esc(p.note)}</small></div>`).join('') || emptyCard('ยังไม่มีข้อมูล (ไม่มีพัสดุฝาก)');
 }
 
 async function vExpenses() {
@@ -13200,26 +13218,31 @@ async function sendSlip() {
 }
 
 /* ================= ลูกบ้าน: รถเข้า-ออก ================= */
-const PUR = { visit: 'เยี่ยมบ้าน', contractor: 'ช่าง/ผู้รับเหมา', delivery: 'ส่งของ/ไปรษณีย์', other: 'อื่นๆ' };
-const VST = { waiting: 'รอเจ้าของบ้านอนุญาตให้ออก', approved: 'อนุญาตให้ออกแล้ว', denied: 'ไม่อนุญาต — ติดต่อเจ้าของบ้าน', delivery: 'ส่งของ (ไม่ต้องรออนุมัติ)', prereg: 'แขกลงทะเบียนล่วงหน้า', override: 'รปภ.ปล่อยตามคำยืนยันทางโทรศัพท์', left: 'ออกแล้ว' };
-const vstat = s => `<span class="badge ${{ waiting: 'pending', approved: 'paid', prereg: 'paid', denied: 'late', delivery: 'partial', override: 'partial', left: '' }[s] || ''}">${VST[s] || s}</span>`;
+const PUR = { visit: 'เยี่ยมบ้าน', contractor: 'ช่าง/ผู้รับเหมา', taxi: 'แท็กซี่', ride: 'รถรับจ้าง/แกร็บ', courier: 'ขนส่งเอกชน', post: 'ไปรษณีย์', delivery: 'ส่งของ (แบบเดิม)', other: 'อื่นๆ' };
+const PUR_VISIT = ['visit', 'contractor', 'other'], PUR_SVC = ['taxi', 'ride', 'courier', 'post'];
+const VST = { waiting: 'รอเจ้าของบ้านอนุญาตให้ออก', approved: 'อนุญาตให้ออกแล้ว', denied: 'ไม่อนุญาต — ติดต่อเจ้าของบ้าน', delivery: 'รถบริการ (ไม่ต้องรออนุมัติ)', service: 'รถบริการ (ไม่ต้องรออนุมัติ)', prereg: 'แขกลงทะเบียนล่วงหน้า', override: 'รปภ.ปล่อยรถ (ลูกบ้านไม่อนุมัติ/ไม่ตอบ)', left: 'ออกแล้ว' };
+const vstat = s => `<span class="badge ${{ waiting: 'pending', approved: 'paid', prereg: 'paid', denied: 'late', delivery: 'partial', service: 'partial', override: 'late', left: '' }[s] || ''}">${VST[s] || s}</span>`;
 function visitCard(v, acts) {
-  return `<div class="card ${v.overnight ? 'alert' : ''}"><div class="row"><b>${esc(v.plate)} → บ้าน ${esc(v.house_no)}</b>${vstat(v.status)}</div>
-    <small class="mut">${PUR[v.purpose]} • บัตร ${esc(v.card_no)} • เข้า ${dt(v.entered_at)}${v.decided_by ? ' • ' + esc(v.decided_by) : ''}</small>
-    ${v.overnight ? '<div><span class="badge late">ค้างข้ามคืน</span></div>' : ''}${v.note ? `<div class="mut">หมายเหตุ: ${esc(v.note)}</div>` : ''}
-    <div>${privLink(v.photo_file, '🖼 ดูรูปทะเบียน')}</div>${acts || ''}</div>`;
+  const dw = (v.dwell_min !== null && v.dwell_min !== undefined) ? `<div><span class="badge ${v.over_limit ? 'late' : 'partial'}">อยู่ในหมู่บ้าน ${v.dwell_min} นาที${v.over_limit ? ' • เกินกำหนด' : ''}</span></div>` : '';
+  return `<div class="card ${v.overnight || v.over_limit ? 'alert' : ''}"><div class="row"><b>${esc(v.plate)}${v.house_no ? ' → บ้าน ' + esc(v.house_no) : ''}</b>${vstat(v.status)}</div>
+    <small class="mut">${PUR[v.purpose] || esc(v.purpose)} • ${v.card_no && v.card_no !== '-' ? 'บัตร ' + esc(v.card_no) + ' • ' : ''}เข้า ${dt(v.entered_at)}${v.left_at ? ' • ออก ' + dt(v.left_at) : ''}${v.decided_by ? ' • ' + esc(v.decided_by) : ''}</small>
+    ${dw}${v.overnight ? '<div><span class="badge late">ค้างข้ามคืน</span></div>' : ''}${v.note ? `<div class="mut">${v.service ? 'ข้อความ' : 'เหตุผล/หมายเหตุ'}: ${esc(v.note)}</div>` : ''}
+    <div>${privLink(v.photo_file, '🖼 ดูรูปทะเบียน')} ${v.exit_photo_file ? privLink(v.exit_photo_file, '🖼 รูปทะเบียนตอนออก') : ''}</div>${acts || ''}</div>`;
 }
+const privacyNote = () => { const r = SET.retention || { visit: 90, service: 30, id: 30 };
+  return `<div class="note">🔒 <b>ข้อมูลรูปถ่าย (PDPA)</b> ระบบถ่ายรูปป้ายทะเบียนเพื่อความปลอดภัยของหมู่บ้าน เก็บรถเยี่ยม/ผู้รับเหมา ${r.visit} วัน · รถบริการ ${r.service} วัน · รูปบัตรประชาชน (เฉพาะกรณีปล่อยรถโดยลูกบ้านไม่อนุมัติ) ${r.id} วัน แล้วลบอัตโนมัติ · เห็นได้เฉพาะ รปภ. กรรมการ นิติฯ และเจ้าของบ้านที่เกี่ยวข้อง (รูปบัตรประชาชนเห็นได้เฉพาะกรรมการ/นิติฯ)</div>`; };
 async function vGate() {
-  const [v, g] = await Promise.all([api('myVisits'), api('listGuests')]);
+  const [v, g, ex, mx] = await Promise.all([api('myVisits'), api('listGuests'), api('listExceptions'), api('approvalMatrix')]);
   const dec = id => `<div class="row" style="gap:8px"><button class="btn" onclick="act('decideVisit',{id:'${id}',ok:true},'อนุญาตแล้ว แจ้ง รปภ.แล้ว')">อนุญาตให้ออก</button><button class="btn sec" onclick="act('decideVisit',{id:'${id}',ok:false},'แจ้ง รปภ.ว่าไม่อนุญาต')">ไม่อนุญาต / ไม่รู้จัก</button></div>`;
   return `<h4>รอคุณอนุญาตให้ออก (${v.waiting.length})</h4>${v.waiting.map(x => visitCard(x, dec(x.id))).join('') || '<div class="card mut">ไม่มีรายการรอ</div>'}
   <div class="card"><b>ลงทะเบียนแขกล่วงหน้า</b><div class="mut">แขกที่ลงทะเบียนไว้ เข้า-ออกได้ทันที ไม่ต้องรออนุมัติ และไม่ใช้โควตา LINE</div>
     <input id="gs_plate" placeholder="ทะเบียนรถแขก เช่น 6กฬ 4545"><input id="gs_name" placeholder="ชื่อแขก/ความสัมพันธ์">
     <label class="lb">วันที่มา (ไม่เกิน 14 วันล่วงหน้า)</label><input id="gs_date" type="date" value="${today()}" min="${today()}">
     <button class="btn" onclick="act('addGuest',{plate:val('gs_plate'),name:val('gs_name'),valid_date:val('gs_date')},'บันทึกแล้ว')">บันทึก</button>
-    ${g.map(x => `<div class="row"><span><b>${esc(x.plate)}</b> • ${esc(x.name)} <small class="mut">(${esc(x.valid_date)})</small></span><button class="btn sec" style="width:auto" onclick="act('deleteGuest',{id:'${x.id}'})">ลบ</button></div>`).join('')}</div>
-  <h4>ประวัติรถเข้า-ออกของบ้านคุณ</h4>${v.history.map(x => visitCard(x, '')).join('') || '<div class="card mut">ยังไม่มี</div>'}
-  <div class="note">เก็บรูปทะเบียนรถตามระยะที่นิติบุคคลกำหนด (ค่าเริ่มต้น 90 วัน) แล้วลบอัตโนมัติ (PDPA)</div>`;
+    ${g.filter(x => x.kind !== 'contractor').map(x => `<div class="row"><span><b>${esc(x.plate)}</b> • ${esc(x.name)} <small class="mut">(${esc(x.valid_date)})</small></span><button class="btn sec" style="width:auto" onclick="act('deleteGuest',{id:'${x.id}'})">ลบ</button></div>`).join('')}</div>
+  ${contractorForm(mx)}${ex.length ? '<h4>ผู้รับเหมาของบ้านคุณ</h4><div class="note">ประกาศเฉพาะในแอป: เห็นได้เฉพาะกรรมการ นิติฯ และบ้านคุณ</div>' + ex.map(x => excCard(x, false)).join('') : ''}
+  <h4>ประวัติรถเข้า-ออกของบ้านคุณ</h4>${v.history.map(x => visitCard(x, '')).join('') || emptyCard()}
+  <div class="note">ถ้าคุณไม่อนุญาต รปภ.จะไม่กักรถ แต่ต้องบันทึกเหตุผล ถ่ายรูปบัตรประชาชนและทะเบียน แล้วระบบแจ้งคุณ กรรมการ และนิติฯ ทันที</div>${privacyNote()}`;
 }
 
 /* ================= ลูกบ้าน: บัญชีบ้าน (หลัก + สำรอง 2) ================= */
@@ -13237,8 +13260,8 @@ async function vHouse() {
 }
 
 function vMore() {
-  const items = [['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจความเห็น'], ['requests', '🪪', 'ขอบัตร/สติกเกอร์'], ['parcels', '📦', 'พัสดุที่ป้อมยาม'], ['house', '👥', 'บัญชีบ้านและแจ้งเตือน'], ['roster', '🏛️', 'รายชื่อกรรมการ']];
-  return `<div class="grid2">${items.map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
+  const items = [['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจความเห็น'], ['requests', '🪪', 'ขอบัตร/สติกเกอร์'], ['parcels', '📦', 'พัสดุที่ป้อมยาม'], ['house', '👥', 'บัญชีบ้านและแจ้งเตือน'], ['roster', '🏛️', 'รายชื่อกรรมการ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'กติกาการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
+  return `<div class="grid2">${items.filter(i => tabOk(i[0])).map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 }
 
 /* ================= ลงทะเบียน (บัญชีหลัก / สำรอง) ================= */
@@ -13272,8 +13295,123 @@ async function doRegister() {
 /* ================= กรรมการ: กล่องรออนุมัติรวม ================= */
 let INBOX = null, IBF = 'all';
 const KIND_TH = { expense: 'เบิกจ่าย', adjust: 'ปรับยอด', credit: 'คืน/โอนเครดิต', minutes: 'รายงานประชุม', change: 'ตั้งค่า/ทะเบียน/บัญชี' };
-async function vInbox() { INBOX = await api('inbox'); return inboxHtml(); }
-const inboxRender = () => { $('#app').innerHTML = inboxHtml(); };
+let RELCARD = '';
+/* ================= ผู้รับเหมา: ลงทะเบียนล่วงหน้า / คำขอยกเว้น ================= */
+const EXC_ST = { pending: ['pending', 'รอกรรมการ 1 ท่านอนุมัติ'], approved: ['paid', 'อนุมัติแล้ว'], rejected: ['late', 'ไม่อนุมัติ'], expired: ['', 'หมดอายุ'] };
+const excBadge = x => x.exc_status ? `<span class="badge ${EXC_ST[x.exc_status][0]}">${EXC_ST[x.exc_status][1]}</span>` : '<span class="badge paid">ลงทะเบียนแล้ว</span>';
+function excCard(x, decide) {
+  return `<div class="card ${x.exc_status === 'pending' ? 'alert' : ''}"><div class="row"><b>🛠 ${esc(x.company)}${decide ? ' • บ้าน ' + esc(x.house_no) : ''}</b>${excBadge(x)}</div>
+    <small class="mut">วัน${esc(x.day_th)}ที่ ${esc(x.valid_date)}${x.win_from ? ' • ' + esc(x.win_from) + '–' + esc(x.win_to) : ''} • ${esc(x.workers)} คน • ${esc(x.work_type)} • ทะเบียน ${x.plates.map(esc).join(', ')}</small>
+    ${x.exc_reason ? `<div class="mut">เหตุผลที่ขอยกเว้น: ${esc(x.exc_reason)}</div>` : ''}
+    ${x.exc_status === 'approved' ? `<div class="mut">✔ อนุมัติโดยกรรมการ ${esc(x.exc_by)} (ผู้ประสานงานต่อในทีมกรรมการ) • ${esc(dt(x.exc_at))}</div>` : ''}${x.exc_status === 'rejected' ? `<div class="mut">เหตุผล: ${esc(x.exc_note)} • ${esc(x.exc_by)}</div>` : ''}
+    ${decide && x.exc_status === 'pending' ? (x.can_decide ? `<div class="row" style="gap:8px"><button class="btn" onclick="act('decideException',{id:'${x.id}',ok:true},'อนุมัติแล้ว ระบบแจ้งผู้ขอและกรรมการ/นิติฯ')">อนุมัติ (1 ท่านจบ)</button><button class="btn sec" onclick="rejExc('${x.id}')">ไม่อนุมัติ</button></div>` : `<small class="mut">${esc(x.why || 'เฉพาะกรรมการลงมติได้')}</small>`) : ''}</div>`;
+}
+function rejExc(id) { const n = prompt('เหตุผลที่ไม่อนุมัติ (อย่างน้อย 5 ตัวอักษร)'); if (n) act('decideException', { id, ok: false, note: n }, 'บันทึกแล้ว'); }
+let EXCRULE = { block_days: ['อาทิตย์'], hours: '08:00–17:00' };
+function excWarn() {
+  const d = val('ct_date'), el = document.getElementById('ct_warn'); if (!el) return;
+  const day = d ? ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'][new Date(d + 'T00:00:00').getDay()] : '';
+  const hrs = EXCRULE.hours.split('–'), f = val('ct_from'), t = val('ct_to'), bad = (day && EXCRULE.block_days.includes(day)) || (f && f < hrs[0]) || (t && t > hrs[1]);
+  el.style.display = bad ? 'block' : 'none'; el.textContent = bad ? `วัน${day}${(f && f < hrs[0]) || (t && t > hrs[1]) ? '/นอกเวลา' : ''} ต้องขอยกเว้น: ระบุเหตุผลด้านล่าง กรรมการ 1 ท่านอนุมัติ ผลประกาศเฉพาะในแอป (กรรมการ นิติฯ และบ้านคุณ)` : '';
+  window.CT_BAD = bad;
+}
+function contractorForm(mx) {
+  EXCRULE = mx.contractor;
+  return `<div class="card"><b>🛠 ลงทะเบียนผู้รับเหมาล่วงหน้า</b>
+    <div class="mut">ทำงานได้ ${esc(mx.contractor.hours)} · ไม่อนุญาตวัน${mx.contractor.block_days.map(esc).join(', ') || 'ใด'} · วัน-เวลาปกติผ่านทันที · วัน/เวลาที่ห้าม ขอยกเว้นได้ กรรมการ 1 ท่านอนุมัติ</div>
+    <input id="ct_company" placeholder="ชื่อบริษัท / หัวหน้าช่าง"><input id="ct_workers" inputmode="numeric" placeholder="จำนวนคนงาน" value="2">
+    <select id="ct_type">${['ซ่อมแซม', 'ต่อเติม/ปรับปรุง', 'ขนย้ายของ', 'อื่นๆ'].map(x => `<option>${x}</option>`).join('')}</select>
+    <input id="ct_plates" placeholder="ทะเบียนรถ (คั่นด้วย , ได้สูงสุด 3 คัน)">
+    <label class="lb">วันที่ทำงาน (ไม่เกิน 14 วันล่วงหน้า)</label><input id="ct_date" type="date" value="${today()}" min="${today()}" onchange="excWarn()">
+    <div class="row" style="gap:8px"><input id="ct_from" type="time" value="09:00" onchange="excWarn()"><input id="ct_to" type="time" value="16:00" onchange="excWarn()"></div>
+    <div id="ct_warn" class="note warn" style="display:none"></div>
+    <textarea id="ct_reason" rows="2" placeholder="เหตุผลที่ต้องทำวันนี้/เวลานี้ (จำเป็นถ้าเป็นวันหรือเวลาที่ห้าม)"></textarea>
+    <button class="btn" onclick="addContractorUI()">ส่งลงทะเบียน</button></div>`;
+}
+async function addContractorUI() {
+  if (BUSY) return; BUSY = true;
+  try { const r = await callX('addContractor', { company: val('ct_company'), workers: val('ct_workers'), work_type: val('ct_type'), plates: val('ct_plates'), valid_date: val('ct_date'), win_from: val('ct_from'), win_to: val('ct_to'), reason: val('ct_reason') });
+    alert(r.status === 'pending' ? 'ส่งคำขอยกเว้นแล้ว รอกรรมการ 1 ท่านอนุมัติ ผลจะแจ้งทาง LINE และแสดงในแอป' : 'ลงทะเบียนผู้รับเหมาแล้ว ผ่านได้ในวันที่กำหนด'); show('gate'); }
+  catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
+}
+async function exceptionsCard(readonly) {
+  if (!featOn('vehicles')) return '';
+  let l = []; try { l = await api('listExceptions'); } catch (e) { return ''; }
+  const today_ = today(), list = l.filter(x => x.exc_status || x.valid_date >= today_).filter(x => x.exc_status === 'pending' || x.valid_date >= today_);
+  if (!list.length) return '';
+  const pend = list.filter(x => x.exc_status === 'pending').length;
+  return `<h4>🛠 ผู้รับเหมาล่วงหน้า / คำขอยกเว้น ${pend ? '(รออนุมัติ ' + pend + ')' : ''}</h4><div class="note">ประกาศเฉพาะในแอป: กรรมการ นิติฯ และบ้านที่ลงทะเบียน (ไม่ส่งถึงทุกบ้าน)</div>${list.map(x => excCard(x, !readonly)).join('')}`;
+}
+/* ================= กติกาการอนุมัติ (ตารางหลักเกณฑ์) ================= */
+async function vMatrix() {
+  const m = await api('approvalMatrix'), LV = { single: ['paid', 'กรรมการ 1 ท่าน'], multi: ['pending', n => 'กรรมการ ' + n + ' ท่าน'], none: ['', 'ไม่ต้องอนุมัติ'] };
+  return `<div class="card"><b>📋 กติกาการอนุมัติ</b><div class="mut">${esc(m.rule)}</div></div>
+  <div class="card"><table><tr><th>รายการ</th><th>ระดับ</th></tr>${m.rows.map(r => `<tr><td><b>${esc(r.label)}</b><br><small class="mut">${esc(r.example)}</small></td><td><span class="badge ${LV[r.level][0]}">${r.level === 'multi' ? LV.multi[1](r.need) : LV[r.level][1]}</span></td></tr>`).join('')}</table></div>
+  <div class="card"><b>ผู้รับเหมา</b><div class="mut">เวลาทำงาน ${esc(m.contractor.hours)} · ไม่อนุญาตวัน${m.contractor.block_days.map(esc).join(', ') || 'ใด'}<br>เรื่องทั่วไป (กรรมการ 1 ท่าน): เมื่อกรรมการท่านใดท่านหนึ่งกดอนุมัติ ถือว่าจบ ผู้ขอและกรรมการบ้านเดียวกัน อนุมัติไม่ได้ · ผลประกาศเฉพาะในแอป และแจ้ง LINE ผู้ขอกับกรรมการ/นิติฯ</div></div>
+  <div class="note">เลขมติ/ข้อบังคับที่มอบอำนาจ: <b>${esc(m.delegation || 'ยังไม่ได้บันทึก (นิติฯ ตั้งที่ ตั้งค่า → ค่าทั่วไป)')}</b></div>`;
+}
+/* ================= คลังความรู้ / ผู้ติดต่อ ================= */
+const KB_CATS = ['ป้อม รปภ.', 'บริษัท รปภ.', 'สำนักงานที่ดิน', 'อบต./เก็บขยะ', 'แม่บ้าน', 'ธนาคาร', 'บริษัทไม้กั้น', 'รถกระเช้า/เปลี่ยนหลอดไฟ', 'เบอร์ฉุกเฉิน/ท้องถิ่น', 'อื่นๆ'];
+let KBL = [], KBQ = '', KBC = '';
+const kbStaff = () => MODE === 'committee' || MODE === 'office' || MODE === 'sys';
+async function vKb() { KBL = await api('listContacts'); KBQ = ''; KBC = ''; return kbHtml(); }
+const telOf = p => String(p || '').split(',').map(x => x.trim()).filter(Boolean).map(x => /\[__\]/.test(x) ? '<span class="mut">[ยังไม่ได้กรอก]</span>' : `<a href="tel:${esc(x.replace(/[^\d+*#]/g, ''))}">📞 ${esc(x)}</a>`).join(' · ');
+function kbCard(c) {
+  const todo = [c.phone, c.org, c.address, c.hours, c.person, c.details].some(x => /\[__\]/.test(x || ''));
+  return `<div class="card ${c.active === false ? 'mut' : ''}"><div class="row"><b>${esc(c.title)}</b>${c.visibility === 'staff' ? '<span class="badge pending">เห็นเฉพาะกรรมการ/นิติฯ</span>' : ''}${c.active === false ? '<span class="badge">ซ่อน</span>' : ''}</div>
+    <small class="mut">${esc(c.category)}${c.org ? ' • ' + esc(c.org) : ''}${c.person ? ' • ' + esc(c.person) : ''}</small>
+    ${c.phone || c.phone2 ? `<div>${telOf(c.phone)}${c.phone2 ? ' · ' + telOf(c.phone2) : ''}</div>` : ''}
+    ${c.hours ? `<div class="mut">🕘 ${esc(c.hours)}</div>` : ''}${c.address ? `<div class="mut">📍 ${esc(c.address)}${c.map_url ? ` <a href="${esc(c.map_url)}" target="_blank" rel="noopener">แผนที่</a>` : ''}</div>` : (c.map_url ? `<div><a href="${esc(c.map_url)}" target="_blank" rel="noopener">🗺 แผนที่</a></div>` : '')}
+    ${c.details ? `<div class="mut" style="white-space:pre-line">${esc(c.details)}</div>` : ''}${c.file_url ? `<div><a href="${esc(c.file_url)}" target="_blank" rel="noopener">📄 แบบฟอร์ม/ไฟล์</a></div>` : ''}
+    ${kbStaff() ? `<div class="row" style="gap:8px">${todo ? '<small class="mut">⚠ มีช่องที่ยังไม่ได้กรอก [__]</small>' : '<small class="mut">แก้ไขล่าสุด ' + esc(dt(c.updated_at)) + ' โดย ' + esc(c.updated_by) + '</small>'}<button class="btn sec" style="width:auto" onclick="kbEdit('${esc(c.id)}')">แก้ไข</button></div>` : ''}</div>`;
+}
+function kbHtml() {
+  const cats = [...new Set(KB_CATS.concat(KBL.map(c => c.category)))].filter(c => KBL.some(x => x.category === c));
+  return `<div class="card"><b>📖 คลังความรู้ / ผู้ติดต่อ</b><div class="mut">เบอร์โทรและข้อมูลสำคัญของหมู่บ้าน${kbStaff() ? ' · กรรมการ/นิติฯ เพิ่มและแก้ได้ทันที ไม่ต้องรออนุมัติ' : ''}</div>
+    <input id="kb_q" placeholder="ค้นหา เช่น ที่ดิน ขยะ ไม้กั้น" oninput="KBQ=this.value;kbRender()">
+    <div class="chips2 wrap" id="kb_c"><button class="${KBC === '' ? 'on' : ''}" onclick="KBC='';kbRender()">ทั้งหมด</button>${cats.map(c => `<button class="${KBC === c ? 'on' : ''}" onclick="KBC=this.dataset.c;kbRender()" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    ${kbStaff() ? '<button class="btn" onclick="kbEdit(\'\')">＋ เพิ่มรายการ</button>' : ''}</div><div id="kb_list">${kbListHtml()}</div>`;
+}
+function kbListHtml() {
+  const q = KBQ.trim().toLowerCase(), l = KBL.filter(c => (!KBC || c.category === KBC) && (!q || [c.title, c.org, c.person, c.phone, c.address, c.details, c.category].join(' ').toLowerCase().includes(q)));
+  return l.map(kbCard).join('') || emptyCard();
+}
+function kbRender() { const el = document.getElementById('kb_list'); if (el) el.innerHTML = kbListHtml(); document.querySelectorAll('#kb_c button').forEach(b => b.classList.toggle('on', (b.dataset.c || '') === KBC)); }
+function kbEdit(id) {
+  const c = KBL.find(x => x.id === id) || { category: KBC || KB_CATS[0], visibility: 'all', sort: 100, active: true };
+  modal(`<h3>${id ? 'แก้ไขรายการ' : 'เพิ่มรายการ'}</h3>
+    <input id="kb_cat" list="kb_cats" placeholder="หมวด" value="${esc(c.category)}"><datalist id="kb_cats">${KB_CATS.map(x => `<option value="${esc(x)}">`).join('')}</datalist>
+    <input id="kb_title" placeholder="ชื่อรายการ" value="${esc(c.title || '')}"><input id="kb_org" placeholder="หน่วยงาน/บริษัท" value="${esc(c.org || '')}"><input id="kb_person" placeholder="ผู้ติดต่อ" value="${esc(c.person || '')}">
+    <input id="kb_phone" inputmode="tel" placeholder="เบอร์โทร (คั่นหลายเบอร์ด้วย ,)" value="${esc(c.phone || '')}"><input id="kb_phone2" inputmode="tel" placeholder="เบอร์สำรอง" value="${esc(c.phone2 || '')}">
+    <input id="kb_hours" placeholder="เวลาทำการ" value="${esc(c.hours || '')}"><input id="kb_addr" placeholder="ที่อยู่" value="${esc(c.address || '')}"><input id="kb_map" placeholder="ลิงก์แผนที่ (https://)" value="${esc(c.map_url || '')}">
+    <textarea id="kb_det" rows="4" placeholder="รายละเอียด เช่น เอกสารที่ต้องเตรียม ผู้ที่ต้องไปด้วยตนเอง">${esc(c.details || '')}</textarea><input id="kb_file" placeholder="ลิงก์แบบฟอร์ม/ไฟล์ (https://)" value="${esc(c.file_url || '')}">
+    <label class="lb">ใครเห็น</label><select id="kb_vis"><option value="all" ${c.visibility !== 'staff' ? 'selected' : ''}>ลูกบ้านทุกคนเห็น</option><option value="staff" ${c.visibility === 'staff' ? 'selected' : ''}>เฉพาะกรรมการ/นิติฯ</option></select>
+    <label class="chk"><input type="checkbox" id="kb_act" ${c.active !== false ? 'checked' : ''}> แสดงในคลังความรู้</label>
+    <button class="btn" onclick="kbSave('${esc(id)}')">บันทึก</button>${id ? `<button class="btn sec" onclick="kbDel('${esc(id)}')">ลบรายการนี้</button>` : ''}<button class="btn sec" onclick="closeModal()">ยกเลิก</button>`);
+}
+async function kbSave(id) {
+  if (BUSY) return; BUSY = true;
+  try { await callX('saveContact', { contact_id: id, category: val('kb_cat'), title: val('kb_title'), org: val('kb_org'), person: val('kb_person'), phone: val('kb_phone'), phone2: val('kb_phone2'), hours: val('kb_hours'), address: val('kb_addr'), map_url: val('kb_map'), details: val('kb_det'), file_url: val('kb_file'), visibility: val('kb_vis'), active: document.getElementById('kb_act').checked, sort: (KBL.find(x => x.id === id) || {}).sort || 100 });
+    closeModal(); alert('บันทึกแล้ว'); show('kb'); }
+  catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
+}
+function kbDel(id) { if (!confirm('ลบรายการนี้ถาวร?')) return; closeModal(); act('removeContact', { contact_id: id }, 'ลบแล้ว'); }
+const toolTiles = () => `<div class="grid2">${[['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'กติกาการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']].map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
+
+
+async function releasesCard() {
+  if (!featOn('vehicles')) return '';
+  let l = []; try { l = await api('listReleases'); } catch (e) { return ''; }
+  if (!l.length) return '';
+  const open = l.filter(x => !x.ack_by).length;
+  return `<div class="card ${open ? 'alert' : ''}"><b>🚧 รปภ.ปล่อยรถโดยลูกบ้านไม่อนุมัติ/ไม่ตอบ (30 วันล่าสุด${open ? ' • รอรับทราบ ' + open : ''})</b>
+    ${l.slice(0, 10).map(x => `<div class="item" style="display:block"><b>${esc(x.plate)}</b> → บ้าน ${esc(x.house_no)} • ${dt(x.released_at)} • โดย ${esc(x.guard)}
+      <div class="mut">เหตุผล: ${esc(x.reason)}</div><div>${privLink(x.id_photo_file, '🪪 รูปบัตรประชาชน')} ${privLink(x.exit_photo_file, '🖼 รูปทะเบียน')}</div>
+      ${x.ack_by ? `<small class="mut">✔ รับทราบโดย ${esc(x.ack_by)}</small>` : `<button class="btn sec" onclick="act('ackRelease',{id:'${x.id}'},'รับทราบแล้ว')">รับทราบ</button>`}</div>`).join('')}
+    <small class="mut">รูปบัตรประชาชนเก็บ ${(SET.retention || {}).id || 30} วัน แล้วลบถาวร · ใช้เพื่อตรวจสอบเหตุการณ์เท่านั้น</small></div>`;
+}
+async function vInbox() { INBOX = await api('inbox'); RELCARD = (await exceptionsCard(false)) + (await releasesCard()); return RELCARD + inboxHtml(); }
+const inboxRender = () => { $('#app').innerHTML = RELCARD + inboxHtml(); };
 function inboxHtml() {
   const f = IBF, all = INBOX.items, list = all.filter(i => f === 'all' || (f === 'money' ? ['expense', 'adjust', 'credit'].includes(i.kind) : f === 'policy' ? i.kind === 'change' : i.kind === 'minutes'));
   const chip = (k, t) => `<button class="${f === k ? 'on' : ''}" onclick="IBF='${k}';inboxRender()">${t}</button>`;
@@ -13328,7 +13466,7 @@ async function vReports() {
 
 /* ================= กรรมการ: ตั้งค่า + QR รับเงิน ================= */
 let SV = null, PKEY = null, QRP = null;
-async function vPolicy() { SV = await api('settingsView'); return policyHtml(); }
+async function vPolicy() { SV = await api('settingsView'); return policyHtml() + toolTiles(); }
 const policyRender = () => { $('#app').innerHTML = policyHtml(); };
 function showVal(r) { return r.kind === 'bool' ? (r.value === 'TRUE' ? 'เปิด' : 'ปิด') : r.kind === 'oneOf' ? ({ live: 'ตัวเลขสด', monthly: 'สรุปรายเดือนที่รับรอง' }[r.value] || r.value) : esc(r.value || '-'); }
 function policyHtml() {
@@ -13393,13 +13531,13 @@ function reqRoster() { act('requestChange', { kind: 'roster', action: val('rc_ac
 
 /* ================= นิติฯ: งาน ================= */
 async function vTasks() {
-  const [d, cut] = await Promise.all([api('listTasks'), arrearsCard('บ้านค้างชำระเกินเกณฑ์ — ระงับบัตร')]);
+  const [d, cut, rel0, exc] = await Promise.all([api('listTasks'), arrearsCard('บ้านค้างชำระเกินเกณฑ์ — ระงับบัตร'), releasesCard(), exceptionsCard(true)]); const rel = exc + rel0;
   const card = t => `<div class="card ${t.critical ? 'crit' : ''}"><b>${esc(t.title)}</b><div class="mut" style="white-space:pre-line">${esc(t.detail || '')}</div><small class="mut">อนุมัติโดย ${t.approvals.map(a => esc(a.name)).join(', ')} (${t.approvals.length} ท่าน)</small>
     <div class="row" style="gap:8px">${t.kind === 'change' ? `<button class="btn" onclick="if(confirm('ดำเนินการตามมติ?'))act('applyChange',{change_id:'${t.id}'},'ดำเนินการแล้ว')">ดำเนินการ</button>` :
       t.kind === 'expense' ? `<button class="btn" onclick="show('expenses')">ไปหน้ารายจ่ายเพื่อจ่ายเงิน</button>` :
       `<input type="file" id="rf_${t.id}" accept="image/*"><button class="btn" onclick="doRefund('${t.id}')">บันทึกโอนคืนแล้ว</button>`}
       <button class="btn sec" onclick="showEv('${t.kind === 'refund' ? 'credit' : t.kind}','${t.id}')">📄 หลักฐาน</button></div></div>`;
-  return cut + `<div class="card hero"><small>งานที่ได้รับมอบจากมติกรรมการ</small><h1>${d.tasks.length} งาน</h1><div class="mut">ดำเนินการได้เมื่ออนุมัติครบแล้วเท่านั้น</div></div>
+  return rel + cut + `<div class="card hero"><small>งานที่ได้รับมอบจากมติกรรมการ</small><h1>${d.tasks.length} งาน</h1><div class="mut">ดำเนินการได้เมื่ออนุมัติครบแล้วเท่านั้น</div></div>
   ${d.tasks.map(card).join('') || '<div class="card mut">ไม่มีงานค้าง</div>'}
   <h4>ดำเนินการแล้ว (ล่าสุด)</h4>${d.done.map(t => `<div class="card"><b>${esc(t.title)}</b><div class="mut">✔ ${esc(t.done_by)} • ${esc(dt(t.done_at))}${t.note ? '<br>' + esc(t.note) : ''}</div></div>`).join('') || '<div class="mut">—</div>'}`;
 }
@@ -13447,8 +13585,8 @@ async function vBank() {
 function loadBankFile() { const f = $('#bk_file').files[0]; if (!f) return; const fr = new FileReader(); fr.onload = () => { $('#bk_text').value = fr.result; }; fr.readAsText(f, 'utf-8'); }
 
 function vOmore() {
-  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ']];
-  return `<div class="grid2">${items.map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
+  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'กติกาการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
+  return `<div class="grid2">${items.filter(i => tabOk(i[0])).map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 }
 
 /* ================= นิติฯ: ประกาศ / ผู้ใช้ / ตั้งค่าทั่วไป ================= */
@@ -13558,7 +13696,21 @@ async function vSys() {
     <div class="chips"><span>รอยืนยันผู้ใช้ ${d.pending}</span><span>LINE ${d.line.used}/${d.line.quota} ข้อความ</span></div></div>
   <div class="card"><b>ตรวจความพร้อมการติดตั้ง</b>${d.checks.map(c => `<div class="item"><span>${c.ok ? '✅' : '⚠️'} ${esc(c.label)}${c.fix ? `<br><small class="mut">${esc(c.fix)}</small>` : ''}</span></div>`).join('')}</div>
   <div class="note warn">สิทธิ์ผู้ดูแลระบบข้ามขั้นตอนอนุมัติได้ ทุกการกระทำถูกบันทึกและกรรมการตรวจได้ · ทดสอบหน้าของแต่ละบทบาทได้จากปุ่มโหมดด้านบน · เมื่อติดตั้งเสร็จควรตั้งวันหมดสิทธิ์ (ADMIN_UNTIL) หรือลบออกจาก ADMIN_LINE_IDS</div>
-  <button class="btn" onclick="show('users')">อนุมัติผู้ใช้ / ตั้งสิทธิ์</button>`;
+  <button class="btn" onclick="show('users')">อนุมัติผู้ใช้ / ตั้งสิทธิ์</button><button class="btn sec" onclick="show('features')">🎛️ เปิด/ปิดฟีเจอร์</button>${toolTiles()}`;
+}
+async function vFeatures() {
+  const d = await api('featuresView');
+  return `<div class="card"><b>🎛️ เปิด/ปิดฟีเจอร์</b><div class="mut">เฉพาะผู้ดูแลระบบ ไม่ต้องรออนุมัติ แต่ระบบบันทึกและแจ้งกรรมการทุกครั้ง · ปิดแล้วข้อมูลเดิมไม่หาย เปิดใหม่ได้ทุกเมื่อ</div>
+    ${d.features.map(f => `<label class="item" style="display:flex;justify-content:space-between;gap:10px;align-items:center"><span><b>${esc(f.label)}</b>${f.needs ? `<br><small class="mut">ต้องเปิด ${esc(f.needs_label)} ก่อน${f.on && !f.effective ? ' (ตอนนี้ถูกปิดตาม)' : ''}</small>` : ''}</span><input type="checkbox" id="ft_${f.key}" style="width:auto" ${f.on ? 'checked' : ''}></label>`).join('')}
+    <button class="btn" onclick="saveFeat()">บันทึก</button></div>
+  <div class="card"><b>เปิดอยู่เสมอ (ปิดไม่ได้)</b>${d.core.map(c => `<div class="mut">• ${esc(c)}</div>`).join('')}</div>
+  <div class="note ${d.advanced_drive ? '' : 'warn'}">${d.advanced_drive ? '✅ ลบรูปถาวรทันทีเมื่อครบกำหนด (Drive API เปิดอยู่)' : '⚠️ ยังไม่ได้เปิด Drive API: รูปที่ครบกำหนดจะอยู่ในถังขยะของ Google อีก 30 วัน (วิธีเปิดดูในคู่มือ)'}</div>`;
+}
+async function saveFeat() {
+  const f = {}; ['housekeeper', 'guard', 'parcels', 'committee_list', 'voting', 'vehicles'].forEach(k => { const e = document.getElementById('ft_' + k); if (e) f[k] = e.checked; });
+  if (BUSY) return; BUSY = true;
+  try { await callX('saveFeatures', { features: f }); const r = await api('me'); ME = r.user; SET = r.settings; renderModes(); renderNav(); alert('บันทึกแล้ว ระบบแจ้งกรรมการแล้ว'); show('features'); }
+  catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
 }
 async function vUsers() {
   const us = await api('listUsers'), pend = us.filter(x => x.active !== 'TRUE');
@@ -13584,49 +13736,80 @@ async function vAdminLog() {
 function setUser(id, active) { const sel = document.getElementById('ur_' + id), u = id; act('setUser', { line_user_id: id, role: sel ? sel.value : 'resident', active }, 'บันทึกแล้ว'); }
 
 /* ================= รปภ.: ป้อมยาม ================= */
-let GF = { plate: '', house: '', purpose: 'visit', card: '' };
+let GF = { plate: '', house: '', purpose: 'visit', card: '', note: '' };
 const gateActs = v => {
-  if (['approved', 'prereg', 'delivery', 'override'].includes(v.status)) return `<button class="btn" onclick="act('leaveVisit',{id:'${v.id}'},'บันทึกรถออก คืนบัตรแล้ว')">รถออกแล้ว • คืนบัตร</button>`;
-  if (v.status === 'denied') return `<div class="note warn">ห้ามปล่อยรถ ติดต่อเจ้าของบ้าน</div><button class="btn sec" onclick="overrideV('${v.id}')">โทรยืนยันแล้ว ปล่อยพร้อมเหตุผล</button>`;
-  if (v.status === 'waiting') return `<button class="btn sec" onclick="overrideV('${v.id}')">เจ้าของไม่ตอบ • โทรยืนยันแล้ว ปล่อยพร้อมเหตุผล</button>`;
+  if (['approved', 'prereg', 'delivery', 'service', 'override'].includes(v.status)) return `<button class="btn" onclick="act('leaveVisit',{id:'${v.id}'},'บันทึกรถออกแล้ว')">${v.service ? 'รถออกแล้ว' : 'รถออกแล้ว • คืนบัตร'}</button>`;
+  if (v.status === 'denied') return `<div class="note warn">ลูกบ้านไม่อนุญาต · ไม่มีนโยบายกักรถ: ถ่ายรูปบัตรประชาชน + ทะเบียน + ระบุเหตุผล แล้วปล่อยได้</div><button class="btn sec" onclick="releaseUI('${v.id}')">ปล่อยรถพร้อมเหตุผลและรูปบัตร</button>`;
+  if (v.status === 'waiting') return `<div class="mut">ให้ผู้ขับขี่โทรแจ้งเจ้าของบ้านให้กด "อนุญาต" ในแอป</div><button class="btn sec" onclick="releaseUI('${v.id}')">ลูกบ้านไม่อนุมัติ/ไม่ตอบ • ปล่อยพร้อมเหตุผลและรูปบัตร</button>`;
   return '';
 };
 const glistHtml = g => `<div class="row"><h4 style="margin:0">ในหมู่บ้านตอนนี้ (${g.inside.length})</h4><button class="btn sec" style="width:auto" onclick="refreshGate()">⟳ รีเฟรช</button></div>
-  ${g.inside.map(v => visitCard(v, gateActs(v))).join('') || '<div class="card mut">ไม่มีรถค้างในหมู่บ้าน</div>'}<small class="mut">รีเฟรชอัตโนมัติทุก ${g.refresh_min} นาที (ปรับได้โดยนิติฯ)</small>`;
+  ${g.inside.map(v => visitCard(v, gateActs(v))).join('') || emptyCard('ไม่มีรถค้างในหมู่บ้าน')}<small class="mut">รีเฟรชอัตโนมัติทุก ${g.refresh_min} นาที (ปรับได้โดยนิติฯ) · รถบริการอยู่เกิน ${SET.service_max_min || 60} นาทีจะขึ้นเตือน</small>`;
 async function refreshGate() { try { const g = await api('listInside'); GREF = g.refresh_min; const el = document.getElementById('glist'); if (el) el.innerHTML = glistHtml(g); } catch (e) {} }
 let GREF = 2;
 async function vGuardGate() {
   const [g, cut] = await Promise.all([api('listInside'), arrearsCard('บ้านที่ระงับบัตรเข้า-ออก')]); GREF = g.refresh_min;
+  const svc = PUR_SVC.includes(GF.purpose);
   return cut + `<div class="card"><b>🚧 บันทึกรถ/บุคคลเข้าหมู่บ้าน</b>
-    <label class="lb">ถ่ายรูปทะเบียนรถ (บังคับ ยกเว้นส่งของ)</label><input type="file" id="g_photo" accept="image/*" capture="environment">
-    <input id="g_plate" placeholder="ทะเบียนรถ" value="${esc(GF.plate)}" oninput="GF.plate=this.value"><input id="g_house" inputmode="numeric" placeholder="บ้านเลขที่ที่จะเข้าพบ" value="${esc(GF.house)}" oninput="GF.house=this.value">
-    <div class="chips2" id="g_purp">${Object.keys(PUR).map(k => `<button data-k="${k}" class="${GF.purpose === k ? 'on' : ''}" onclick="setPurpose('${k}')">${PUR[k]}</button>`).join('')}</div>
-    <input id="g_card" placeholder="เลขบัตรที่แลก" value="${esc(GF.card)}" oninput="GF.card=this.value"><button class="btn" onclick="addVisitUI()">บันทึกเข้า</button>
-    <div class="mut">• เยี่ยม/ช่าง: แจ้งเจ้าของบ้านให้อนุญาตรถออก • <b>ส่งของ/ไปรษณีย์</b>: เลือกประเภทนี้ ไม่ต้องรออนุมัติ ไม่ใช้โควตา LINE • แขกที่ลงทะเบียนล่วงหน้าผ่านได้ทันที</div></div>
-  <div id="glist">${glistHtml(g)}</div>`;
+    <label class="lb">ถ่ายรูปทะเบียนรถ (บังคับ)</label><input type="file" id="g_photo" accept="image/*" capture="environment">
+    <input id="g_plate" placeholder="ทะเบียนรถ" value="${esc(GF.plate)}" oninput="GF.plate=this.value">
+    <label class="lb">ประเภท</label><div class="chips2 wrap" id="g_purp">${[...PUR_VISIT, ...PUR_SVC].map(k => `<button data-k="${k}" class="${GF.purpose === k ? 'on' : ''}" onclick="setPurpose('${k}')">${k === PUR_SVC[0] ? '│ ' : ''}${PUR[k]}</button>`).join('')}</div>
+    <input id="g_house" inputmode="numeric" placeholder="${svc ? 'บ้านเลขที่ที่ไปรับ-ส่ง (ไม่บังคับ)' : 'บ้านเลขที่ที่จะเข้าพบ'}" value="${esc(GF.house)}" oninput="GF.house=this.value">
+    <input id="g_note" style="display:${svc ? 'block' : 'none'}" placeholder="ข้อความ เช่น รับลูกบ้านซอย 3 / ส่งพัสดุ" value="${esc(GF.note)}" oninput="GF.note=this.value">
+    <input id="g_card" style="display:${svc ? 'none' : 'block'}" placeholder="เลขบัตรที่แลก" value="${esc(GF.card)}" oninput="GF.card=this.value"><button class="btn" onclick="addVisitUI()">บันทึกเข้า</button>
+    <div class="mut" id="g_hint">${svc ? '• <b>รถบริการ</b> (แท็กซี่ รถรับจ้าง ขนส่ง ไปรษณีย์): เข้า-ออกได้ทันที ไม่ต้องรออนุมัติ ไม่ส่ง LINE · ระบบบันทึกเวลาเข้า-ออก' : '• เยี่ยม/ช่าง: แจ้งเจ้าของบ้านให้อนุญาตรถออก · ถ้าลูกบ้านไม่อนุมัติหรือไม่ตอบ ปล่อยได้โดยถ่ายรูปบัตรประชาชน + ทะเบียน + ระบุเหตุผล (ไม่มีนโยบายกักรถ) ระบบแจ้งลูกบ้าน กรรมการ นิติฯ'}</div></div>
+  <div id="glist">${glistHtml(g)}</div>${privacyNote()}`;
 }
-function setPurpose(k) { GF.purpose = k; document.querySelectorAll('#g_purp button').forEach(b => b.classList.toggle('on', b.dataset.k === k)); }
+function setPurpose(k) {
+  GF.purpose = k; document.querySelectorAll('#g_purp button').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+  const svc = PUR_SVC.includes(k), h = document.getElementById('g_house'), n = document.getElementById('g_note'), c = document.getElementById('g_card');
+  if (h) h.placeholder = svc ? 'บ้านเลขที่ที่ไปรับ-ส่ง (ไม่บังคับ)' : 'บ้านเลขที่ที่จะเข้าพบ'; if (n) n.style.display = svc ? 'block' : 'none'; if (c) c.style.display = svc ? 'none' : 'block';
+}
 async function addVisitUI() {
   const f = await fileOf('g_photo');
   if (BUSY) return; BUSY = true;
-  try { const r = await callX('addVisit', { plate: GF.plate, house_no: GF.house, purpose: GF.purpose, card_no: GF.card, ...(f ? { photo: f.file, mime: f.mime } : {}) });
-    GF = { plate: '', house: '', purpose: 'visit', card: '' }; alert(r.status === 'prereg' ? 'แขกลงทะเบียนล่วงหน้า ผ่านได้เลย (ไม่ส่ง LINE)' : r.status === 'delivery' ? 'บันทึกการส่งของแล้ว' : 'บันทึกแล้ว แจ้งเจ้าของบ้านให้อนุญาตรถออก'); show('ggate');
+  try { const r = await callX('addVisit', { plate: GF.plate, house_no: GF.house, purpose: GF.purpose, card_no: GF.card, note: GF.note, ...(f ? { photo: f.file, mime: f.mime } : {}) });
+    GF = { plate: '', house: '', purpose: 'visit', card: '', note: '' };
+    alert(r.status === 'prereg' ? 'แขกลงทะเบียนล่วงหน้า ผ่านได้เลย (ไม่ส่ง LINE)' : r.status === 'service' ? 'บันทึกรถบริการแล้ว อนุญาตทันที' : 'บันทึกแล้ว แจ้งเจ้าของบ้านให้กดอนุญาตรถออก'); show('ggate');
   } catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
 }
-function overrideV(id) { const r = prompt('เหตุผลที่ปล่อยรถโดยไม่มีการอนุญาตในแอป (เช่น โทรคุยกับเจ้าของบ้านแล้ว)'); if (r) act('overrideVisit', { id, reason: r }, 'บันทึกแล้ว แจ้งเจ้าของบ้านและกรรมการ'); }
+// ปล่อยรถเมื่อลูกบ้านไม่อนุมัติ/ไม่ตอบ: เหตุผลสำเร็จรูป + รูปบัตรประชาชน + รูปทะเบียน
+let RL = { id: '', reason: '' };
+function releaseUI(id) {
+  RL = { id, reason: '' }; const rs = (SET.exit_reasons && SET.exit_reasons.length) ? SET.exit_reasons : ['อื่นๆ'];
+  modal(`<h3>ปล่อยรถโดยลูกบ้านไม่อนุมัติ/ไม่ตอบ</h3>
+    <div class="note warn">ไม่มีนโยบายกักรถ แต่ต้องมีหลักฐาน: เหตุผล + รูปบัตรประชาชนผู้ขับขี่ + รูปทะเบียน ระบบแจ้งลูกบ้าน กรรมการ และนิติฯ ทันที · รูปบัตรประชาชนเก็บ ${(SET.retention || {}).id || 30} วัน แล้วลบถาวร เห็นได้เฉพาะกรรมการ/นิติฯ</div>
+    <label class="lb">เหตุผล (เลือก 1 ข้อ)</label><div class="chips2 wrap" id="rl_r">${rs.map((r, i) => `<button data-i="${i}" onclick="pickReason(${i})">${esc(r)}</button>`).join('')}</div>
+    <input id="rl_d" placeholder="รายละเอียด (อย่างน้อย 5 ตัวอักษร ถ้าเลือก อื่นๆ)" style="font-size:14px">
+    <label class="lb">📷 รูปบัตรประชาชนผู้ขับขี่ (บังคับ)</label><input type="file" id="rl_id" accept="image/*" capture="environment">
+    <label class="lb">📷 รูปทะเบียนรถ (บังคับ)</label><input type="file" id="rl_pl" accept="image/*" capture="environment">
+    <button class="btn" onclick="doRelease()">บันทึกและปล่อยรถ</button><button class="btn sec" onclick="closeModal()">ยกเลิก</button>`);
+}
+function pickReason(i) { const rs = SET.exit_reasons || []; RL.reason = rs[i] || ''; document.querySelectorAll('#rl_r button').forEach(b => b.classList.toggle('on', +b.dataset.i === i)); }
+async function doRelease() {
+  if (!RL.reason) return alert('กรุณาเลือกเหตุผล');
+  const a = await fileOf('rl_id'), b = await fileOf('rl_pl');
+  if (!a) return alert('ต้องถ่ายรูปบัตรประชาชนของผู้ขับขี่'); if (!b) return alert('ต้องถ่ายรูปทะเบียนรถตอนปล่อยออก');
+  if (BUSY) return; BUSY = true;
+  try { await callX('overrideVisit', { id: RL.id, reason: RL.reason, detail: val('rl_d'), id_photo: a.file, id_mime: a.mime, photo: b.file, mime: b.mime }); closeModal(); alert('บันทึกแล้ว แจ้งลูกบ้าน กรรมการ และนิติฯ แล้ว'); show('ggate'); }
+  catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
+}
 async function vGuests() {
   const g = await api('listGuests');
-  return `<div class="card"><b>แขกที่ลูกบ้านลงทะเบียนล่วงหน้า (วันนี้)</b>${g.map(x => `<div class="row"><span><b>${esc(x.plate)}</b> → บ้าน ${esc(x.house_no)}<div class="mut">${esc(x.name)}</div></span><span class="badge paid">ผ่านได้ทันที</span></div>`).join('') || '<div class="mut">ไม่มี</div>'}</div>
-  <div class="note">ถ้าทะเบียนและบ้านตรงกับรายการนี้ ระบบจะผ่านอัตโนมัติ ไม่ต้องรอลูกบ้านอนุมัติ และไม่ใช้โควตาข้อความ LINE</div>`;
+  const one = x => x.kind === 'contractor'
+    ? `<div class="row"><span><b>🛠 ${esc(x.company)}</b> → บ้าน ${esc(x.house_no)}<div class="mut">${esc(x.workers)} คน • ${esc(x.work_type)}${x.win_from ? ' • ' + esc(x.win_from) + '–' + esc(x.win_to) : ''}<br>ทะเบียน ${x.plates.map(esc).join(', ')}</div></span><span class="badge ${x.exception ? 'late' : 'paid'}">${x.exception ? 'อนุมัติพิเศษ โดยกรรมการ ' + esc(x.exc_by) : 'ผ่านได้'}</span></div>`
+    : `<div class="row"><span><b>${esc(x.plate)}</b> → บ้าน ${esc(x.house_no)}<div class="mut">${esc(x.name)}</div></span><span class="badge paid">ผ่านได้</span></div>`;
+  return `<div class="card"><b>แขกและผู้รับเหมาที่ลูกบ้านลงทะเบียนล่วงหน้า (วันนี้)</b>${g.map(one).join('') || emptyCard()}</div>
+  <div class="note">ถ้าทะเบียนและบ้านตรงกับรายการนี้ ระบบจะผ่านอัตโนมัติ ไม่ต้องรอลูกบ้านอนุมัติ · <b>ผู้รับเหมาที่ไม่อยู่ในรายการ</b> ในวัน/เวลาที่ห้าม (เช่น วันอาทิตย์) เข้าไม่ได้ ต้องให้ลูกบ้านขอยกเว้นและกรรมการอนุมัติก่อน</div>`;
 }
 
 
-const PRESETS = ['#06c755', '#1a73e8', '#00897b', '#7b1fa2', '#e65100', '#c2185b', '#37474f', '#b71c1c'];
+const PRESETS = ['#e03f8b', '#1a73e8', '#00897b', '#7b1fa2', '#e65100', '#c2185b', '#37474f', '#b71c1c'];
 let BRC = null;
 function shade(hex, k) { const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, f = k < 0 ? 0 : 255, t = Math.abs(k), m = v => Math.round((f - v) * t + v); return '#' + [m(r), m(g), m(b)].map(v => v.toString(16).padStart(2, '0')).join(''); }
 const lum = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
 function applyBrand() {   // สี โลโก้ ชื่อไทย/อังกฤษ จากการตั้งค่าของนิติบุคคล
-  const p = /^#[0-9a-fA-F]{6}$/.test(SET.theme_primary || '') ? SET.theme_primary : '#06c755', st = document.documentElement.style;
+  const p = /^#[0-9a-fA-F]{6}$/.test(SET.theme_primary || '') ? SET.theme_primary : '#e03f8b', st = document.documentElement.style;
   st.setProperty('--pri', p); st.setProperty('--pri2', shade(p, -0.22)); st.setProperty('--hero1', shade(p, -0.65)); st.setProperty('--hero2', shade(p, -0.25));
   st.setProperty('--on-pri', lum(p) > 0.65 ? '#111' : '#fff');
   const tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.setAttribute('content', p);
@@ -13653,9 +13836,79 @@ async function saveBrand() {
     const r = await api('me'); SET = r.settings; applyBrand(); alert('บันทึกรูปลักษณ์แล้ว'); show(CUR);
   } catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
 }
+/* ================= ช่วยเหลือ (Help) ประจำหน้า + ศูนย์ช่วยเหลือ ================= */
+const HELP = {
+  home: { a: 'res', t: 'หน้าแรก', w: 'สรุปสถานะบ้านของคุณ: ยอดค้างชำระ เครดิต และเรื่องที่ต้องทำ', s: ['ดูยอดค้างจ่ายที่การ์ดสีเข้ม แล้วกด "ไปชำระเงิน"', 'ถ้ามีรถรอคุณอนุญาตให้ออก การ์ดสีเหลืองจะขึ้น แตะเพื่ออนุมัติ', 'ป้ายสีแดงแจ้งระงับบัตรเข้า-ออก แปลว่าบ้านค้างชำระเกินเกณฑ์ ต้องชำระเพื่อเปิดบัตร', 'ดูความคืบหน้าการชำระของทั้งหมู่บ้านและรายรับ-รายจ่าย 6 เดือน'], k: [['เครดิต', 'เงินที่โอนเกินหรือจ่ายล่วงหน้า ระบบหักบิลถัดไปให้'], ['ตัดบัตร', 'ไม้กั้นไม่เปิดอัตโนมัติ ต้องลงจากรถมากดปุ่มที่ห้อง รปภ.']] },
+  pay: { a: 'res', t: 'ชำระเงิน', w: 'เลือกเดือนที่จะจ่าย สร้างใบแจ้งชำระ และแจ้งโอนเงิน', s: ['เลือกรายการ (เดือนค้าง หรือแพ็กเกจ 6 เดือน/รายปีช่วงที่เปิด) แล้วกดสร้างใบแจ้งชำระ', 'สแกน QR พร้อมเพย์ในแอปธนาคาร (ยอดล็อกให้) หรือโอนตามเลขบัญชีที่แสดง', 'แนบสลิป แล้วรอนิติฯ ตรวจ ระบบแจ้งผลและใบเสร็จทาง LINE', 'โอนเกิน/โอนซ้ำ ระบบเก็บเป็นเครดิตหักบิลถัดไป ไม่โอนคืนอัตโนมัติ'], k: [['ส่วนลด', 'คิดเป็น % จากราคาเต็มของบ้านคุณ ไม่ลดซ้อนกัน'], ['แพ็กเกจ', 'จ่ายครั้งเดียวหลายเดือน ต้องจ่ายให้ทันกำหนดจึงได้ส่วนลด']] },
+  gate: { a: 'res', t: 'รถเข้า-ออก', w: 'อนุญาตรถของผู้มาเยี่ยม ลงทะเบียนแขกและผู้รับเหมาล่วงหน้า', s: ['มีรถมาหาบ้านคุณ จะได้ LINE กด "อนุญาตให้ออก" หรือ "ไม่อนุญาต"', 'ถ้าไม่อนุญาตหรือไม่ตอบ รปภ.ไม่กักรถ แต่ต้องบันทึกเหตุผล+รูปบัตร+ทะเบียน และระบบแจ้งคุณ กรรมการ นิติฯ', 'แขกล่วงหน้า: กรอกทะเบียน ชื่อ วันที่มา (ไม่เกิน 14 วัน) ผ่านได้ทันที', 'ผู้รับเหมา: กรอกบริษัท จำนวนคน ทะเบียน วัน-เวลา · วันอาทิตย์/นอกเวลาต้องขอยกเว้น กรรมการ 1 ท่านอนุมัติ'], k: [['รถบริการ', 'แท็กซี่ แกร็บ ขนส่ง ไปรษณีย์ เข้า-ออกได้ทันที ไม่ต้องอนุญาต'], ['ขอยกเว้น', 'ขอให้ผู้รับเหมาทำงานในวันหรือเวลาที่ห้าม ต้องระบุเหตุผล']] },
+  tickets: { a: 'res', t: 'แจ้งซ่อม / ร้องเรียน / ขอดูกล้อง', w: 'แจ้งปัญหาส่วนกลาง ร้องเรียน หรือขอดูกล้องวงจรปิด', s: ['เลือกประเภท กรอกรายละเอียดและตำแหน่ง แนบรูปได้', 'ขอดูกล้อง: ระบุช่วงเวลาเหตุการณ์และวัน-เวลาที่จะไปดูที่ป้อม รปภ. (ไม่ต้องรออนุมัติ)', 'ติดตามสถานะได้ในรายการด้านล่าง'], k: [['ขอดูกล้อง', 'ดูที่ป้อม รปภ. เท่านั้น ไม่ส่งไฟล์ภาพ']] },
+  more: { a: 'res', t: 'เมนูอื่น', w: 'รวมเมนูที่ไม่ได้ใช้บ่อย', s: ['การประชุม โหวต ขอบัตร พัสดุ บัญชีบ้านและแจ้งเตือน', 'คลังความรู้: เบอร์ติดต่อและข้อมูลสำคัญ', 'กติกาการอนุมัติ: เรื่องใดต้องกรรมการกี่ท่าน', 'ศูนย์ช่วยเหลือ: คู่มือการใช้งานทั้งระบบ'], k: [] },
+  house: { a: 'res', t: 'บัญชีบ้านและแจ้งเตือน', w: 'จัดการบัญชีหลัก/สำรอง (รวม 3 บัญชีต่อบ้าน) และการแจ้งเตือน LINE', s: ['บัญชีหลักยืนยันบัญชีสำรองได้', 'เลือกว่าให้ส่ง LINE ถึงทุกบัญชีในบ้าน หรือเฉพาะบัญชีหลัก (ประหยัดโควตา)'], k: [] },
+  meetings: { a: 'res', t: 'การประชุม', w: 'ดูนัดประชุม วาระ รายงานที่รับรองแล้ว และเช็กอิน', s: ['ดูวัน เวลา สถานที่ และวาระ', 'เช็กอินเมื่อมาประชุม (นับองค์ประชุม)', 'อ่านรายงานการประชุมที่กรรมการรับรองแล้ว'], k: [['องค์ประชุม', 'จำนวนหลังคาเรือนขั้นต่ำที่ต้องมา']] },
+  votes: { a: 'res', t: 'โหวต / สำรวจความเห็น', w: 'ลงคะแนนเรื่องที่ที่ประชุมเปิดให้โหวต', s: ['เลือกตัวเลือกแล้วกดยืนยัน', '1 บ้าน 1 เสียง (บัญชีใดบัญชีหนึ่งของบ้านลงได้)'], k: [] },
+  requests: { a: 'res', t: 'ขอบัตร / สติกเกอร์', w: 'ขอบัตรเข้า-ออกหรือสติกเกอร์รถเพิ่ม/ทดแทน', s: ['เลือกประเภทและจำนวน', 'ชำระตามราคาที่ประกาศ แล้วแนบสลิป', 'รอนิติฯ ดำเนินการ'], k: [] },
+  parcels: { a: 'res', t: 'พัสดุที่ป้อมยาม', w: 'พัสดุที่ รปภ. รับฝากไว้ให้บ้านคุณ', s: ['มีพัสดุ จะได้ LINE พร้อมรูป', 'ไปรับที่ป้อม รปภ. แล้ว รปภ.กด "ลูกบ้านรับแล้ว"'], k: [] },
+  kb: { a: 'all', t: 'คลังความรู้ / ผู้ติดต่อ', w: 'เบอร์โทรและข้อมูลที่ใช้บ่อย เช่น ป้อม รปภ. แม่บ้าน สำนักงานที่ดิน อบต. ธนาคาร ไม้กั้น รถกระเช้า เบอร์ฉุกเฉิน', s: ['พิมพ์ค้นหา หรือแตะหมวด', 'แตะเบอร์เพื่อโทร แตะแผนที่เพื่อนำทาง', 'กรรมการ/นิติฯ กด "เพิ่ม" หรือ "แก้ไข" ได้ทันที ไม่ต้องรออนุมัติ'], k: [['เห็นเฉพาะกรรมการ/นิติฯ', 'ข้อมูลที่ลูกบ้านไม่เห็น เช่น บริษัท รปภ. และรายชื่อ รปภ.'], ['[__]', 'ช่องที่ยังไม่ได้กรอก']] },
+  matrix: { a: 'all', t: 'กติกาการอนุมัติ', w: 'บอกว่าเรื่องใดต้องให้กรรมการกี่ท่านอนุมัติ', s: ['กรรมการ 1 ท่าน: เรื่องทั่วไปที่ไม่เกี่ยวกับเงิน ไม่เปลี่ยนนโยบาย ไม่เซนซิทีฟ เช่น ผู้รับเหมาวันอาทิตย์', 'หลายท่าน: การเงิน นโยบาย และเรื่องเซนซิทีฟ', 'ระบบกำหนดระดับจากประเภทรายการ ผู้ขอเลือกเองไม่ได้'], k: [] },
+  help: { a: 'all', t: 'ศูนย์ช่วยเหลือ', w: 'รวมวิธีใช้ของทุกหน้า', s: ['พิมพ์คำค้นหา หรือแตะหัวข้อเพื่อเปิด', 'ในแต่ละหน้ามีปุ่ม ⓘ มุมขวาล่างบอกวิธีใช้ของหน้านั้น'], k: [] },
+  inbox: { a: 'com', t: 'รออนุมัติ (กรรมการ)', w: 'ทุกเรื่องที่รอกรรมการลงมติอยู่ในกล่องเดียว', s: ['แตะรายการ อ่านรายละเอียดและหลักฐาน', 'กด อนุมัติ หรือ ไม่อนุมัติ (ต้องใส่เหตุผล)', 'ผู้ขอและกรรมการบ้านเดียวกับผู้ขอ ลงมติไม่ได้', 'คำขอยกเว้นผู้รับเหมา: กรรมการ 1 ท่านอนุมัติแล้วจบ', 'การ์ด "รปภ.ปล่อยรถ" ตรวจเหตุผลและรูปแล้วกด รับทราบ'], k: [['หลายท่าน 1/3', 'อนุมัติแล้ว 1 จากที่ต้องมี 3'], ['เดี่ยว', 'กรรมการ 1 ท่านอนุมัติจบ']] },
+  reports: { a: 'com', t: 'รายงาน', w: 'การเงินภาพรวม บ้านค้างชำระ บันทึกการกระทำ', s: ['เลือกช่วงเดือน', 'ดูบ้านค้างชำระและยอดรวม', 'ตรวจประวัติการกระทำสำคัญ'], k: [] },
+  policy: { a: 'com', t: 'ตั้งค่า', w: 'ปรับค่าของระบบ ค่าที่กระทบเงิน/นโยบายต้องผ่านการอนุมัติ', s: ['เลือกการตั้งค่า ใส่ค่าใหม่และเหตุผล แล้วส่งขออนุมัติ', 'ค่าทั่วไป (วันผู้รับเหมา เหตุผลปล่อยรถ ระยะเก็บรูป) นิติฯ ปรับได้เอง', 'ตั้งรูปลักษณ์: ชื่อ สี โลโก้'], k: [['ส่งขออนุมัติ', 'ต้องให้กรรมการครบตามเกณฑ์จึงมีผล']] },
+  roster: { a: 'com', t: 'รายชื่อกรรมการ', w: 'ทะเบียนกรรมการ ตำแหน่ง วาระ', s: ['ดูรายชื่อและวาระ', 'แต่งตั้ง/ถอดถอนผ่านคำขอพร้อมมติที่ประชุม'], k: [] },
+  tasks: { a: 'off', t: 'งานนิติฯ', w: 'งานที่ได้รับมอบจากมติกรรมการ และรายการต้องติดตาม', s: ['ดูงานที่อนุมัติแล้ว กดดำเนินการเมื่อทำจริง (เช่น โอนจ่าย โอนคืน)', 'ดูบ้านที่ค้างชำระเกินเกณฑ์: ต้องระงับบัตรในระบบไม้กั้นเอง', 'การ์ดผู้รับเหมาวันอาทิตย์และการปล่อยรถ แจ้งให้รับทราบ'], k: [] },
+  verify: { a: 'off', t: 'ตรวจสลิป', w: 'ตรวจสลิปของลูกบ้านเทียบกับเงินเข้าบัญชีจริง', s: ['นำเข้าสเตตเมนต์ CSV (หรือให้ระบบอ่านจาก Drive)', 'ดูแถบ เงินเข้าแล้ว / ยังไม่พบ / ยอดไม่ตรง', 'ยืนยันเมื่อพบเงินเข้า ระบบตัดยอดและออกใบเสร็จ', 'สลิปไม่ถูกต้อง: กดปฏิเสธพร้อมเหตุผล'], k: [] },
+  finance: { a: 'off', t: 'บัญชีบ้าน', w: 'ดูและปรับยอดรายบ้าน', s: ['ค้นหาบ้าน ดูใบแจ้งชำระและประวัติ', 'ปรับยอด/ยกเว้นต้องส่งขออนุมัติกรรมการ'], k: [] },
+  expenses: { a: 'off', t: 'รายจ่าย', w: 'บันทึกรายจ่ายและเงินสดย่อย', s: ['กรอกประเภท จำนวน ผู้รับเงิน แนบบิล', 'ต้องให้กรรมการอนุมัติตามเกณฑ์ก่อนจ่าย', 'หลังโอนจ่ายแนบสลิปจ่าย'], k: [] },
+  omore: { a: 'off', t: 'อื่นๆ (นิติฯ)', w: 'เมนูรวมของนิติฯ', s: ['รับมอบงาน ประชุม โหวต ประกาศ/ผู้ใช้/ตั้งค่า สเตตเมนต์ พัสดุ', 'คลังความรู้ กติกาการอนุมัติ ศูนย์ช่วยเหลือ'], k: [] },
+  admin: { a: 'off', t: 'ประกาศ / ผู้ใช้ / ตั้งค่าทั่วไป', w: 'ประกาศถึงลูกบ้าน อนุมัติผู้ใช้ และค่าตั้งที่ปรับได้เอง', s: ['ประกาศ: ส่ง LINE ถึงทุกบ้าน (กินโควตา)', 'อนุมัติผู้ใช้ใหม่ตามบ้านเลขที่', 'ปรับค่าทั่วไป เช่น รอบรีเฟรชป้อม ระยะเก็บรูป เวลาผู้รับเหมา'], k: [] },
+  bank: { a: 'off', t: 'นำเข้าสเตตเมนต์', w: 'นำเข้าไฟล์ CSV ธนาคารเพื่อเทียบสลิป', s: ['วางไฟล์ลงโฟลเดอร์ BankStatements หรืออัปโหลดที่นี่', 'กด ตรวจสอบเงินเข้าตอนนี้'], k: [] },
+  opening: { a: 'adm', t: 'รับมอบงาน / ยกมา', w: 'ใส่ยอดยกมา สินทรัพย์ บ้านค้างชำระ ตอนเริ่มใช้ระบบ', s: ['ใส่เงินสด/เงินฝากยกมา', 'นำเข้ารายชื่อบ้านค้าง/จ่ายล่วงหน้า', 'ตรวจกับสมุดบัญชีแล้วกดล็อก (ล็อกแล้วแก้ไม่ได้)'], k: [] },
+  ggate: { a: 'grd', t: 'ป้อมยาม', w: 'บันทึกรถเข้า-ออก', s: ['ถ่ายรูปทะเบียน (บังคับ) พิมพ์ทะเบียน เลือกประเภท', 'รถบริการ (แท็กซี่ ขนส่ง): ผ่านทันที กดรถออกเมื่อออก', 'รถเยี่ยม/ช่าง: ให้ผู้ขับขี่โทรหาลูกบ้านเอง รอลูกบ้านกดอนุญาต', 'ลูกบ้านไม่อนุมัติ/ไม่ตอบ: ปล่อยพร้อมเหตุผล+รูปบัตร+ทะเบียน (ไม่กักรถ)', 'ผู้รับเหมาวันอาทิตย์/นอกเวลา ที่ไม่มีคำอนุมัติ เข้าไม่ได้'], k: [['ในหมู่บ้านตอนนี้', 'รถที่ยังไม่บันทึกออก รีเฟรชเองตามรอบที่ตั้ง']] },
+  gguests: { a: 'grd', t: 'แขกและผู้รับเหมาล่วงหน้า', w: 'รายการที่ลูกบ้านลงทะเบียนไว้สำหรับวันนี้', s: ['ทะเบียนตรงกับรายการ ระบบผ่านให้อัตโนมัติ', 'ผู้รับเหมาที่ขึ้น "อนุมัติพิเศษ" ได้รับอนุมัติจากกรรมการแล้ว'], k: [] },
+  cctv: { a: 'grd', t: 'ขอดูกล้อง', w: 'คำขอดูกล้องวงจรปิดของลูกบ้าน', s: ['ดูช่วงเวลา กล้อง และเวลานัด', 'เปิดดูเฉพาะช่วงที่ขอ ที่ป้อมเท่านั้น', 'บันทึกผล: ดูแล้ว/ไม่พบภาพ'], k: [] },
+  tickets_tech: { a: 'tec', t: 'งานของฉัน', w: 'งานแจ้งซ่อมส่วนกลางที่ได้รับ', s: ['เปิดงาน ดูรายละเอียด สถานที่ รูป', 'เปลี่ยนสถานะ: กำลังทำ → เสร็จ พร้อมบันทึกผล', 'ถ้ายังไม่มีงาน จะแสดง "ยังไม่มีข้อมูล"'], k: [] },
+  sys: { a: 'adm', t: 'ความพร้อมระบบ', w: 'ตรวจว่าตั้งค่าครบ', s: ['ดูรายการ ⚠️ แล้วแก้ตามคำแนะนำ', 'อนุมัติผู้ใช้ใหม่ที่หน้า ผู้ใช้/สิทธิ์', 'เปิด Drive API เพื่อลบรูปถาวรตามกำหนด'], k: [] },
+  users: { a: 'adm', t: 'ผู้ใช้ / สิทธิ์', w: 'อนุมัติผู้ใช้และตั้งบทบาท', s: ['เลือกบทบาท: ลูกบ้าน กรรมการ นิติฯ รปภ. แม่บ้าน ช่าง', 'กดบันทึก/ระงับ'], k: [] },
+  features: { a: 'adm', t: 'เปิด/ปิดฟีเจอร์', w: 'เปิดหรือปิดระบบย่อยได้ 6 ตัว', s: ['ติ๊กเปิด/ปิด แล้วกดบันทึก', 'ปิดแล้วข้อมูลไม่หาย เปิดใหม่ได้', 'ระบบบันทึกและแจ้งกรรมการทุกครั้ง'], k: [] },
+  adminlog: { a: 'adm', t: 'ประวัติผู้ดูแลระบบ', w: 'บันทึกทุกการกระทำที่ข้ามการอนุมัติ', s: ['กรรมการตรวจย้อนหลังได้'], k: [] }
+};
+const HELP_AUD = { res: 'ลูกบ้าน', com: 'กรรมการ', off: 'นิติฯ', grd: 'รปภ.', tec: 'แม่บ้าน / ช่าง', adm: 'ผู้ดูแลระบบ', all: 'ทุกคน' };
+const HELP_FAQ = [
+  ['เข้าแอปแล้วขึ้น "รอการยืนยัน"', 'บัญชีใหม่ต้องให้นิติฯ หรือบัญชีหลักของบ้านยืนยันก่อน จะได้รับแจ้งทาง LINE'],
+  ['จ่ายแล้วทำไมยังขึ้นค้าง', 'ต้องรอนิติฯ ตรวจสลิปและพบเงินเข้าบัญชี โดยปกติภายใน 1 วันทำการ ถ้านานกว่านั้นติดต่อนิติฯ (ดูคลังความรู้)'],
+  ['บัตรเข้า-ออกถูกตัด ทำอย่างไร', 'ชำระยอดค้างให้ต่ำกว่าเกณฑ์ ระบบแจ้งนิติฯ ให้เปิดบัตร ระหว่างนั้นต้องลงจากรถกดปุ่มที่ห้อง รปภ.'],
+  ['รถแขกต้องรออนุญาตทุกครั้งไหม', 'ลงทะเบียนแขกล่วงหน้าไว้ ผ่านได้ทันที · รถบริการ (แท็กซี่ แกร็บ ขนส่ง ไปรษณีย์) ผ่านทันที'],
+  ['ผู้รับเหมาทำงานวันอาทิตย์ได้ไหม', 'ปกติไม่ได้ ลงทะเบียนล่วงหน้าพร้อมเหตุผล กรรมการ 1 ท่านอนุมัติ ผลแจ้งใน LINE และในแอป'],
+  ['ไม่อนุญาตรถแล้ว รปภ.ยังปล่อยได้หรือ', 'ได้ เพราะไม่มีนโยบายกักรถ แต่ รปภ.ต้องเลือกเหตุผล ถ่ายรูปบัตรประชาชนและทะเบียน แล้วระบบแจ้งคุณ กรรมการ นิติฯ'],
+  ['รูปป้ายทะเบียนเก็บนานแค่ไหน', 'รถเยี่ยม/ผู้รับเหมา 90 วัน รถบริการ 30 วัน รูปบัตรประชาชน 30 วัน แล้วลบอัตโนมัติ (PDPA)'],
+  ['ลืม PIN กรรมการ', 'แจ้งผู้ดูแลระบบให้รีเซ็ต PIN แล้วตั้งใหม่ ห้ามใช้เลขเดาง่าย'],
+  ['เมนูบางอย่างหายไป', 'ผู้ดูแลระบบอาจปิดฟีเจอร์นั้นไว้ ข้อมูลเดิมยังอยู่ ติดต่อนิติฯ']
+];
+const helpKey = id => (id === 'tickets' && MODE === 'tech') ? 'tickets_tech' : (HELP[id] ? id : '');
+function showHelp(id) {
+  const k = helpKey(id || CUR), h = HELP[k]; if (!h) return;
+  modal(`<h3>ⓘ ${esc(h.t)}</h3><div class="mut">สำหรับ: ${HELP_AUD[h.a]}</div><p>${esc(h.w)}</p>
+    ${h.s.length ? `<b>วิธีใช้</b><ol class="steps">${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol>` : ''}
+    ${h.k.length ? `<b>คำอธิบาย</b>${h.k.map(([a, b]) => `<div class="item" style="display:block"><b>${esc(a)}</b> — ${esc(b)}</div>`).join('')}` : ''}
+    ${k === 'help' ? '' : `<button class="btn" onclick="closeModal();show('help')">❓ ไปศูนย์ช่วยเหลือ</button>`}<button class="btn sec" onclick="closeModal()">ปิด</button>`);
+}
+function updHelpFab(id) { const b = document.getElementById('helpfab'); if (b) b.style.display = helpKey(id) && id !== 'help' ? 'flex' : 'none'; }
+async function vHelp() {
+  const groups = ['res', 'com', 'off', 'grd', 'tec', 'adm'], mine = { resident: ['res'], committee: ['com'], office: ['off'], guard: ['grd'], tech: ['tec'], sys: ['adm'] }[MODE] || [];
+  const det = (h, k) => `<details class="hl" data-k="${k}"><summary><b>${esc(h.t)}</b> <small class="mut">${HELP_AUD[h.a]}</small></summary><p>${esc(h.w)}</p><ol class="steps">${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol>${h.k.map(([a, b]) => `<div class="mut"><b>${esc(a)}</b> — ${esc(b)}</div>`).join('')}</details>`;
+  const sorted = Object.keys(HELP).filter(k => k !== 'help').sort((a, b) => (mine.includes(HELP[a].a) ? 0 : HELP[a].a === 'all' ? 1 : 2) - (mine.includes(HELP[b].a) ? 0 : HELP[b].a === 'all' ? 1 : 2));
+  return `<div class="card"><b>❓ ศูนย์ช่วยเหลือ</b><div class="mut">วิธีใช้ทุกหน้า เรียงตามบทบาทของคุณก่อน · ในแต่ละหน้ามีปุ่ม ⓘ มุมขวาล่าง</div>
+    <input id="hl_q" placeholder="ค้นหา เช่น ชำระเงิน บัตร ผู้รับเหมา" oninput="helpFilter()"></div>
+  <div id="hl_list">${sorted.map(k => det(HELP[k], k)).join('')}</div>
+  <div class="card"><b>คำถามที่พบบ่อย</b>${HELP_FAQ.map(([q, a]) => `<details class="hl"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>
+  <div class="grid2"><div class="card tile" onclick="show('kb')"><div style="font-size:30px">📖</div><b>คลังความรู้/ผู้ติดต่อ</b></div><div class="card tile" onclick="show('matrix')"><div style="font-size:30px">📋</div><b>กติกาการอนุมัติ</b></div></div>
+  <div class="note">VillaKunalai 3 • ระบบบริหารหมู่บ้าน · เนื้อหาช่วยเหลือเขียนตามการใช้งานจริงของแต่ละหน้า</div>`;
+}
+function helpFilter() { const q = val('hl_q').trim().toLowerCase(); document.querySelectorAll('#app details.hl').forEach(d => { d.style.display = !q || d.textContent.toLowerCase().includes(q) ? '' : 'none'; if (q && d.style.display === '') d.open = true; }); }
+
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
-  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv };
+  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, help: vHelp };
 // ลิงก์จากข้อความ LINE: ?receipt=<pay_id> เปิดใบเสร็จ · ?go=pay ไปหน้าชำระเงิน
 async function openDeepLink() {
   let q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
@@ -13671,6 +13924,9 @@ async function openDeepLink() {
 let SHOWSEQ = 0;
 async function show(id) {
   CUR = id; const seq = ++SHOWSEQ, app = $('#app');
+  updHelpFab(id);
+  const blk = featBlocked(id);
+  if (blk) { app.innerHTML = `<div class="card"><h3>🔒 ${blk}</h3><p class="mut">ผู้ดูแลระบบปิดฟีเจอร์นี้ไว้ ข้อมูลเดิมยังอยู่ครบ หากต้องการใช้ ติดต่อนิติฯ หรือผู้ดูแลระบบ</p></div>`; return; }
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.id === 'tab_' + navKey(id)));
   const old = vcGet(id);
   // มีของเดิม: แสดงทันที (กดไม่ได้จนกว่าข้อมูลใหม่มา) · ไม่มี: โครงร่างกำลังโหลด
@@ -13718,7 +13974,7 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
   if (cached && cached.user && !['guest', 'pending'].includes(cached.user.role)) {
     ME = cached.user; SET = cached.settings || {}; applyBrand();
     $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
-    MODE = modesOf()[0]; CUR = TABS[MODE][0][0]; renderModes(); renderNav();
+    MODE = modesOf()[0]; CUR = firstTab(MODE); renderModes(); renderNav();
     const old = vcGet(CUR); if (old) $('#app').innerHTML = '<div class="stale">' + old + '</div>';
   }
   const r = await api('me'); ME = r.user; SET = r.settings;
@@ -13726,7 +13982,7 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
   applyBrand(); $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
   if (ME.role === 'guest') return renderRegister();
   if (ME.role === 'pending') { $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
-  MODE = modesOf()[0]; CUR = TABS[MODE][0][0]; renderModes(); renderNav(); show(CUR);
+  MODE = modesOf()[0]; CUR = firstTab(MODE); renderModes(); renderNav(); show(CUR);
   openDeepLink();
   setInterval(() => { if (MODE === 'guard' && CUR === 'ggate' && !document.hidden && !BUSY && !document.activeElement.matches('input,textarea')) refreshGate(); }, Math.max(1, SET.gate_refresh_min || 2) * 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && MODE === 'guard' && CUR === 'ggate') refreshGate(); });
