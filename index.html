@@ -12542,7 +12542,7 @@ const TABS = {
   tech: [['tickets','🧹','งานของฉัน'],['kb','📖','ติดต่อ']],
   sys: [['sys','🛠️','ความพร้อม'],['users','👥','ผู้ใช้/สิทธิ์'],['opening','📥','ยกมา'],['policy','⚙️','ตั้งค่า'],['adminlog','📜','ประวัติ']]
 };
-const SUB = { sys: ['features','kb','matrix','help'], policy: ['kb','matrix','help'], more: ['meetings','votes','requests','parcels','house','roster','kb','matrix','help'], omore: ['tickets','meetings','votes','admin','bank','parcels','opening','kb','matrix','help'] };
+const SUB = { sys: ['features','archive','kb','matrix','help'], policy: ['archive','kb','matrix','help'], more: ['meetings','votes','requests','parcels','house','roster','kb','matrix','help'], omore: ['tickets','meetings','votes','admin','bank','parcels','opening','archive','kb','matrix','help'] };
 const navKey = tab => { for (const [p, subs] of Object.entries(SUB)) if (subs.includes(tab) && !TABS[MODE].some(t => t[0] === tab)) return p; return tab; };
 // เปิด/ปิดฟีเจอร์โดยผู้ดูแลระบบ (SET.features มาจากเซิร์ฟเวอร์ ถ้าไม่มี = เปิด)
 const FT = { gate: 'vehicles', ggate: 'vehicles', gguests: 'vehicles', parcels: 'parcels', votes: 'voting', roster: 'committee_list', cctv: 'guard' };
@@ -12589,6 +12589,10 @@ const fileLink = (id, t='ดูไฟล์') => id ? `<a href="https://drive.go
 const thumb = id => id ? `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w800">` : '';
 const badge = s => `<span class="badge ${s}">${ST[s] || s}</span>`;
 
+async function previewReceipt() {
+  try { const r = await api('receiptPreview'); modal('<h3>ตัวอย่างใบเสร็จ</h3><iframe sandbox="" style="width:100%;height:420px;border:1px solid #ddd;background:#fff" srcdoc="' + String(r.html).replace(/&/g, '&amp;').replace(/"/g, '&quot;') + '"></iframe><div class="mut">บันทึกข้อความก่อนแล้วกดดูตัวอย่างอีกครั้ง</div><button class="btn sec" onclick="closeModal()">ปิด</button>'); }
+  catch (e) { toast(e.message); }
+}
 function modal(h) { $('#mbody').innerHTML = h; $('#modal').style.display = 'block'; }
 /* ---------- ความเร็ว: โหลดไลบรารีเมื่อใช้ · แถบโหลด · รวมคำขอ · แคชหน้า ---------- */
 function needLib(id) {   // ไลบรารี QR เก็บเป็นข้อความ ไม่ต้องประมวลผลตอนเปิดแอป รันครั้งแรกที่ใช้
@@ -12599,7 +12603,7 @@ let INFLIGHT = 0;
 function busyBar(d) { INFLIGHT = Math.max(0, INFLIGHT + d); document.body.classList.toggle('loading', INFLIGHT > 0); }
 const READ_ACTIONS = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
-  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'getFile', 'payOptions', 'batch']);
+  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
 async function post(action, data) {
   busyBar(1);
   try {
@@ -12617,6 +12621,7 @@ async function apiBatch(calls) { return post('batch', { calls: calls.map(c => ({
 const okOr = (r, dflt) => (r && r.ok) ? r.data : dflt;
 // แคชหน้าที่เคยเปิด: แสดงทันทีระหว่างรอข้อมูลใหม่ (เก็บใน sessionStorage หายเมื่อปิดแอป)
 const VC = {};
+let FIRST = null;
 function vcKey(id) { return MODE + ':' + id; }
 function vcGet(id) { if (VC[vcKey(id)]) return VC[vcKey(id)]; try { return sessionStorage.getItem('vc:' + vcKey(id)); } catch (e) { return null; } }
 function vcPut(id, h) { VC[vcKey(id)] = h; try { if (h.length < 200000) sessionStorage.setItem('vc:' + vcKey(id), h); } catch (e) {} }
@@ -12669,7 +12674,7 @@ function setMode(m) {
   if (m !== 'resident' && !ME.pinOK) return showPin(m);
   MODE = m; renderModes(); CUR = firstTab(m); renderNav(); show(CUR);
 }
-async function lockStaff() { try { await api('lockPin'); } catch (e) {} ME.pinOK = false; setMode('resident'); }
+async function lockStaff() { try { await api('lockPin'); } catch (e) {} vcClear(); ME.pinOK = false; setMode('resident'); }
 function showPin(target) {
   const first = !ME.hasPin;
   modal(`<h3>🔐 ${first ? 'ตั้ง PIN 6 หลัก เพื่อเข้าโหมด' : 'ยืนยัน PIN เพื่อเข้าโหมด'}${MODE_TH[target] || ''}</h3>
@@ -13350,6 +13355,47 @@ async function vMatrix() {
   <div class="card"><b>ผู้รับเหมา</b><div class="mut">เวลาทำงาน ${esc(m.contractor.hours)} · ไม่อนุญาตวัน${m.contractor.block_days.map(esc).join(', ') || 'ใด'}<br>เรื่องทั่วไป (กรรมการ 1 ท่าน): เมื่อกรรมการท่านใดท่านหนึ่งกดอนุมัติ ถือว่าจบ ผู้ขอและกรรมการบ้านเดียวกัน อนุมัติไม่ได้ · ผลประกาศเฉพาะในแอป และแจ้ง LINE ผู้ขอกับกรรมการ/นิติฯ</div></div>
   <div class="note">เลขมติ/ข้อบังคับที่มอบอำนาจ: <b>${esc(m.delegation || 'ยังไม่ได้บันทึก (นิติฯ ตั้งที่ ตั้งค่า → ค่าทั่วไป)')}</b></div>`;
 }
+/* ================= ข้อมูลเก็บถาวร (กรรมการ / นิติฯ / ผู้ดูแลระบบ) ================= */
+const ARC = { kind: 'visits', year: '', q: '', from: '', to: '', off: 0, limit: 50 };
+let ARCI = null, ARCR = null;
+async function vArchive() {
+  ARCI = await api('viewArchiveInfo');
+  if (!ARC.year || !ARCI.years.some(y => y.year === ARC.year)) ARC.year = ARCI.years.length ? ARCI.years[ARCI.years.length - 1].year : '';
+  ARCR = ARC.year ? await api('listArchive', Object.assign({}, ARC, { offset: ARC.off })) : null;
+  return arcHtml();
+}
+function arcRowHtml(r) {
+  if (ARC.kind === 'visits') return `<div class="card"><div class="row"><b>${esc(r.plate) || '-'}</b><span class="badge">${esc(ST[r.status] || r.status)}</span></div>
+    <small class="mut">บ้าน ${esc(r.house_no) || '-'} • ${esc(PUR[r.purpose] || r.purpose)} • เข้า ${esc(dt(r.entered_at))}${r.left_at ? ' • ออก ' + esc(dt(r.left_at)) : ''}${r.card_no ? ' • บัตร ' + esc(r.card_no) : ''}</small>
+    ${r.note ? `<div class="mut">${esc(r.note)}</div>` : ''}${r.ack_by ? `<small class="mut">รับทราบโดย ${esc(r.ack_by)}</small>` : ''}</div>`;
+  return `<div class="card"><div class="row"><b>${esc(r.action)}</b><small class="mut">${esc(dt(r.time))}</small></div>
+    <small class="mut">${esc(r.user)} • ${esc(r.role)}</small><div class="mut" style="word-break:break-word">${esc(r.detail)}</div></div>`;
+}
+function arcHtml() {
+  const i = ARCI, last = i.last;
+  const head = `<div class="card"><b>🗄️ ข้อมูลเก็บถาวร</b>
+    <div class="mut">ระบบย้ายรถเข้า-ออกและบันทึกการใช้งานที่เก่ากว่า ${esc(i.days)} วัน ไปไฟล์ชีตถาวรรายปี ทุกวันที่ 1 เพื่อให้แอปเร็ว · เห็นเฉพาะกรรมการ นิติฯ และผู้ดูแลระบบ ทุกครั้งที่เปิดดูมีบันทึก · ไม่มีรูป (ลบถาวรตามระยะเก็บรูป PDPA)</div>
+    <div class="mut">ในชีตหลักตอนนี้: รถเข้า-ออก ${esc(i.live.visits)} แถว · บันทึกการใช้งาน ${esc(i.live.audit)} แถว</div>
+    ${last ? (last.error ? `<div class="note" style="border-color:#c0392b">⚠️ เก็บถาวรครั้งล่าสุด (${esc(dt(last.at))}) ไม่สำเร็จ: ${esc(last.error)} · ข้อมูลเดิมยังอยู่ครบ</div>` : `<div class="mut">ครั้งล่าสุด ${esc(dt(last.at))}: ย้ายรถเข้า-ออก ${esc(last.moved.visits)} แถว · บันทึกการใช้งาน ${esc(last.moved.audit)} แถว</div>`) : '<div class="mut">ยังไม่เคยย้าย (จะทำอัตโนมัติวันที่ 1 ของเดือน)</div>'}
+    ${MODE === 'office' || MODE === 'sys' ? '<button class="btn sec" onclick="arcRun()">เก็บถาวรตอนนี้</button>' : ''}</div>`;
+  if (!i.years.length) return head + emptyCard('ยังไม่มีข้อมูลเก็บถาวร');
+  const R = ARCR, from = ARC.off + 1, to = ARC.off + (R ? R.rows.length : 0);
+  return head + `<div class="card"><div class="chips2">${i.kinds.map(k => `<button class="${ARC.kind === k.key ? 'on' : ''}" onclick="arcKind('${k.key}')">${esc(k.label)}</button>`).join('')}</div>
+    <label class="lb">ปี</label><select id="ar_year">${i.years.map(y => `<option value="${esc(y.year)}" ${y.year === ARC.year ? 'selected' : ''}>${esc(y.year)} (${ARC.kind === 'visits' ? esc(y.visits) : esc(y.audit)} แถว)</option>`).join('')}</select>
+    <div class="row" style="gap:8px"><div style="flex:1"><label class="lb">ตั้งแต่วันที่</label><input id="ar_from" type="date" value="${esc(ARC.from)}"></div><div style="flex:1"><label class="lb">ถึงวันที่</label><input id="ar_to" type="date" value="${esc(ARC.to)}"></div></div>
+    <label class="lb">คำค้น</label><input id="ar_q" maxlength="60" value="${esc(ARC.q)}" placeholder="${ARC.kind === 'visits' ? 'ทะเบียน เลขบ้าน หมายเหตุ' : 'ชื่อ การกระทำ รายละเอียด'}">
+    <button class="btn" onclick="arcSearch()">ค้นหา</button></div>
+    ${R && R.total ? `<div class="mut">พบ ${esc(R.total)} แถว · แสดง ${from}–${to} (ใหม่ → เก่า)</div>` + R.rows.map(arcRowHtml).join('') +
+      `<div class="row" style="gap:8px"><button class="btn sec" ${ARC.off ? '' : 'disabled'} onclick="arcPage(-1)">ก่อนหน้า</button><button class="btn sec" ${to < R.total ? '' : 'disabled'} onclick="arcPage(1)">ถัดไป</button></div>` : emptyCard('ไม่พบข้อมูลตามเงื่อนไข')}`;
+}
+function arcRead() { ARC.year = val('ar_year') || ARC.year; ARC.from = val('ar_from'); ARC.to = val('ar_to'); ARC.q = val('ar_q'); }
+function arcKind(k) { arcRead(); ARC.kind = k; ARC.off = 0; show('archive'); }
+function arcSearch() { arcRead(); ARC.off = 0; show('archive'); }
+function arcPage(d) { arcRead(); ARC.off = Math.max(0, ARC.off + d * ARC.limit); show('archive'); }
+function arcRun() {
+  if (!confirm('ย้ายแถวที่เก่ากว่าเกณฑ์ไปไฟล์เก็บถาวรตอนนี้เลยหรือไม่? ระบบตรวจไฟล์ถาวรให้ครบก่อนลบแถวเดิม')) return;
+  act('runArchive', {}, r => `ย้ายแล้ว: รถเข้า-ออก ${r.moved.visits} แถว · บันทึกการใช้งาน ${r.moved.audit} แถว`);
+}
 /* ================= คลังความรู้ / ผู้ติดต่อ ================= */
 const KB_CATS = ['ป้อม รปภ.', 'บริษัท รปภ.', 'สำนักงานที่ดิน', 'อบต./เก็บขยะ', 'แม่บ้าน', 'ธนาคาร', 'บริษัทไม้กั้น', 'รถกระเช้า/เปลี่ยนหลอดไฟ', 'เบอร์ฉุกเฉิน/ท้องถิ่น', 'อื่นๆ'];
 let KBL = [], KBQ = '', KBC = '';
@@ -13396,7 +13442,7 @@ async function kbSave(id) {
   catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
 }
 function kbDel(id) { if (!confirm('ลบรายการนี้ถาวร?')) return; closeModal(); act('removeContact', { contact_id: id }, 'ลบแล้ว'); }
-const toolTiles = () => `<div class="grid2">${[['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'กติกาการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']].map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
+const toolTiles = () => `<div class="grid2">${[['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'กติกาการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']].map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 
 
 async function releasesCard() {
@@ -13585,7 +13631,7 @@ async function vBank() {
 function loadBankFile() { const f = $('#bk_file').files[0]; if (!f) return; const fr = new FileReader(); fr.onload = () => { $('#bk_text').value = fr.result; }; fr.readAsText(f, 'utf-8'); }
 
 function vOmore() {
-  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'กติกาการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
+  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'กติกาการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
   return `<div class="grid2">${items.filter(i => tabOk(i[0])).map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 }
 
@@ -13605,6 +13651,10 @@ async function vAdmin() {
   <div class="card"><b>🏦 โฟลเดอร์สเตตเมนต์ใน Google Drive</b>
     ${sv.texts.map(t => `<label class="lb">${esc(t.label)}</label><div class="row" style="gap:8px"><input id="st_${t.key}" value="${esc(t.value)}"><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'${t.key}',value:val('st_${t.key}')},'บันทึกแล้ว')">บันทึก</button></div>`).join('')}
     <div class="mut">วางไฟล์ CSV จาก SCB Business Anywhere ไว้ในโฟลเดอร์นี้ ระบบอ่านไฟล์ล่าสุดทุก 30 นาที</div></div>
+  <div class="card"><b>🧾 หน้าตาใบเสร็จรับเงิน</b><div class="mut">ปรับข้อความ สี และโลโก้ได้เอง (มีผลกับใบเสร็จที่ออกต่อจากนี้ ตัวเลขเงินปรับไม่ได้) ปล่อยว่าง = ใช้ค่าเริ่มต้น</div>
+    ${sv.receipt.map(t => t.key === 'RECEIPT_LOGO' ? `<label class="chk"><input type="checkbox" id="st_${t.key}" ${t.value === 'TRUE' ? 'checked' : ''} onchange="act('setSimple',{key:'${t.key}',value:this.checked?'TRUE':'FALSE'},'บันทึกแล้ว')"> แสดงโลโก้บนใบเสร็จ</label>` : `<label class="lb">${esc(t.label)}</label><div class="row" style="gap:8px"><input id="st_${t.key}" value="${esc(t.value)}"><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'${t.key}',value:val('st_${t.key}')},'บันทึกแล้ว')">บันทึก</button></div>`).join('')}
+    <button class="btn sec" onclick="previewReceipt()">ดูตัวอย่างใบเสร็จ</button>
+    <div class="mut">ต้องการออกแบบเองทั้งใบ: ใส่ ID เอกสาร Google Docs แม่แบบในชีต Settings (RECEIPT_TEMPLATE_DOC_ID) ใช้ {{village}} {{receipt_no}} {{paid_date}} {{owner}} {{house_no}} {{items}} {{total}} {{verified_by}}</div></div>
   <div class="card"><b>ตั้งค่าทั่วไป (ไม่ต้องผ่านอนุมัติ)</b>
     ${sv.simple.map(s => `<label class="lb">${esc(s.label)} (${s.min}–${s.max})</label><div class="row" style="gap:8px"><input id="ss_${s.key}" type="number" value="${esc(s.value)}" min="${s.min}" max="${s.max}"><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'${s.key}',value:val('ss_${s.key}')},'บันทึกแล้ว')">บันทึก</button></div>`).join('')}
     <label class="lb">ระดับการแจ้งเตือน LINE (ประหยัดโควตา)</label><div class="row" style="gap:8px"><select id="ss_lvl">${[['essential', 'เฉพาะสำคัญ (รถเข้า-ออก/พัสดุ/ยืนยันบัญชี)'], ['normal', 'ปกติ (+บิล/ผลชำระ/ประกาศ)'], ['all', 'ทั้งหมด (+แจ้งเตือนภายในกรรมการ)']].map(([k, t]) => `<option value="${k}" ${sv.line_level === k ? 'selected' : ''}>${t}</option>`).join('')}</select><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'LINE_NOTIFY_LEVEL',value:val('ss_lvl')},'บันทึกแล้ว')">บันทึก</button></div>
@@ -13870,6 +13920,7 @@ const HELP = {
   sys: { a: 'adm', t: 'ความพร้อมระบบ', w: 'ตรวจว่าตั้งค่าครบ', s: ['ดูรายการ ⚠️ แล้วแก้ตามคำแนะนำ', 'อนุมัติผู้ใช้ใหม่ที่หน้า ผู้ใช้/สิทธิ์', 'เปิด Drive API เพื่อลบรูปถาวรตามกำหนด'], k: [] },
   users: { a: 'adm', t: 'ผู้ใช้ / สิทธิ์', w: 'อนุมัติผู้ใช้และตั้งบทบาท', s: ['เลือกบทบาท: ลูกบ้าน กรรมการ นิติฯ รปภ. แม่บ้าน ช่าง', 'กดบันทึก/ระงับ'], k: [] },
   features: { a: 'adm', t: 'เปิด/ปิดฟีเจอร์', w: 'เปิดหรือปิดระบบย่อยได้ 6 ตัว', s: ['ติ๊กเปิด/ปิด แล้วกดบันทึก', 'ปิดแล้วข้อมูลไม่หาย เปิดใหม่ได้', 'ระบบบันทึกและแจ้งกรรมการทุกครั้ง'], k: [] },
+  archive: { a: 'com', t: 'ข้อมูลเก็บถาวร', w: 'ดูรถเข้า-ออกและบันทึกการใช้งานที่เก่ากว่า 90 วัน ซึ่งระบบย้ายออกจากชีตหลักให้อัตโนมัติทุกวันที่ 1 เพื่อให้แอปเร็ว', s: ['เลือกประเภท ปี ช่วงวันที่ หรือพิมพ์คำค้น (ทะเบียน บ้าน ชื่อ) แล้วกดค้นหา', 'เห็นเฉพาะกรรมการ นิติฯ และผู้ดูแลระบบ ทุกครั้งที่เปิดดูมีบันทึกว่าใครดู', 'ไม่มีรูปในข้อมูลเก็บถาวร (ลบถาวรตามระยะเก็บรูป PDPA แล้ว)', 'นิติฯ กด "เก็บถาวรตอนนี้" ได้ถ้าไม่อยากรอวันที่ 1'], k: [] },
   adminlog: { a: 'adm', t: 'ประวัติผู้ดูแลระบบ', w: 'บันทึกทุกการกระทำที่ข้ามการอนุมัติ', s: ['กรรมการตรวจย้อนหลังได้'], k: [] }
 };
 const HELP_AUD = { res: 'ลูกบ้าน', com: 'กรรมการ', off: 'นิติฯ', grd: 'รปภ.', tec: 'แม่บ้าน / ช่าง', adm: 'ผู้ดูแลระบบ', all: 'ทุกคน' };
@@ -13908,7 +13959,7 @@ function helpFilter() { const q = val('hl_q').trim().toLowerCase(); document.que
 
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
-  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, help: vHelp };
+  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, archive: vArchive, help: vHelp };
 // ลิงก์จากข้อความ LINE: ?receipt=<pay_id> เปิดใบเสร็จ · ?go=pay ไปหน้าชำระเงิน
 async function openDeepLink() {
   let q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
@@ -13975,14 +14026,17 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
     ME = cached.user; SET = cached.settings || {}; applyBrand();
     $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
     MODE = modesOf()[0]; CUR = firstTab(MODE); renderModes(); renderNav();
-    const old = vcGet(CUR); if (old) $('#app').innerHTML = '<div class="stale">' + old + '</div>';
+    FIRST = show(CUR);   // มีข้อมูลที่จำไว้: โหลดหน้าแรกพร้อมกับ me ไม่ต้องรอทีละขั้น (สิทธิ์จริงเซิร์ฟเวอร์ตรวจทุกคำขอ)
   }
-  const r = await api('me'); ME = r.user; SET = r.settings;
+  const r = await api('me'); const prev = cached && cached.user ? JSON.stringify([cached.user.role, cached.user.office, cached.user.acct_type, !!cached.user.admin]) : '';
+  ME = r.user; SET = r.settings;
   try { localStorage.setItem(meKey(), JSON.stringify({ user: { display_name: ME.display_name, house_no: ME.house_no, role: ME.role, office: ME.office, acct_type: ME.acct_type, hasPin: ME.hasPin, admin: ME.admin }, settings: SET })); } catch (e) {}
   applyBrand(); $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
-  if (ME.role === 'guest') return renderRegister();
-  if (ME.role === 'pending') { $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
-  MODE = modesOf()[0]; CUR = firstTab(MODE); renderModes(); renderNav(); show(CUR);
+  if (ME.role === 'guest') { SHOWSEQ++; return renderRegister(); }
+  if (ME.role === 'pending') { SHOWSEQ++; $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
+  const same = FIRST && prev === JSON.stringify([ME.role, ME.office, ME.acct_type, !!ME.admin]) && modesOf()[0] === MODE && firstTab(MODE) === CUR;
+  MODE = modesOf()[0]; CUR = firstTab(MODE); renderModes(); renderNav();
+  if (!same) show(CUR);   // สิทธิ์เปลี่ยนจากที่จำไว้ ค่อยโหลดใหม่ · ถ้าเหมือนเดิมใช้ผลที่โหลดคู่ขนานไว้แล้ว
   openDeepLink();
   setInterval(() => { if (MODE === 'guard' && CUR === 'ggate' && !document.hidden && !BUSY && !document.activeElement.matches('input,textarea')) refreshGate(); }, Math.max(1, SET.gate_refresh_min || 2) * 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && MODE === 'guard' && CUR === 'ggate') refreshGate(); });
