@@ -12603,18 +12603,27 @@ let INFLIGHT = 0;
 function busyBar(d) { INFLIGHT = Math.max(0, INFLIGHT + d); document.body.classList.toggle('loading', INFLIGHT > 0); }
 const READ_ACTIONS = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
-  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'lineTopicsView', 'myNotifs', 'notifCount', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
+  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'lineTopicsView', 'myNotifs', 'notifCount', 'shiftStatus', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
 // วัดเวลาจริงของแต่ละคำขอ (เครื่องผู้ใช้ ↔ เซิร์ฟเวอร์) เก็บ 60 รายการล่าสุด ดูได้ที่ ผู้ดูแลระบบ → ความพร้อม
 const PERF = { list: [], boot: 0 };
 function perfAdd(a, c, sv) { PERF.list.push({ a, c: Math.round(c), s: sv == null ? null : Math.round(sv), t: Date.now() }); if (PERF.list.length > 60) PERF.list.shift(); try { sessionStorage.setItem('perf', JSON.stringify(PERF)); } catch (e) {} }
 try { const p = JSON.parse(sessionStorage.getItem('perf') || 'null'); if (p && Array.isArray(p.list)) PERF.list = p.list; } catch (e) {}
+// กะ รปภ.: บัตรกะของระบบ (ผูกกับบัญชี LINE ที่เริ่มกะ) ใช้แทนบัตร LINE ที่หมดอายุทุกชั่วโมง
+let GS = null; try { GS = JSON.parse(localStorage.getItem('gsess') || 'null'); } catch (e) {}
+const lineSub = () => { try { return (liff.getDecodedIDToken() || {}).sub || ''; } catch (e) { return ''; } };
+const shiftOn = () => !!(GS && GS.t && GS.exp > Date.now() && GS.sub === lineSub());
+function clearShift() { GS = null; try { localStorage.removeItem('gsess'); } catch (e) {} }
 async function post(action, data) {
-  busyBar(1); const t0 = performance.now();
+  busyBar(1); const t0 = performance.now(), useS = shiftOn() && action !== 'startShift';
   try {
-    const r = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify(Object.assign({ action, data, idToken: liff.getIDToken() }, ME && ME.admin ? { as: MODE } : {})) });
+    const r = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify(Object.assign({ action, data }, useS ? { sess: GS.t } : { idToken: liff.getIDToken() }, ME && ME.admin ? { as: MODE } : {})) });
     const j = await r.json();
     perfAdd(action === 'batch' ? 'ชุด: ' + ((data && data.calls) || []).map(c => c.action).join('+') : action, performance.now() - t0, j.ms);
-    if (!j.ok) { if (/ยืนยันตัวตน LINE|เข้าสู่ระบบผ่าน LINE/.test(j.error)) { liff.logout(); liff.login(); } throw new Error(j.error); }
+    if (!j.ok) {
+      if (/กะหมดอายุ|เริ่มกะ/.test(j.error)) { clearShift(); setTimeout(renderShift, 0); }
+      else if (!useS && /ยืนยันตัวตน LINE|เข้าสู่ระบบผ่าน LINE/.test(j.error)) { liff.logout(); liff.login(); }
+      throw new Error(j.error);
+    }
     if (!READ_ACTIONS.has(action)) { vcClear(); BADGE_AT = 0; }   // มีการเปลี่ยนข้อมูล: ทิ้งหน้าที่จำไว้
     return j.data;
   } finally { busyBar(-1); }
@@ -12625,7 +12634,7 @@ function meKey() { let sub = ''; try { sub = (liff.getDecodedIDToken() || {}).su
 const BATCHABLE = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'arrearsList', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
   'reports', 'roster', 'listInside', 'listReleases', 'listExceptions', 'approvalMatrix', 'listGuests', 'houseLookup', 'bankStatus', 'userPicker', 'listUsers',
-  'sysStatus', 'featuresView', 'adminLog', 'notifCount', 'myNotifs', 'payOptions', 'listContacts', 'settingsView', 'openingView', 'listAssets', 'viewArchiveInfo']);
+  'sysStatus', 'featuresView', 'adminLog', 'notifCount', 'myNotifs', 'shiftStatus', 'payOptions', 'listContacts', 'settingsView', 'openingView', 'listAssets', 'viewArchiveInfo']);
 let AQ = [], AQT = null;
 function api(action, data = {}) {
   if (!BATCHABLE.has(action)) return post(action, data);
@@ -12692,6 +12701,7 @@ function modesOf() {
 }
 function renderModes() {
   const ms = modesOf();
+  if (ME.role === 'guard' && !ME.admin && shiftOn()) { $('#modes').innerHTML = `<span class="pin">🛡️ ${esc(ME.display_name || '')} · กะถึง ${new Date(GS.exp).toTimeString().slice(0, 5)}</span><button class="lk" onclick="endShift()">จบกะ</button>`; return; }
   $('#modes').innerHTML = ms.length > 1 ? ms.map(m => `<button class="${m === MODE ? 'on' : ''}" onclick="setMode('${m}')">${MODE_TH[m]}${m !== 'resident' && !ME.pinOK ? ' 🔒' : ''}</button>`).join('') +
     (ME.pinOK ? `<span class="pin">🔓 ยืนยัน PIN แล้ว</span><button class="lk" onclick="lockStaff()">ออกจากโหมดอนุมัติ</button>` : '') : '';
 }
@@ -13385,6 +13395,36 @@ async function vMatrix() {
   <div class="card"><b>ผู้รับเหมา</b><div class="mut">เวลาทำงาน ${esc(m.contractor.hours)} · ไม่อนุญาตวัน${m.contractor.block_days.map(esc).join(', ') || 'ใด'}<br>เรื่องทั่วไป (กรรมการ 1 ท่าน): เมื่อกรรมการท่านใดท่านหนึ่งกดอนุมัติ ถือว่าจบ ผู้ขอและกรรมการบ้านเดียวกัน อนุมัติไม่ได้ · ผลประกาศเฉพาะในแอป และแจ้ง LINE ผู้ขอกับกรรมการ/นิติฯ</div></div>
   <div class="note">เลขมติ/ข้อบังคับที่มอบอำนาจ: <b>${esc(m.delegation || 'ยังไม่ได้บันทึก (นิติฯ ตั้งที่ ตั้งค่า → ค่าทั่วไป)')}</b></div>`;
 }
+/* ================= กะ รปภ. ================= */
+const needShift = () => ME && ME.role === 'guard' && !ME.admin && SET.guard_shift && !shiftOn();
+function renderShift() {
+  if (!needShift()) return;
+  SHOWSEQ++; $('#nav').innerHTML = ''; $('#modes').innerHTML = '';
+  const first = !ME.hasPin;
+  $('#app').innerHTML = `<div class="card"><h3>🛡️ เริ่มกะ</h3><p class="mut">${esc(ME.display_name || '')} · ใส่ PIN ครั้งเดียว ใช้งานได้ต่อเนื่อง ${esc(SET.guard_hours || 12)} ชั่วโมง ไม่ต้องเข้าระบบใหม่ระหว่างกะ<br>เปลี่ยนคน/จบงาน ให้กด "จบกะ" ทุกครั้ง โดยเฉพาะเครื่องกลางที่ป้อม</p>
+    ${first ? `<label class="lb">ตั้ง PIN 6 หลัก (ครั้งแรก ห้ามเดาง่าย)</label><input id="sh_new" type="password" inputmode="numeric" maxlength="6" autocomplete="off"><label class="lb">ใส่ PIN อีกครั้ง</label><input id="sh_new2" type="password" inputmode="numeric" maxlength="6" autocomplete="off">`
+      : `<label class="lb">PIN 6 หลัก</label><input id="sh_pin" type="password" inputmode="numeric" maxlength="6" autocomplete="off">`}
+    <button class="btn" onclick="startShift()">เริ่มกะ</button><p class="mut">ลืม PIN: ติดต่อนิติฯ ให้ล้าง PIN ที่หน้า ผู้ใช้/สิทธิ์</p></div>`;
+}
+async function startShift() {
+  const first = !ME.hasPin, d = first ? { new_pin: val('sh_new') } : { pin: val('sh_pin') };
+  if (first && val('sh_new') !== val('sh_new2')) return toast('PIN สองช่องไม่ตรงกัน', true);
+  try {
+    const r = await post('startShift', d);
+    GS = { t: r.token, exp: r.exp, sub: lineSub() }; try { localStorage.setItem('gsess', JSON.stringify(GS)); } catch (e) {}
+    ME.hasPin = true; ME.shift_until = r.exp; MODE = 'guard'; CUR = firstTab('guard'); renderModes(); renderNav(); show(CUR);
+    toast('เริ่มกะแล้ว ใช้งานได้ถึง ' + new Date(r.exp).toTimeString().slice(0, 5));
+  } catch (e) { toast(e.message, true); }
+}
+async function endShift() {
+  if (!confirm('จบกะตอนนี้? เครื่องนี้จะต้องใส่ PIN ใหม่ก่อนใช้งาน')) return;
+  try { await post('endShift', {}); } catch (e) {}
+  clearShift(); vcClear(); renderShift();
+}
+async function revokeShifts() {
+  if (!confirm('ยกเลิกกะ รปภ. ทุกเครื่องทันที? ทุกคนต้องใส่ PIN เริ่มกะใหม่')) return;
+  act('revokeShifts', {}, n => 'ยกเลิกแล้ว ' + n + ' กะ');
+}
 /* ================= ศูนย์แจ้งเตือนในแอป ================= */
 let NTF = null, NTO = 0;
 const NT_ICON = { res: '🏠', staff: '🏛️', guard: '🚧' };
@@ -13715,9 +13755,12 @@ function vOmore() {
 
 /* ================= นิติฯ: ประกาศ / ผู้ใช้ / ตั้งค่าทั่วไป ================= */
 async function vAdmin() {
-  const [us, sv] = await Promise.all([api('listUsers'), api('settingsView')]);
+  const [us, sv, sh] = await Promise.all([api('listUsers'), api('settingsView'), api('shiftStatus').catch(() => [])]);
   const pend = us.filter(x => x.active !== 'TRUE');
-  return `<div class="card"><b>📢 ออกประกาศ (ส่ง LINE ถึงบัญชีหลักทุกบ้าน)</b><div class="mut">1 ประกาศ ≈ 57 ข้อความ ควรรวมหลายเรื่องไว้ในประกาศเดียว</div><input id="n_title" placeholder="หัวข้อ">
+  return `<div class="card"><b>🛡️ กะ รปภ. ที่ใช้งานอยู่ (${sh.length})</b>${sh.map(x => `<div class="item"><span>${esc(x.name)}</span><small class="mut">เริ่ม ${esc(dt(x.since))} · ถึง ${esc(dt(x.until))}</small></div>`).join('') || '<div class="mut">ไม่มี</div>'}
+    <div class="mut">รปภ. เริ่มกะด้วย LINE + PIN ใช้งานต่อเนื่องได้ตามอายุกะ (ตั้งที่ ตั้งค่าทั่วไป) · เครื่องหาย/เปลี่ยนตัว รปภ. กดยกเลิกทั้งหมดได้ทันที</div>
+    ${sh.length ? '<button class="btn sec" onclick="revokeShifts()">ยกเลิกกะ รปภ. ทั้งหมด</button>' : ''}</div>
+  <div class="card"><b>📢 ออกประกาศ (ส่ง LINE ถึงบัญชีหลักทุกบ้าน)</b><div class="mut">1 ประกาศ ≈ 57 ข้อความ ควรรวมหลายเรื่องไว้ในประกาศเดียว</div><input id="n_title" placeholder="หัวข้อ">
     <textarea id="n_body" rows="4" placeholder="รายละเอียด วัน เวลา สถานที่"></textarea><button class="btn" onclick="newAnn()">ประกาศ</button></div>
   <div class="card"><b>🎨 รูปลักษณ์ระบบ (ชื่อ สี โลโก้)</b><div class="mut">แสดงที่หัวหน้าแอปของทุกคน</div>
     <label class="lb">ชื่อหมู่บ้าน (ไทย)</label><input id="br_th" value="${esc(sv.brand.name_th)}">
@@ -13740,6 +13783,7 @@ async function vAdmin() {
   <h4>ผู้ใช้งาน (${us.length}) • รอยืนยัน ${pend.length}</h4>
   ${us.map(x => `<div class="card"><div class="row"><b>${esc(x.display_name)}</b><span class="badge ${x.active === 'TRUE' ? 'done' : 'pending'}">${x.active === 'TRUE' ? 'ใช้งาน' : 'รอยืนยัน/ระงับ'}</span></div>
     <small class="mut">บ้าน ${esc(x.house_no) || '-'} • ${x.acct_type === 'main' ? 'บัญชีหลัก' : x.acct_type === 'backup' ? 'บัญชีสำรอง' : ROLE_TH[x.role] || x.role} • ${esc(x.phone)}</small>
+    ${x.role === 'guard' && x.active === 'TRUE' ? `<button class="btn sec" style="width:auto" onclick="if(confirm('ล้าง PIN และยกเลิกกะของ ${esc(x.display_name)}? รปภ. จะตั้ง PIN ใหม่ตอนเริ่มกะครั้งถัดไป'))act('resetGuardPin',{uid:'${esc(x.line_user_id)}'},'ล้าง PIN แล้ว')">ล้าง PIN รปภ.</button>` : ''}
     ${['committee', 'manager'].includes(x.role) ? `<div class="note">${ROLE_TH[x.role]} (เปลี่ยนผ่านทะเบียนกรรมการเท่านั้น)</div>` : `
     ${x.acct_type ? `<div class="row" style="gap:8px">${x.active !== 'TRUE' ? `<button class="btn" onclick="act('decideAccount',{uid:'${esc(x.line_user_id)}',ok:true},'ยืนยันแล้ว')">ยืนยันบัญชี</button><button class="btn sec" onclick="act('decideAccount',{uid:'${esc(x.line_user_id)}',ok:false},'ปฏิเสธแล้ว')">ปฏิเสธ</button>` : `<button class="btn sec" onclick="setUser('${esc(x.line_user_id)}',false)">ระงับ</button>`}</div>`
       : `<select id="ur_${esc(x.line_user_id)}">${ROLES.map(r => `<option value="${r}" ${r === x.role ? 'selected' : ''}>${ROLE_TH[r]}</option>`).join('')}</select><button class="btn" onclick="setUser('${esc(x.line_user_id)}',true)">ยืนยัน/บันทึก</button><button class="btn sec" onclick="setUser('${esc(x.line_user_id)}',false)">ระงับ</button>`}`}</div>`).join('')}`;
@@ -14130,8 +14174,10 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
   if (ME.role === 'pending') { SHOWSEQ++; $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
   const same = FIRST && prev === JSON.stringify([ME.role, ME.office, ME.acct_type, !!ME.admin]) && modesOf()[0] === MODE && firstTab(MODE) === CUR;
   MODE = modesOf()[0]; CUR = firstTab(MODE); renderModes(); renderNav();
-  if (!same) show(CUR);   // สิทธิ์เปลี่ยนจากที่จำไว้ ค่อยโหลดใหม่ · ถ้าเหมือนเดิมใช้ผลที่โหลดคู่ขนานไว้แล้ว
+  if (needShift()) renderShift();   // รปภ.: ต้องเริ่มกะ (PIN) ก่อน
+  else if (!same) show(CUR);   // สิทธิ์เปลี่ยนจากที่จำไว้ ค่อยโหลดใหม่ · ถ้าเหมือนเดิมใช้ผลที่โหลดคู่ขนานไว้แล้ว
   openDeepLink();
+  setInterval(() => { if (ME && ME.role === 'guard' && SET.guard_shift && !ME.admin && GS && !shiftOn()) { clearShift(); renderShift(); } }, 60000);   // กะหมดอายุระหว่างเปิดค้าง
   setInterval(() => { if (MODE === 'guard' && CUR === 'ggate' && !document.hidden && !BUSY && !document.activeElement.matches('input,textarea')) refreshGate(); }, Math.max(1, SET.gate_refresh_min || 2) * 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && MODE === 'guard' && CUR === 'ggate') refreshGate(); });
 })().catch(e => {
