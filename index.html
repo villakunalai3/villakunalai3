@@ -12542,7 +12542,7 @@ const TABS = {
   tech: [['tickets','🧹','งานของฉัน'],['kb','📖','ติดต่อ']],
   sys: [['sys','🛠️','ความพร้อม'],['users','👥','ผู้ใช้/สิทธิ์'],['opening','📥','ยกมา'],['policy','⚙️','ตั้งค่า'],['adminlog','📜','ประวัติ']]
 };
-const SUB = { sys: ['features','archive','kb','matrix','help'], policy: ['archive','kb','matrix','help'], more: ['meetings','votes','requests','parcels','house','roster','kb','matrix','help'], omore: ['tickets','meetings','votes','admin','bank','parcels','opening','archive','kb','matrix','help'] };
+const SUB = { sys: ['features','archive','kb','matrix','help'], policy: ['archive','kb','matrix','help'], more: ['meetings','votes','requests','parcels','house','roster','kb','matrix','help'], omore: ['tickets','meetings','votes','admin','linetopics','bank','parcels','opening','archive','kb','matrix','help'] };
 const navKey = tab => { for (const [p, subs] of Object.entries(SUB)) if (subs.includes(tab) && !TABS[MODE].some(t => t[0] === tab)) return p; return tab; };
 // เปิด/ปิดฟีเจอร์โดยผู้ดูแลระบบ (SET.features มาจากเซิร์ฟเวอร์ ถ้าไม่มี = เปิด)
 const FT = { gate: 'vehicles', ggate: 'vehicles', gguests: 'vehicles', parcels: 'parcels', votes: 'voting', roster: 'committee_list', cctv: 'guard' };
@@ -12603,7 +12603,7 @@ let INFLIGHT = 0;
 function busyBar(d) { INFLIGHT = Math.max(0, INFLIGHT + d); document.body.classList.toggle('loading', INFLIGHT > 0); }
 const READ_ACTIONS = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
-  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
+  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'lineTopicsView', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
 // วัดเวลาจริงของแต่ละคำขอ (เครื่องผู้ใช้ ↔ เซิร์ฟเวอร์) เก็บ 60 รายการล่าสุด ดูได้ที่ ผู้ดูแลระบบ → ความพร้อม
 const PERF = { list: [], boot: 0 };
 function perfAdd(a, c, sv) { PERF.list.push({ a, c: Math.round(c), s: sv == null ? null : Math.round(sv), t: Date.now() }); if (PERF.list.length > 60) PERF.list.shift(); try { sessionStorage.setItem('perf', JSON.stringify(PERF)); } catch (e) {} }
@@ -13384,6 +13384,24 @@ async function vMatrix() {
   <div class="card"><b>ผู้รับเหมา</b><div class="mut">เวลาทำงาน ${esc(m.contractor.hours)} · ไม่อนุญาตวัน${m.contractor.block_days.map(esc).join(', ') || 'ใด'}<br>เรื่องทั่วไป (กรรมการ 1 ท่าน): เมื่อกรรมการท่านใดท่านหนึ่งกดอนุมัติ ถือว่าจบ ผู้ขอและกรรมการบ้านเดียวกัน อนุมัติไม่ได้ · ผลประกาศเฉพาะในแอป และแจ้ง LINE ผู้ขอกับกรรมการ/นิติฯ</div></div>
   <div class="note">เลขมติ/ข้อบังคับที่มอบอำนาจ: <b>${esc(m.delegation || 'ยังไม่ได้บันทึก (นิติฯ ตั้งที่ ตั้งค่า → ค่าทั่วไป)')}</b></div>`;
 }
+/* ================= การแจ้งเตือน LINE รายเรื่อง (นิติฯ) ================= */
+let LTV = null;
+async function vLineTopics() { LTV = await api('lineTopicsView'); return ltHtml(); }
+function ltHtml() {
+  const d = LTV, u = d.usage, pct = Math.min(100, Math.round(u.used / Math.max(1, u.quota) * 100));
+  const row = t => `<label class="item" style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" id="lt_${t.key}" ${t.on ? 'checked' : ''} ${t.locked ? 'disabled' : ''} style="width:auto;margin-top:4px">
+    <span style="flex:1"><b>${t.locked ? '🔒 ' : ''}${esc(t.label)}</b>${t.prio === 'critical' ? ' <span class="badge pending">สำคัญ</span>' : ''}<br><small class="mut">ถึง: ${esc(t.to)}${t.note ? ' · ' + esc(t.note) : ''}</small>
+    <br><small class="mut">เดือนนี้: ส่งแล้ว ${t.sent} ข้อความ${t.skipped ? ' · งดส่งเพราะปิด ' + t.skipped : ''}</small></span></label>`;
+  return `<div class="card"><b>📨 การแจ้งเตือน LINE รายเรื่อง</b>
+    <div class="mut">LINE OA แพ็กเกจฟรีส่งได้ ${esc(u.quota)} ข้อความ/เดือน · ผู้รับ 1 คน = 1 ข้อความ (ประกาศถึงทุกบ้าน ≈ 57) · เรื่องที่ปิด ข้อมูลยังอยู่ในแอปครบ แค่ไม่ส่ง LINE</div>
+    <div style="background:#eee;border-radius:8px;height:10px;margin:8px 0"><div style="width:${pct}%;height:10px;border-radius:8px;background:${pct >= 90 ? '#c0392b' : pct >= 80 ? '#e67e22' : 'var(--primary,#e03f8b)'}"></div></div>
+    <div class="mut">เดือน ${esc(u.month)} ใช้ไปแล้ว ${esc(u.used)} / ${esc(u.quota)} ข้อความ (${pct}%) · เมื่อเกิน 90% ระบบส่งเฉพาะเรื่อง "สำคัญ"</div>
+    <div class="chips2"><button onclick="ltPreset('essential')">เฉพาะสำคัญ</button><button onclick="ltPreset('normal')">ปกติ</button><button onclick="ltPreset('all')">ทั้งหมด</button></div></div>
+  ${Object.keys(d.groups).map(g => `<div class="card"><b>${esc(d.groups[g])}</b>${d.topics.filter(t => t.g === g).map(row).join('')}</div>`).join('')}
+  <button class="btn" onclick="ltSave()">บันทึก</button>`;
+}
+function ltPreset(lv) { LTV.topics.forEach(t => { const el = document.getElementById('lt_' + t.key); if (el && !t.locked) el.checked = lv === 'all' || t.prio === 'critical' || (lv === 'normal' && t.prio === 'normal'); }); }
+function ltSave() { const on = {}; LTV.topics.forEach(t => { const el = document.getElementById('lt_' + t.key); if (el) on[t.key] = el.checked; }); act('saveLineTopics', { on }, r => r.changed ? `บันทึกแล้ว (เปลี่ยน ${r.changed} เรื่อง)` : 'บันทึกแล้ว (ไม่มีการเปลี่ยนแปลง)'); }
 /* ================= ข้อมูลเก็บถาวร (กรรมการ / นิติฯ / ผู้ดูแลระบบ) ================= */
 const ARC = { kind: 'visits', year: '', q: '', from: '', to: '', off: 0, limit: 50 };
 let ARCI = null, ARCR = null;
@@ -13660,7 +13678,7 @@ async function vBank() {
 function loadBankFile() { const f = $('#bk_file').files[0]; if (!f) return; const fr = new FileReader(); fr.onload = () => { $('#bk_text').value = fr.result; }; fr.readAsText(f, 'utf-8'); }
 
 function vOmore() {
-  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
+  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['linetopics', '📨', 'การแจ้งเตือน LINE'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
   return `<div class="grid2">${items.filter(i => tabOk(i[0])).map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 }
 
@@ -13686,7 +13704,7 @@ async function vAdmin() {
     <div class="mut">ต้องการออกแบบเองทั้งใบ: ใส่ ID เอกสาร Google Docs แม่แบบในชีต Settings (RECEIPT_TEMPLATE_DOC_ID) ใช้ {{village}} {{receipt_no}} {{paid_date}} {{owner}} {{house_no}} {{items}} {{total}} {{verified_by}}</div></div>
   <div class="card"><b>ตั้งค่าทั่วไป (ไม่ต้องผ่านอนุมัติ)</b>
     ${sv.simple.map(s => `<label class="lb">${esc(s.label)} (${s.min}–${s.max})</label><div class="row" style="gap:8px"><input id="ss_${s.key}" type="number" value="${esc(s.value)}" min="${s.min}" max="${s.max}"><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'${s.key}',value:val('ss_${s.key}')},'บันทึกแล้ว')">บันทึก</button></div>`).join('')}
-    <label class="lb">ระดับการแจ้งเตือน LINE (ประหยัดโควตา)</label><div class="row" style="gap:8px"><select id="ss_lvl">${[['essential', 'เฉพาะสำคัญ (รถเข้า-ออก/พัสดุ/ยืนยันบัญชี)'], ['normal', 'ปกติ (+บิล/ผลชำระ/ประกาศ)'], ['all', 'ทั้งหมด (+แจ้งเตือนภายในกรรมการ)']].map(([k, t]) => `<option value="${k}" ${sv.line_level === k ? 'selected' : ''}>${t}</option>`).join('')}</select><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'LINE_NOTIFY_LEVEL',value:val('ss_lvl')},'บันทึกแล้ว')">บันทึก</button></div>
+    <label class="lb">การแจ้งเตือน LINE (ประหยัดโควตา)</label><button class="btn sec" onclick="show('linetopics')">📨 เลือกเรื่องที่ส่ง LINE ทีละเรื่อง</button>
     <div class="mut">การตั้งค่าอื่น (อัตราค่าส่วนกลาง ส่วนลด วงเงิน บัญชีรับเงิน ฯลฯ) ต้องให้กรรมการอนุมัติที่โหมดกรรมการ → แท็บตั้งค่า</div></div>
   <h4>ผู้ใช้งาน (${us.length}) • รอยืนยัน ${pend.length}</h4>
   ${us.map(x => `<div class="card"><div class="row"><b>${esc(x.display_name)}</b><span class="badge ${x.active === 'TRUE' ? 'done' : 'pending'}">${x.active === 'TRUE' ? 'ใช้งาน' : 'รอยืนยัน/ระงับ'}</span></div>
@@ -13959,6 +13977,7 @@ const HELP = {
   sys: { a: 'adm', t: 'ความพร้อมระบบ', w: 'ตรวจว่าตั้งค่าครบ', s: ['ดูรายการ ⚠️ แล้วแก้ตามคำแนะนำ', 'อนุมัติผู้ใช้ใหม่ที่หน้า ผู้ใช้/สิทธิ์', 'เปิด Drive API เพื่อลบรูปถาวรตามกำหนด'], k: [] },
   users: { a: 'adm', t: 'ผู้ใช้ / สิทธิ์', w: 'อนุมัติผู้ใช้และตั้งบทบาท', s: ['เลือกบทบาท: ลูกบ้าน กรรมการ นิติฯ รปภ. แม่บ้าน ช่าง', 'กดบันทึก/ระงับ'], k: [] },
   features: { a: 'adm', t: 'เปิด/ปิดฟีเจอร์', w: 'เปิดหรือปิดระบบย่อยได้ 6 ตัว', s: ['ติ๊กเปิด/ปิด แล้วกดบันทึก', 'ปิดแล้วข้อมูลไม่หาย เปิดใหม่ได้', 'ระบบบันทึกและแจ้งกรรมการทุกครั้ง'], k: [] },
+  linetopics: { a: 'off', t: 'การแจ้งเตือน LINE รายเรื่อง', w: 'เลือกว่าเรื่องใดส่ง LINE เพื่อประหยัดโควตาข้อความฟรีของ LINE OA ต่อเดือน', s: ['ทุกผู้รับ 1 คน นับ 1 ข้อความ เช่น ประกาศถึงทุกบ้าน ≈ 57 ข้อความ', 'ติ๊กเปิด/ปิดทีละเรื่อง หรือกดชุดสำเร็จรูป แล้วกดบันทึก', 'ดูตัวเลข "เดือนนี้" ว่าเรื่องใดใช้โควตามาก', 'เรื่องที่มี 🔒 ปิดไม่ได้ (นโยบาย/ความปลอดภัย)', 'ปิดแล้วข้อมูลยังอยู่ในแอปครบ แค่ไม่ส่ง LINE'], k: [['โควตา', 'จำนวนข้อความ LINE ฟรีต่อเดือนของบัญชี LINE OA (ตั้งที่ LINE_MONTHLY_QUOTA)'], ['ระดับความสำคัญ', 'เมื่อโควตาใกล้เต็ม เรื่องสำคัญยังส่งได้ถึง 100% เรื่องอื่นหยุดที่ 90%']] },
   archive: { a: 'com', t: 'ข้อมูลเก็บถาวร', w: 'ดูรถเข้า-ออกและบันทึกการใช้งานที่เก่ากว่า 90 วัน ซึ่งระบบย้ายออกจากชีตหลักให้อัตโนมัติทุกวันที่ 1 เพื่อให้แอปเร็ว', s: ['เลือกประเภท ปี ช่วงวันที่ หรือพิมพ์คำค้น (ทะเบียน บ้าน ชื่อ) แล้วกดค้นหา', 'เห็นเฉพาะกรรมการ นิติฯ และผู้ดูแลระบบ ทุกครั้งที่เปิดดูมีบันทึกว่าใครดู', 'ไม่มีรูปในข้อมูลเก็บถาวร (ลบถาวรตามระยะเก็บรูป PDPA แล้ว)', 'นิติฯ กด "เก็บถาวรตอนนี้" ได้ถ้าไม่อยากรอวันที่ 1'], k: [] },
   adminlog: { a: 'adm', t: 'ประวัติผู้ดูแลระบบ', w: 'บันทึกทุกการกระทำที่ข้ามการอนุมัติ', s: ['กรรมการตรวจย้อนหลังได้'], k: [] }
 };
@@ -13998,7 +14017,7 @@ function helpFilter() { const q = val('hl_q').trim().toLowerCase(); document.que
 
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
-  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, archive: vArchive, help: vHelp };
+  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, archive: vArchive, linetopics: vLineTopics, help: vHelp };
 // ลิงก์จากข้อความ LINE: ?receipt=<pay_id> เปิดใบเสร็จ · ?go=pay ไปหน้าชำระเงิน
 async function openDeepLink() {
   let q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
