@@ -114,7 +114,7 @@ nav button span{position:relative}
 </style>
 </head>
 <body>
-<header><div class="brand"><img id="logo" alt="" hidden onerror="this.hidden=true"><div><b id="title">หมู่บ้านวิลล่า คุณาลัย 3</b><i id="title_en">VillaKunalai 3</i></div></div><small id="who"></small></header><div id="modes"></div><button id="helpfab" class="helpfab" onclick="showHelp(CUR)" aria-label="ช่วยเหลือหน้านี้">ⓘ</button><div id="toast"></div><div id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="mbody"></div></div>
+<header><div class="brand"><img id="logo" alt="" hidden onerror="this.hidden=true"><div><b id="title">หมู่บ้านวิลล่า คุณาลัย 3</b><i id="title_en">VillaKunalai 3</i></div></div><div style="display:flex;align-items:center;gap:6px"><button id="bell" hidden onclick="show('notifs')" aria-label="การแจ้งเตือน" style="background:none;border:0;color:inherit;font-size:20px;cursor:pointer;padding:0 4px"><span style="position:relative">🔔<i class="bd" id="bd_notifs" style="display:none"></i></span></button><small id="who"></small></div></header><div id="modes"></div><button id="helpfab" class="helpfab" onclick="showHelp(CUR)" aria-label="ช่วยเหลือหน้านี้">ⓘ</button><div id="toast"></div><div id="modal" onclick="if(event.target===this)closeModal()"><div class="in" id="mbody"></div></div>
 <nav id="nav"></nav>
 <main id="app">กำลังโหลด...</main>
 <script type="text/plain" id="lib_qr">
@@ -12603,7 +12603,7 @@ let INFLIGHT = 0;
 function busyBar(d) { INFLIGHT = Math.max(0, INFLIGHT + d); document.body.classList.toggle('loading', INFLIGHT > 0); }
 const READ_ACTIONS = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
-  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'lineTopicsView', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
+  'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'lineTopicsView', 'myNotifs', 'notifCount', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
 // วัดเวลาจริงของแต่ละคำขอ (เครื่องผู้ใช้ ↔ เซิร์ฟเวอร์) เก็บ 60 รายการล่าสุด ดูได้ที่ ผู้ดูแลระบบ → ความพร้อม
 const PERF = { list: [], boot: 0 };
 function perfAdd(a, c, sv) { PERF.list.push({ a, c: Math.round(c), s: sv == null ? null : Math.round(sv), t: Date.now() }); if (PERF.list.length > 60) PERF.list.shift(); try { sessionStorage.setItem('perf', JSON.stringify(PERF)); } catch (e) {} }
@@ -12625,7 +12625,7 @@ function meKey() { let sub = ''; try { sub = (liff.getDecodedIDToken() || {}).su
 const BATCHABLE = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'arrearsList', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
   'reports', 'roster', 'listInside', 'listReleases', 'listExceptions', 'approvalMatrix', 'listGuests', 'houseLookup', 'bankStatus', 'userPicker', 'listUsers',
-  'sysStatus', 'featuresView', 'adminLog', 'payOptions', 'listContacts', 'settingsView', 'openingView', 'listAssets', 'viewArchiveInfo']);
+  'sysStatus', 'featuresView', 'adminLog', 'notifCount', 'myNotifs', 'payOptions', 'listContacts', 'settingsView', 'openingView', 'listAssets', 'viewArchiveInfo']);
 let AQ = [], AQT = null;
 function api(action, data = {}) {
   if (!BATCHABLE.has(action)) return post(action, data);
@@ -12727,6 +12727,7 @@ async function loadBadges(force) {
   Object.keys(BADGE_N).forEach(k => set(k, BADGE_N[k]));
   if (!force && Date.now() - BADGE_AT < 45000) return;   // ไม่ถามเซิร์ฟเวอร์ถี่เกินไป
   BADGE_AT = Date.now();
+  api('notifCount').then(c => set('notifs', c.unread)).catch(() => {});   // กระดิ่ง: ทุกโหมด (รวมกับคำขออื่นในรอบเดียว)
   try {
     if (MODE === 'committee') { const [d, e] = await apiBatch([['inbox'], ['listExceptions']]); if (d.ok) set('inbox', d.data.items.filter(i => i.can_vote).length + (e && e.ok ? e.data.filter(x => x.can_decide).length : 0)); }
     if (MODE === 'office') { const [t, p] = await apiBatch([['listTasks'], ['pendingPayments']]); if (t.ok) set('tasks', t.data.tasks.length); if (p.ok) set('verify', p.data.payments.length); }
@@ -13384,24 +13385,54 @@ async function vMatrix() {
   <div class="card"><b>ผู้รับเหมา</b><div class="mut">เวลาทำงาน ${esc(m.contractor.hours)} · ไม่อนุญาตวัน${m.contractor.block_days.map(esc).join(', ') || 'ใด'}<br>เรื่องทั่วไป (กรรมการ 1 ท่าน): เมื่อกรรมการท่านใดท่านหนึ่งกดอนุมัติ ถือว่าจบ ผู้ขอและกรรมการบ้านเดียวกัน อนุมัติไม่ได้ · ผลประกาศเฉพาะในแอป และแจ้ง LINE ผู้ขอกับกรรมการ/นิติฯ</div></div>
   <div class="note">เลขมติ/ข้อบังคับที่มอบอำนาจ: <b>${esc(m.delegation || 'ยังไม่ได้บันทึก (นิติฯ ตั้งที่ ตั้งค่า → ค่าทั่วไป)')}</b></div>`;
 }
+/* ================= ศูนย์แจ้งเตือนในแอป ================= */
+let NTF = null, NTO = 0;
+const NT_ICON = { res: '🏠', staff: '🏛️', guard: '🚧' };
+const NTGO = { t_gate: 'gate', t_release: 'gate', t_parcel: 'parcels', t_payee: 'pay', t_bill: 'pay', t_remind: 'pay', t_payresult: 'pay', t_billchange: 'pay', t_card: 'pay', t_credit: 'pay',
+  t_service: 'tickets', t_contractor: 'gate', t_announce: 'home', t_meeting: 'meetings', t_vote: 'votes', s_approve: 'inbox', s_security: 'inbox', s_progress: 'inbox', s_task: 'tasks',
+  s_payment: 'verify', s_register: 'admin', s_arrears: 'tasks', g_exit: 'ggate', g_overnight: 'ggate', g_cctv: 'cctv' };
+const NTLBL = { gate: 'รถเข้า-ออก', parcels: 'พัสดุ', pay: 'ชำระเงิน', tickets: 'แจ้งซ่อม', home: 'หน้าแรก', meetings: 'การประชุม', votes: 'โหวต', inbox: 'รออนุมัติ', tasks: 'งานนิติฯ', verify: 'ตรวจสลิป', admin: 'ผู้ใช้/ตั้งค่า', ggate: 'ป้อมยาม', cctv: 'ขอดูกล้อง' };
+const viewModes = v => modesOf().filter(m => tabsOf(m).some(t => t[0] === v || (SUB[t[0]] || []).includes(v)));
+async function vNotifs() {
+  NTF = await api('myNotifs', { offset: NTO });
+  if (NTF.unread) api('seenNotifs').then(() => { BADGE_N.notifs = 0; loadBadges(true); }).catch(() => {});
+  const goBtn = it => {
+    if (/^receipt=/.test(it.q || '')) return `<button class="btn sec" onclick="openReceipt(${esc(JSON.stringify(decodeURIComponent(it.q.slice(8))))})">เปิดใบเสร็จ</button>`;
+    const v = NTGO[it.topic]; return v && viewModes(v).length ? `<button class="btn sec" onclick="notifGo('${v}')">เปิด${NTLBL[v] || ''}</button>` : '';
+  };
+  const items = NTF.items.map(it => `<div class="card"${it.unread ? ' style="border-left:4px solid var(--pri,#e03f8b)"' : ''}><div class="row"><b>${NT_ICON[it.g] || '🔔'} ${esc(it.label || 'แจ้งเตือน')}</b>${it.unread ? '<span class="badge pending">ใหม่</span>' : ''}</div>
+    <small class="mut">${esc(dt(it.at))}</small><div style="white-space:pre-line;word-break:break-word">${esc(it.text)}</div>${goBtn(it)}</div>`).join('');
+  const to = NTO + NTF.items.length;
+  return `<div class="card"><b>🔔 การแจ้งเตือน</b><div class="mut">ทุกเรื่องที่ระบบแจ้งถึงคุณอยู่ที่นี่ แม้เรื่องนั้นไม่ได้ส่ง LINE · เห็นเฉพาะของคุณ · ลบอัตโนมัติเมื่อเก่าเกินกำหนด</div>${NTF.unread ? `<div class="mut">ใหม่ ${NTF.unread} รายการ</div>` : ''}</div>
+  ${items || emptyCard('ยังไม่มีการแจ้งเตือน')}
+  ${NTF.total > 30 ? `<div class="row" style="gap:8px"><button class="btn sec" ${NTO ? '' : 'disabled'} onclick="NTO=Math.max(0,NTO-30);show('notifs')">ใหม่กว่า</button><button class="btn sec" ${to < NTF.total ? '' : 'disabled'} onclick="NTO+=30;show('notifs')">เก่ากว่า</button></div>` : ''}`;
+}
+function notifGo(v) {
+  const ms = viewModes(v); if (!ms.length) return toast('บัญชีนี้เปิดหน้านี้ไม่ได้', true);
+  if (ms.includes(MODE)) return show(v);
+  const m = ms[0]; if (m !== 'resident' && !ME.pinOK) return showPin(m);
+  MODE = m; renderModes(); CUR = v; renderNav(); show(v);
+}
 /* ================= การแจ้งเตือน LINE รายเรื่อง (นิติฯ) ================= */
 let LTV = null;
 async function vLineTopics() { LTV = await api('lineTopicsView'); return ltHtml(); }
 function ltHtml() {
   const d = LTV, u = d.usage, pct = Math.min(100, Math.round(u.used / Math.max(1, u.quota) * 100));
-  const row = t => `<label class="item" style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" id="lt_${t.key}" ${t.on ? 'checked' : ''} ${t.locked ? 'disabled' : ''} style="width:auto;margin-top:4px">
+  const row = t => `<div class="item" style="display:flex;gap:10px;align-items:flex-start">
+    <span style="display:flex;flex-direction:column;gap:2px;align-items:center;min-width:52px"><label style="font-size:12px;display:flex;gap:4px;align-items:center"><input type="checkbox" id="la_${t.key}" ${t.app ? 'checked' : ''} ${t.locked ? 'disabled' : ''} style="width:auto">ในแอป</label><label style="font-size:12px;display:flex;gap:4px;align-items:center"><input type="checkbox" id="lt_${t.key}" ${t.on ? 'checked' : ''} ${t.locked ? 'disabled' : ''} style="width:auto">LINE</label></span>
     <span style="flex:1"><b>${t.locked ? '🔒 ' : ''}${esc(t.label)}</b>${t.prio === 'critical' ? ' <span class="badge pending">สำคัญ</span>' : ''}<br><small class="mut">ถึง: ${esc(t.to)}${t.note ? ' · ' + esc(t.note) : ''}</small>
-    <br><small class="mut">เดือนนี้: ส่งแล้ว ${t.sent} ข้อความ${t.skipped ? ' · งดส่งเพราะปิด ' + t.skipped : ''}</small></span></label>`;
-  return `<div class="card"><b>📨 การแจ้งเตือน LINE รายเรื่อง</b>
+    <br><small class="mut">LINE เดือนนี้: ส่งแล้ว ${t.sent} ข้อความ${t.skipped ? ' · งดส่งเพราะปิด ' + t.skipped : ''}</small></span></div>`;
+  return `<div class="card"><b>📨 การแจ้งเตือน (ในแอป / LINE)</b>
+    <div class="mut"><b>ในแอป</b> = บันทึกในกระดิ่ง 🔔 ของผู้รับ ไม่ใช้โควตา เก็บ ${esc(d.keep_days)} วัน · <b>LINE</b> = ส่งข้อความ LINE ใช้โควตา · แนะนำเปิด "ในแอป" ทุกเรื่อง แล้วปิด LINE เรื่องที่ไม่เร่งด่วน</div>
     <div class="mut">LINE OA แพ็กเกจฟรีส่งได้ ${esc(u.quota)} ข้อความ/เดือน · ผู้รับ 1 คน = 1 ข้อความ (ประกาศถึงทุกบ้าน ≈ 57) · เรื่องที่ปิด ข้อมูลยังอยู่ในแอปครบ แค่ไม่ส่ง LINE</div>
     <div style="background:#eee;border-radius:8px;height:10px;margin:8px 0"><div style="width:${pct}%;height:10px;border-radius:8px;background:${pct >= 90 ? '#c0392b' : pct >= 80 ? '#e67e22' : 'var(--primary,#e03f8b)'}"></div></div>
     <div class="mut">เดือน ${esc(u.month)} ใช้ไปแล้ว ${esc(u.used)} / ${esc(u.quota)} ข้อความ (${pct}%) · เมื่อเกิน 90% ระบบส่งเฉพาะเรื่อง "สำคัญ"</div>
-    <div class="chips2"><button onclick="ltPreset('essential')">เฉพาะสำคัญ</button><button onclick="ltPreset('normal')">ปกติ</button><button onclick="ltPreset('all')">ทั้งหมด</button></div></div>
+    <div class="mut">ชุดสำเร็จรูปสำหรับ LINE:</div><div class="chips2"><button onclick="ltPreset('essential')">เฉพาะสำคัญ</button><button onclick="ltPreset('normal')">ปกติ</button><button onclick="ltPreset('all')">ทั้งหมด</button></div></div>
   ${Object.keys(d.groups).map(g => `<div class="card"><b>${esc(d.groups[g])}</b>${d.topics.filter(t => t.g === g).map(row).join('')}</div>`).join('')}
   <button class="btn" onclick="ltSave()">บันทึก</button>`;
 }
 function ltPreset(lv) { LTV.topics.forEach(t => { const el = document.getElementById('lt_' + t.key); if (el && !t.locked) el.checked = lv === 'all' || t.prio === 'critical' || (lv === 'normal' && t.prio === 'normal'); }); }
-function ltSave() { const on = {}; LTV.topics.forEach(t => { const el = document.getElementById('lt_' + t.key); if (el) on[t.key] = el.checked; }); act('saveLineTopics', { on }, r => r.changed ? `บันทึกแล้ว (เปลี่ยน ${r.changed} เรื่อง)` : 'บันทึกแล้ว (ไม่มีการเปลี่ยนแปลง)'); }
+function ltSave() { const on = {}, app = {}; LTV.topics.forEach(t => { const el = document.getElementById('lt_' + t.key), ea = document.getElementById('la_' + t.key); if (el) on[t.key] = el.checked; if (ea) app[t.key] = ea.checked; }); act('saveLineTopics', { on, app }, r => r.changed ? `บันทึกแล้ว (เปลี่ยน ${r.changed} เรื่อง)` : 'บันทึกแล้ว (ไม่มีการเปลี่ยนแปลง)'); }
 /* ================= ข้อมูลเก็บถาวร (กรรมการ / นิติฯ / ผู้ดูแลระบบ) ================= */
 const ARC = { kind: 'visits', year: '', q: '', from: '', to: '', off: 0, limit: 50 };
 let ARCI = null, ARCR = null;
@@ -13678,7 +13709,7 @@ async function vBank() {
 function loadBankFile() { const f = $('#bk_file').files[0]; if (!f) return; const fr = new FileReader(); fr.onload = () => { $('#bk_text').value = fr.result; }; fr.readAsText(f, 'utf-8'); }
 
 function vOmore() {
-  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['linetopics', '📨', 'การแจ้งเตือน LINE'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
+  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['linetopics', '📨', 'การแจ้งเตือน (ในแอป/LINE)'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
   return `<div class="grid2">${items.filter(i => tabOk(i[0])).map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 }
 
@@ -13704,7 +13735,7 @@ async function vAdmin() {
     <div class="mut">ต้องการออกแบบเองทั้งใบ: ใส่ ID เอกสาร Google Docs แม่แบบในชีต Settings (RECEIPT_TEMPLATE_DOC_ID) ใช้ {{village}} {{receipt_no}} {{paid_date}} {{owner}} {{house_no}} {{items}} {{total}} {{verified_by}}</div></div>
   <div class="card"><b>ตั้งค่าทั่วไป (ไม่ต้องผ่านอนุมัติ)</b>
     ${sv.simple.map(s => `<label class="lb">${esc(s.label)} (${s.min}–${s.max})</label><div class="row" style="gap:8px"><input id="ss_${s.key}" type="number" value="${esc(s.value)}" min="${s.min}" max="${s.max}"><button class="btn sec" style="width:auto" onclick="act('setSimple',{key:'${s.key}',value:val('ss_${s.key}')},'บันทึกแล้ว')">บันทึก</button></div>`).join('')}
-    <label class="lb">การแจ้งเตือน LINE (ประหยัดโควตา)</label><button class="btn sec" onclick="show('linetopics')">📨 เลือกเรื่องที่ส่ง LINE ทีละเรื่อง</button>
+    <label class="lb">การแจ้งเตือน LINE (ประหยัดโควตา)</label><button class="btn sec" onclick="show('linetopics')">📨 เลือกเรื่องที่แจ้งเตือน (ในแอป / LINE) ทีละเรื่อง</button>
     <div class="mut">การตั้งค่าอื่น (อัตราค่าส่วนกลาง ส่วนลด วงเงิน บัญชีรับเงิน ฯลฯ) ต้องให้กรรมการอนุมัติที่โหมดกรรมการ → แท็บตั้งค่า</div></div>
   <h4>ผู้ใช้งาน (${us.length}) • รอยืนยัน ${pend.length}</h4>
   ${us.map(x => `<div class="card"><div class="row"><b>${esc(x.display_name)}</b><span class="badge ${x.active === 'TRUE' ? 'done' : 'pending'}">${x.active === 'TRUE' ? 'ใช้งาน' : 'รอยืนยัน/ระงับ'}</span></div>
@@ -13977,7 +14008,8 @@ const HELP = {
   sys: { a: 'adm', t: 'ความพร้อมระบบ', w: 'ตรวจว่าตั้งค่าครบ', s: ['ดูรายการ ⚠️ แล้วแก้ตามคำแนะนำ', 'อนุมัติผู้ใช้ใหม่ที่หน้า ผู้ใช้/สิทธิ์', 'เปิด Drive API เพื่อลบรูปถาวรตามกำหนด'], k: [] },
   users: { a: 'adm', t: 'ผู้ใช้ / สิทธิ์', w: 'อนุมัติผู้ใช้และตั้งบทบาท', s: ['เลือกบทบาท: ลูกบ้าน กรรมการ นิติฯ รปภ. แม่บ้าน ช่าง', 'กดบันทึก/ระงับ'], k: [] },
   features: { a: 'adm', t: 'เปิด/ปิดฟีเจอร์', w: 'เปิดหรือปิดระบบย่อยได้ 6 ตัว', s: ['ติ๊กเปิด/ปิด แล้วกดบันทึก', 'ปิดแล้วข้อมูลไม่หาย เปิดใหม่ได้', 'ระบบบันทึกและแจ้งกรรมการทุกครั้ง'], k: [] },
-  linetopics: { a: 'off', t: 'การแจ้งเตือน LINE รายเรื่อง', w: 'เลือกว่าเรื่องใดส่ง LINE เพื่อประหยัดโควตาข้อความฟรีของ LINE OA ต่อเดือน', s: ['ทุกผู้รับ 1 คน นับ 1 ข้อความ เช่น ประกาศถึงทุกบ้าน ≈ 57 ข้อความ', 'ติ๊กเปิด/ปิดทีละเรื่อง หรือกดชุดสำเร็จรูป แล้วกดบันทึก', 'ดูตัวเลข "เดือนนี้" ว่าเรื่องใดใช้โควตามาก', 'เรื่องที่มี 🔒 ปิดไม่ได้ (นโยบาย/ความปลอดภัย)', 'ปิดแล้วข้อมูลยังอยู่ในแอปครบ แค่ไม่ส่ง LINE'], k: [['โควตา', 'จำนวนข้อความ LINE ฟรีต่อเดือนของบัญชี LINE OA (ตั้งที่ LINE_MONTHLY_QUOTA)'], ['ระดับความสำคัญ', 'เมื่อโควตาใกล้เต็ม เรื่องสำคัญยังส่งได้ถึง 100% เรื่องอื่นหยุดที่ 90%']] },
+  notifs: { a: 'all', t: 'การแจ้งเตือน', w: 'รวมทุกเรื่องที่ระบบแจ้งถึงคุณ (กดกระดิ่ง 🔔 มุมขวาบน) แม้เรื่องนั้นไม่ได้ส่ง LINE', s: ['ตัวเลขแดงบนกระดิ่ง = เรื่องใหม่ที่ยังไม่ได้เปิดดู', 'กด "เปิด…" เพื่อไปหน้าที่เกี่ยวข้อง เช่น ชำระเงิน รถเข้า-ออก ใบเสร็จ', 'เห็นเฉพาะแจ้งเตือนของคุณเอง', 'ระบบลบรายการเก่ากว่ากำหนด (เริ่มต้น 90 วัน) อัตโนมัติ'], k: [] },
+  linetopics: { a: 'off', t: 'การแจ้งเตือน (ในแอป / LINE)', w: 'เลือกทีละเรื่องว่าแจ้งในศูนย์แจ้งเตือนของแอป และ/หรือส่ง LINE เพื่อประหยัดโควตาข้อความฟรีของ LINE OA', s: ['ช่อง "ในแอป" = บันทึกในกระดิ่ง 🔔 ของผู้รับ (ไม่ใช้โควตา) · ช่อง "LINE" = ส่งข้อความ LINE', 'แนะนำ: เปิดในแอปทุกเรื่อง แล้วปิด LINE เรื่องที่ไม่เร่งด่วน', 'ทุกผู้รับ 1 คน นับ 1 ข้อความ เช่น ประกาศถึงทุกบ้าน ≈ 57 ข้อความ', 'ติ๊กเปิด/ปิดทีละเรื่อง หรือกดชุดสำเร็จรูป แล้วกดบันทึก', 'ดูตัวเลข "เดือนนี้" ว่าเรื่องใดใช้โควตามาก', 'เรื่องที่มี 🔒 ปิดไม่ได้ (นโยบาย/ความปลอดภัย)', 'ปิดแล้วข้อมูลยังอยู่ในแอปครบ แค่ไม่ส่ง LINE'], k: [['โควตา', 'จำนวนข้อความ LINE ฟรีต่อเดือนของบัญชี LINE OA (ตั้งที่ LINE_MONTHLY_QUOTA)'], ['ระดับความสำคัญ', 'เมื่อโควตาใกล้เต็ม เรื่องสำคัญยังส่งได้ถึง 100% เรื่องอื่นหยุดที่ 90%']] },
   archive: { a: 'com', t: 'ข้อมูลเก็บถาวร', w: 'ดูรถเข้า-ออกและบันทึกการใช้งานที่เก่ากว่า 90 วัน ซึ่งระบบย้ายออกจากชีตหลักให้อัตโนมัติทุกวันที่ 1 เพื่อให้แอปเร็ว', s: ['เลือกประเภท ปี ช่วงวันที่ หรือพิมพ์คำค้น (ทะเบียน บ้าน ชื่อ) แล้วกดค้นหา', 'เห็นเฉพาะกรรมการ นิติฯ และผู้ดูแลระบบ ทุกครั้งที่เปิดดูมีบันทึกว่าใครดู', 'ไม่มีรูปในข้อมูลเก็บถาวร (ลบถาวรตามระยะเก็บรูป PDPA แล้ว)', 'นิติฯ กด "เก็บถาวรตอนนี้" ได้ถ้าไม่อยากรอวันที่ 1'], k: [] },
   adminlog: { a: 'adm', t: 'ประวัติผู้ดูแลระบบ', w: 'บันทึกทุกการกระทำที่ข้ามการอนุมัติ', s: ['กรรมการตรวจย้อนหลังได้'], k: [] }
 };
@@ -14017,14 +14049,16 @@ function helpFilter() { const q = val('hl_q').trim().toLowerCase(); document.que
 
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
-  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, archive: vArchive, linetopics: vLineTopics, help: vHelp };
+  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, archive: vArchive, linetopics: vLineTopics, notifs: vNotifs, help: vHelp };
 // ลิงก์จากข้อความ LINE: ?receipt=<pay_id> เปิดใบเสร็จ · ?go=pay ไปหน้าชำระเงิน
 async function openDeepLink() {
   let q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
   const rc = q.get('receipt'), go = q.get('go');
   try { history.replaceState(null, '', location.pathname); } catch (e) {}
   if (go === 'pay' && TABS[MODE].some(t => t[0] === 'pay')) show('pay');
-  if (!rc) return;
+  if (rc) openReceipt(rc);
+}
+async function openReceipt(rc) {
   try {
     const a = await api('myAccount'), p = (a.payments || []).find(x => x.pay_id === rc);
     if (p && p.receipt_file) viewFile(p.receipt_file); else toast('ไม่พบใบเสร็จนี้ในบ้านของคุณ', true);
@@ -14092,6 +14126,7 @@ window.addEventListener('DOMContentLoaded', () => (async () => {
   try { localStorage.setItem(meKey(), JSON.stringify({ user: { display_name: ME.display_name, house_no: ME.house_no, role: ME.role, office: ME.office, acct_type: ME.acct_type, hasPin: ME.hasPin, admin: ME.admin }, settings: SET })); } catch (e) {}
   applyBrand(); $('#who').textContent = (ME.display_name || '') + (ME.house_no ? ' • บ้าน ' + ME.house_no : '');
   if (ME.role === 'guest') { SHOWSEQ++; return renderRegister(); }
+  if (ME.role !== 'pending') $('#bell').hidden = false;
   if (ME.role === 'pending') { SHOWSEQ++; $('#app').innerHTML = '<div class="card"><h3>รอการยืนยัน</h3><p class="mut">บัญชีของคุณรอบัญชีหลักของบ้านหรือนิติฯ ยืนยัน จะได้รับแจ้งทาง LINE</p><button class="btn sec" onclick="location.reload()">ตรวจสอบสถานะ</button></div>'; return; }
   const same = FIRST && prev === JSON.stringify([ME.role, ME.office, ME.acct_type, !!ME.admin]) && modesOf()[0] === MODE && firstTab(MODE) === CUR;
   MODE = modesOf()[0]; CUR = firstTab(MODE); renderModes(); renderNav();
