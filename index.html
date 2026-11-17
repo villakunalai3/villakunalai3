@@ -12522,7 +12522,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 });
 </script>
 <script>
-const CONFIG = { LIFF_ID: '2012507801-kwzVupeV', API_URL: 'https://script.google.com/macros/s/AKfycbzwkZzyN8_9KtgDTJutXjemDldIpSXaZ6Ie_ETuYHY44iTUTH-rgtM2nftlEZguZK10/exec' };
+const CONFIG = { LIFF_ID: 'ใส่_LIFF_ID', API_URL: 'ใส่_URL_Apps_Script_ที่ลงท้ายด้วย_/exec' };
 const ROLES = ['resident','guard','technician','housekeeper'];   // สิทธิ์กรรมการ/นิติฯ เปลี่ยนได้เฉพาะผ่านคำขอแก้ทะเบียนกรรมการ (อนุมัติ + มติที่ประชุม)
 const ROLE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',manager:'นิติฯ',guard:'รปภ.',technician:'ช่าง',housekeeper:'แม่บ้าน'};
 const PLAN_TH = {monthly:'รายเดือน',half:'ราย 6 เดือน',yearly:'รายปี',manual:'ออกบิลเอง'};
@@ -12604,20 +12604,49 @@ function busyBar(d) { INFLIGHT = Math.max(0, INFLIGHT + d); document.body.classL
 const READ_ACTIONS = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
   'evidence', 'reports', 'roster', 'listInside', 'listGuests', 'houseLookup', 'settingsView', 'bankStatus', 'qrPreview', 'userPicker', 'listUsers', 'receiptPreview', 'listArchive', 'viewArchiveInfo', 'getFile', 'payOptions', 'batch']);
+// วัดเวลาจริงของแต่ละคำขอ (เครื่องผู้ใช้ ↔ เซิร์ฟเวอร์) เก็บ 60 รายการล่าสุด ดูได้ที่ ผู้ดูแลระบบ → ความพร้อม
+const PERF = { list: [], boot: 0 };
+function perfAdd(a, c, sv) { PERF.list.push({ a, c: Math.round(c), s: sv == null ? null : Math.round(sv), t: Date.now() }); if (PERF.list.length > 60) PERF.list.shift(); try { sessionStorage.setItem('perf', JSON.stringify(PERF)); } catch (e) {} }
+try { const p = JSON.parse(sessionStorage.getItem('perf') || 'null'); if (p && Array.isArray(p.list)) PERF.list = p.list; } catch (e) {}
 async function post(action, data) {
-  busyBar(1);
+  busyBar(1); const t0 = performance.now();
   try {
     const r = await fetch(CONFIG.API_URL, { method:'POST', body: JSON.stringify(Object.assign({ action, data, idToken: liff.getIDToken() }, ME && ME.admin ? { as: MODE } : {})) });
     const j = await r.json();
+    perfAdd(action === 'batch' ? 'ชุด: ' + ((data && data.calls) || []).map(c => c.action).join('+') : action, performance.now() - t0, j.ms);
     if (!j.ok) { if (/ยืนยันตัวตน LINE|เข้าสู่ระบบผ่าน LINE/.test(j.error)) { liff.logout(); liff.login(); } throw new Error(j.error); }
     if (!READ_ACTIONS.has(action)) { vcClear(); BADGE_AT = 0; }   // มีการเปลี่ยนข้อมูล: ทิ้งหน้าที่จำไว้
     return j.data;
   } finally { busyBar(-1); }
 }
 function meKey() { let sub = ''; try { sub = (liff.getDecodedIDToken() || {}).sub || ''; } catch (e) {} return 'me_cache:' + sub; }   // แยกตามบัญชี LINE
-async function api(action, data = {}) { return post(action, data); }
+// รวมคำขออ่านที่เกิดพร้อมกัน (เช่น Promise.all ในหน้าเดียว หรือ me + หน้าแรกตอนเปิดแอป) เป็นคำขอเดียวอัตโนมัติ
+// เซิร์ฟเวอร์ยืนยันตัวตนครั้งเดียวและอ่านแต่ละชีตครั้งเดียว · รายการต้องตรงกับ BATCH_OK ใน Code.gs
+const BATCHABLE = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'arrearsList', 'listBank', 'houseBalances', 'houseAccount',
+  'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
+  'reports', 'roster', 'listInside', 'listReleases', 'listExceptions', 'approvalMatrix', 'listGuests', 'houseLookup', 'bankStatus', 'userPicker', 'listUsers',
+  'sysStatus', 'featuresView', 'adminLog', 'payOptions', 'listContacts', 'settingsView', 'openingView', 'listAssets', 'viewArchiveInfo']);
+let AQ = [], AQT = null;
+function api(action, data = {}) {
+  if (!BATCHABLE.has(action)) return post(action, data);
+  return new Promise((res, rej) => { AQ.push({ action, data, res, rej }); if (!AQT) AQT = setTimeout(flushApi, 0); });
+}
+function flushApi() {
+  const q = AQ; AQ = []; AQT = null;
+  for (let i = 0; i < q.length; i += 8) {
+    const part = q.slice(i, i + 8);
+    if (part.length === 1) { post(part[0].action, part[0].data).then(part[0].res, part[0].rej); continue; }
+    post('batch', { calls: part.map(c => ({ action: c.action, data: c.data })) }).then(
+      R => part.forEach((c, k) => { const r = R && R[k];
+        if (r && r.ok) c.res(r.data);
+        else if (r && /รวมในชุดไม่ได้/.test(r.error)) post(c.action, c.data).then(c.res, c.rej);   // เซิร์ฟเวอร์รุ่นเก่ายังไม่รู้จัก: ส่งแยก
+        else c.rej(new Error(r ? r.error : 'ไม่ได้รับผลจากเซิร์ฟเวอร์')); }),
+      e => part.forEach(c => c.rej(e)));
+  }
+}
 // รวมหลายคำขออ่านเป็นรอบเดียว คืนค่า [{ok,data}|{ok:false,error}]
-async function apiBatch(calls) { return post('batch', { calls: calls.map(c => ({ action: c[0], data: c[1] || {} })) }); }
+// คืน [{ok,data}|{ok:false,error}] ตามลำดับ · ผ่านตัวรวมคำขอ จึงรวมกับคำขออื่นที่เกิดพร้อมกันได้ (เช่น me ตอนเปิดแอป)
+function apiBatch(calls) { return Promise.all(calls.map(c => api(c[0], c[1] || {}).then(data => ({ ok: true, data }), e => ({ ok: false, error: e.message })))); }
 const okOr = (r, dflt) => (r && r.ok) ? r.data : dflt;
 // แคชหน้าที่เคยเปิด: แสดงทันทีระหว่างรอข้อมูลใหม่ (เก็บใน sessionStorage หายเมื่อปิดแอป)
 const VC = {};
@@ -13746,7 +13775,17 @@ async function vSys() {
     <div class="chips"><span>รอยืนยันผู้ใช้ ${d.pending}</span><span>LINE ${d.line.used}/${d.line.quota} ข้อความ</span></div></div>
   <div class="card"><b>ตรวจความพร้อมการติดตั้ง</b>${d.checks.map(c => `<div class="item"><span>${c.ok ? '✅' : '⚠️'} ${esc(c.label)}${c.fix ? `<br><small class="mut">${esc(c.fix)}</small>` : ''}</span></div>`).join('')}</div>
   <div class="note warn">สิทธิ์ผู้ดูแลระบบข้ามขั้นตอนอนุมัติได้ ทุกการกระทำถูกบันทึกและกรรมการตรวจได้ · ทดสอบหน้าของแต่ละบทบาทได้จากปุ่มโหมดด้านบน · เมื่อติดตั้งเสร็จควรตั้งวันหมดสิทธิ์ (ADMIN_UNTIL) หรือลบออกจาก ADMIN_LINE_IDS</div>
+  ${perfCard()}
   <button class="btn" onclick="show('users')">อนุมัติผู้ใช้ / ตั้งสิทธิ์</button><button class="btn sec" onclick="show('features')">🎛️ เปิด/ปิดฟีเจอร์</button>${toolTiles()}`;
+}
+// ข้อ 10: วัดจริง ไม่เดา · เวลาเครื่องผู้ใช้รวมเครือข่าย เทียบกับเวลาประมวลผลบนเซิร์ฟเวอร์
+function perfCard() {
+  const by = {}; PERF.list.forEach(x => { const b = by[x.a] = by[x.a] || { n: 0, c: 0, s: 0, sn: 0, max: 0 }; b.n++; b.c += x.c; b.max = Math.max(b.max, x.c); if (x.s != null) { b.s += x.s; b.sn++; } });
+  const rowsP = Object.keys(by).map(a => Object.assign({ a }, by[a])).sort((x, y) => y.c / y.n - x.c / x.n).slice(0, 12);
+  return `<div class="card"><b>⏱️ ความเร็วที่วัดได้จริง (เครื่องนี้)</b>
+    <div class="mut">เปิดแอปจนหน้าแรกพร้อม: <b>${PERF.boot ? (PERF.boot / 1000).toFixed(1) + ' วินาที' : '-'}</b> · ${PERF.list.length} คำขอล่าสุดในรอบใช้งานนี้ · "รวม" = เวลาที่ผู้ใช้รอทั้งหมด "เซิร์ฟเวอร์" = เวลาประมวลผลใน Apps Script ส่วนต่างคือเครือข่าย/การเริ่มทำงานของ Google</div>
+    ${rowsP.length ? `<table><tr><th>คำขอ</th><th>ครั้ง</th><th>รวม (เฉลี่ย/สูงสุด)</th><th>เซิร์ฟเวอร์</th></tr>${rowsP.map(r => `<tr><td><small>${esc(r.a)}</small></td><td>${r.n}</td><td>${(r.c / r.n / 1000).toFixed(2)} / ${(r.max / 1000).toFixed(2)} วิ</td><td>${r.sn ? (r.s / r.sn / 1000).toFixed(2) + ' วิ' : '-'}</td></tr>`).join('')}</table>` : '<div class="mut">ยังไม่มีข้อมูล ลองเปิดหน้าอื่นๆ ก่อน แล้วกลับมาดู</div>'}
+    <div class="mut">ถ้า "รวม" สูงแต่ "เซิร์ฟเวอร์" ต่ำ = ช้าที่เครือข่ายหรือการเริ่มทำงาน (cold start) · ถ้า "เซิร์ฟเวอร์" สูง = ข้อมูลในชีตเยอะหรือคำนวณหนัก ให้ส่งตารางนี้ให้ผู้พัฒนา</div></div>`;
 }
 async function vFeatures() {
   const d = await api('featuresView');
@@ -13989,6 +14028,7 @@ async function show(id) {
     app.innerHTML = h;
     if (!old) { app.classList.remove('fade'); void app.offsetWidth; app.classList.add('fade'); }   // เลื่อนเข้านุ่ม ๆ เฉพาะครั้งแรก
     vcPut(id, app.innerHTML);
+    if (!PERF.boot) PERF.boot = Math.round(performance.now());   // เวลาตั้งแต่เปิดแอปจนหน้าแรกพร้อม
     loadBadges();
   }
   catch (e) {
