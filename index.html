@@ -111,6 +111,29 @@ nav button span{position:relative}
 .badge.pending{background:#e08a0022;color:var(--amb);border-color:#e08a0044}.badge.paid{background:#e03f8b22;color:var(--pri2);border-color:#e03f8b44}
 .badge.partial{background:#2a7de122;color:var(--blu);border-color:#2a7de144}.badge.late{background:#d93c3c22;color:var(--red);border-color:#d93c3c44;font-weight:800}
 .paid{color:var(--pri2)}.open{color:var(--amb)}.late{color:var(--red)}
+:root{--vin:#2a78d6;--vex:#eb6834;--vbal:#6250d6}
+@media(prefers-color-scheme:dark){:root{--vin:#3987e5;--vex:#d95926;--vbal:#9085e9}}
+.an-hero .an-sub{font-size:13px;opacity:.9;margin-bottom:8px}.an-kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0}.an-kpi>div{background:#ffffff1f;border-radius:12px;padding:8px 10px}
+.an-kpi small{display:block}.an-kpi b{display:block;font-size:20px;line-height:1.3}.an-chg{font-size:12px;opacity:.95}.an-chg.good::after{content:' ดีขึ้น'}.an-chg.bad::after{content:' แย่ลง'}
+.card .an-chg.good{color:#1a7f37}.card .an-chg.bad{color:var(--red)}.hero .an-chg,.hero .an-chg.good,.hero .an-chg.bad{color:#fff}
+.an-tb{width:100%;border-collapse:collapse;margin:6px 0}.an-tb td,.an-tb th{padding:6px 4px;border-bottom:1px solid var(--bd);text-align:left}.an-tb td:last-child,.an-tb th:last-child{text-align:right}.an-tb.sm td:not(:first-child),.an-tb.sm th:not(:first-child){text-align:right}
+.an-tb tr.tot td{font-weight:700;border-top:2px solid var(--tx);border-bottom:0}.an-tb tr.sec td{font-weight:700;color:var(--mut);background:var(--bg)}.an-tb td.pos{color:var(--tx)}.an-tb td.neg{color:var(--tx)}
+.an-avg{background:var(--bg);border-radius:10px;padding:8px 10px;margin-top:8px}
+.an-leg{display:flex;gap:14px;font-size:13px;color:var(--mut);margin:4px 0}.an-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}.an-leg i.tick{width:3px;height:14px;background:var(--tx);border-radius:1px}
+.an-svg{width:100%;height:auto;display:block;overflow:visible}.an-svg .an-ax{font-size:9.5px;fill:var(--mut)}.an-svg .an-lbl{font-size:11px;fill:var(--tx);font-weight:700}.an-svg .an-grid{stroke:var(--bd);stroke-width:1}.an-svg .an-base{stroke:var(--mut);stroke-width:1}
+.an-svg g{cursor:pointer}.an-svg g.fut{opacity:.35}.an-svg g:hover path{opacity:.85}
+.an-tip{font-size:13px;color:var(--mut);min-height:20px;margin-top:2px}.an-tip .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:3px}.an-tip .sw.in{background:var(--vin)}.an-tip .sw.ex{background:var(--vex)}
+.an-hb{margin:8px 0}.an-track{position:relative;height:10px;background:var(--bg);border-radius:5px;margin:3px 0}.an-track.big{height:16px;border-radius:8px}.an-fill{height:100%;background:var(--vex);border-radius:5px}.an-fill.in{background:var(--vin)}
+.an-mark{position:absolute;top:-3px;width:3px;height:16px;background:var(--tx);border-radius:1px;margin-left:-1px}
+.an-work{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:6px}.an-work>div{background:var(--bg);border-radius:12px;padding:10px}.an-work small{display:block;color:var(--mut)}.an-work .big{display:block;font-size:28px;font-weight:700;line-height:1.2}
+.an-foot ul{margin:4px 0;padding-left:18px;font-size:13px;color:var(--mut)}.an-print-head{display:none}
+#an_slides{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column}
+.an-sl-top{display:flex;justify-content:space-between;padding:10px 18px;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;font-weight:700}
+.an-sl-body{flex:1;overflow:auto;padding:16px;max-width:980px;width:100%;margin:auto;font-size:118%}.an-sl-body h2{margin:4px 0 10px}.an-sl-body .an-svg{max-height:36vh;width:auto;max-width:100%;margin:auto}.an-sl-body .card>b:first-child{display:none}.an-sl-body details.noslide{display:none}
+.an-sl-nav{display:flex;gap:10px;justify-content:center;padding:10px;border-top:1px solid var(--bd);background:var(--card)}.an-sl-nav button{font:inherit;padding:10px 18px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);min-width:110px}
+@media print{header,nav,#modes,#helpfab,#toast,.noprint,#an_slides{display:none!important}body{background:#fff;color:#000;padding:0}main{max-width:none;padding:0}
+  .card{box-shadow:none;border:1px solid #bbb;break-inside:avoid;page-break-inside:avoid}.hero,.an-sl-top,.an-fill,.an-mark,.an-leg i,svg{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .an-print-head{display:block;font-weight:700;font-size:13px;margin-bottom:6px;color:#555}details,.an-tip{display:none}.an-svg{max-height:62mm;width:auto;max-width:100%;margin:0 auto}}
 </style>
 </head>
 <body>
@@ -12522,7 +12545,7 @@ function findAlignmentPattern(matrix, alignmentPatternQuads, topRight, topLeft, 
 });
 </script>
 <script>
-const CONFIG = { LIFF_ID: '2012507801-kwzVupeV', API_URL: 'https://script.google.com/macros/s/AKfycbzwkZzyN8_9KtgDTJutXjemDldIpSXaZ6Ie_ETuYHY44iTUTH-rgtM2nftlEZguZK10/exec' };
+const CONFIG = { LIFF_ID: 'ใส่_LIFF_ID', API_URL: 'ใส่_URL_Apps_Script_ที่ลงท้ายด้วย_/exec' };
 const ROLES = ['resident','guard','technician','housekeeper'];   // สิทธิ์กรรมการ/นิติฯ เปลี่ยนได้เฉพาะผ่านคำขอแก้ทะเบียนกรรมการ (อนุมัติ + มติที่ประชุม)
 const ROLE_TH = {resident:'ลูกบ้าน',committee:'กรรมการ',manager:'นิติฯ',guard:'รปภ.',technician:'ช่าง',housekeeper:'แม่บ้าน'};
 const PLAN_TH = {monthly:'รายเดือน',half:'ราย 6 เดือน',yearly:'รายปี',manual:'ออกบิลเอง'};
@@ -12542,8 +12565,8 @@ const TABS = {
   tech: [['tickets','🧹','งานของฉัน'],['kb','📖','ติดต่อ']],
   sys: [['sys','🛠️','ความพร้อม'],['users','👥','ผู้ใช้/สิทธิ์'],['opening','📥','ยกมา'],['policy','⚙️','ตั้งค่า'],['adminlog','📜','ประวัติ']]
 };
-const SUB = { sys: ['features','archive','kb','matrix','help'], policy: ['archive','kb','matrix','help'], more: ['meetings','votes','requests','parcels','house','roster','kb','matrix','help'], omore: ['tickets','meetings','votes','admin','linetopics','bank','parcels','opening','archive','kb','matrix','help'] };
-const navKey = tab => { for (const [p, subs] of Object.entries(SUB)) if (subs.includes(tab) && !TABS[MODE].some(t => t[0] === tab)) return p; return tab; };
+const SUB = { sys: ['features','archive','kb','matrix','help'], reports: ['annual'], policy: ['annual','archive','kb','matrix','help'], more: ['annual','meetings','votes','requests','parcels','house','roster','kb','matrix','help'], omore: ['annual','tickets','meetings','votes','admin','linetopics','bank','parcels','opening','archive','kb','matrix','help'] };
+const navKey = tab => { for (const [p, subs] of Object.entries(SUB)) if (subs.includes(tab) && !TABS[MODE].some(t => t[0] === tab) && TABS[MODE].some(t => t[0] === p)) return p; return tab; };
 // เปิด/ปิดฟีเจอร์โดยผู้ดูแลระบบ (SET.features มาจากเซิร์ฟเวอร์ ถ้าไม่มี = เปิด)
 const FT = { gate: 'vehicles', ggate: 'vehicles', gguests: 'vehicles', parcels: 'parcels', votes: 'voting', roster: 'committee_list', cctv: 'guard' };
 const featOn = k => !(SET.features && SET.features[k] === false);
@@ -12634,7 +12657,7 @@ function meKey() { let sub = ''; try { sub = (liff.getDecodedIDToken() || {}).su
 const BATCHABLE = new Set(['me', 'dashboard', 'myAccount', 'myVisits', 'inbox', 'listTasks', 'pendingPayments', 'arrearsList', 'listBank', 'houseBalances', 'houseAccount',
   'listAdjustments', 'myRequests', 'listTickets', 'listParcels', 'listExpenses', 'listRecurring', 'listAgendas', 'listMeetings', 'listCreditMoves', 'voteItem',
   'reports', 'roster', 'listInside', 'listReleases', 'listExceptions', 'approvalMatrix', 'listGuests', 'houseLookup', 'bankStatus', 'userPicker', 'listUsers',
-  'sysStatus', 'featuresView', 'adminLog', 'notifCount', 'myNotifs', 'shiftStatus', 'payOptions', 'listContacts', 'settingsView', 'openingView', 'listAssets', 'viewArchiveInfo']);
+  'sysStatus', 'featuresView', 'adminLog', 'notifCount', 'myNotifs', 'shiftStatus', 'annualReport', 'annualPublished', 'payOptions', 'listContacts', 'settingsView', 'openingView', 'listAssets', 'viewArchiveInfo']);
 let AQ = [], AQT = null;
 function api(action, data = {}) {
   if (!BATCHABLE.has(action)) return post(action, data);
@@ -13305,7 +13328,7 @@ async function vHouse() {
 }
 
 function vMore() {
-  const items = [['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจความเห็น'], ['requests', '🪪', 'ขอบัตร/สติกเกอร์'], ['parcels', '📦', 'พัสดุที่ป้อมยาม'], ['house', '👥', 'บัญชีบ้านและแจ้งเตือน'], ['roster', '🏛️', 'รายชื่อกรรมการ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
+  const items = [['annual', '📊', 'รายงานประจำปี'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจความเห็น'], ['requests', '🪪', 'ขอบัตร/สติกเกอร์'], ['parcels', '📦', 'พัสดุที่ป้อมยาม'], ['house', '👥', 'บัญชีบ้านและแจ้งเตือน'], ['roster', '🏛️', 'รายชื่อกรรมการ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
   return `<div class="grid2">${items.filter(i => tabOk(i[0])).map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 }
 
@@ -13430,8 +13453,8 @@ let NTF = null, NTO = 0;
 const NT_ICON = { res: '🏠', staff: '🏛️', guard: '🚧' };
 const NTGO = { t_gate: 'gate', t_release: 'gate', t_parcel: 'parcels', t_payee: 'pay', t_bill: 'pay', t_remind: 'pay', t_payresult: 'pay', t_billchange: 'pay', t_card: 'pay', t_credit: 'pay',
   t_service: 'tickets', t_contractor: 'gate', t_announce: 'home', t_meeting: 'meetings', t_vote: 'votes', s_approve: 'inbox', s_security: 'inbox', s_progress: 'inbox', s_task: 'tasks',
-  s_payment: 'verify', s_register: 'admin', s_arrears: 'tasks', g_exit: 'ggate', g_overnight: 'ggate', g_cctv: 'cctv' };
-const NTLBL = { gate: 'รถเข้า-ออก', parcels: 'พัสดุ', pay: 'ชำระเงิน', tickets: 'แจ้งซ่อม', home: 'หน้าแรก', meetings: 'การประชุม', votes: 'โหวต', inbox: 'รออนุมัติ', tasks: 'งานนิติฯ', verify: 'ตรวจสลิป', admin: 'ผู้ใช้/ตั้งค่า', ggate: 'ป้อมยาม', cctv: 'ขอดูกล้อง' };
+  s_payment: 'verify', s_register: 'admin', t_report: 'annual', s_arrears: 'tasks', g_exit: 'ggate', g_overnight: 'ggate', g_cctv: 'cctv' };
+const NTLBL = { gate: 'รถเข้า-ออก', parcels: 'พัสดุ', pay: 'ชำระเงิน', tickets: 'แจ้งซ่อม', home: 'หน้าแรก', meetings: 'การประชุม', votes: 'โหวต', inbox: 'รออนุมัติ', tasks: 'งานนิติฯ', verify: 'ตรวจสลิป', admin: 'ผู้ใช้/ตั้งค่า', ggate: 'ป้อมยาม', cctv: 'ขอดูกล้อง', annual: 'รายงานประจำปี' };
 const viewModes = v => modesOf().filter(m => tabsOf(m).some(t => t[0] === v || (SUB[t[0]] || []).includes(v)));
 async function vNotifs() {
   NTF = await api('myNotifs', { offset: NTO });
@@ -13514,6 +13537,211 @@ function arcRun() {
   if (!confirm('ย้ายแถวที่เก่ากว่าเกณฑ์ไปไฟล์เก็บถาวรตอนนี้เลยหรือไม่? ระบบตรวจไฟล์ถาวรให้ครบก่อนลบแถวเดิม')) return;
   act('runArchive', {}, r => `ย้ายแล้ว: รถเข้า-ออก ${r.moved.visits} แถว · บันทึกการใช้งาน ${r.moved.audit} แถว`);
 }
+/* ================= รายงานประจำปี (ม.ค.–ธ.ค.) =================
+   กรรมการ/นิติฯ: ตัวเลขสด + ตั้งงบประมาณ + ขอเผยแพร่ · ลูกบ้าน: เฉพาะฉบับที่กรรมการอนุมัติแล้ว (ล็อกตัวเลข)
+   กราฟวาดเองด้วย SVG (ไม่โหลดไลบรารีเพิ่ม) · สี: รายรับ ฟ้า / รายจ่าย ส้ม / ยอดคงเหลือ ม่วง (ผ่านการตรวจตาบอดสี) */
+let ANR = { year: 0, view: 'live', budget: false }, AND = null;
+const anStaff = () => MODE === 'committee' || MODE === 'office' || MODE === 'sys';
+const be = y => Number(y) + 543;
+const bahtS = n => { const v = Math.abs(Number(n || 0)); return (n < 0 ? '−' : '') + (v >= 1e6 ? (v / 1e6).toLocaleString('th-TH', { maximumFractionDigits: 2 }) + ' ล้าน' : v >= 1e4 ? Math.round(v / 1000).toLocaleString('th-TH') + 'K' : Math.round(v).toLocaleString('th-TH')); };
+const pctChg = (a, b) => b ? Math.round((a - b) / Math.abs(b) * 1000) / 10 : null;
+const chgTxt = (a, b, goodUp) => { const p = pctChg(a, b); if (p === null) return ''; const up = p >= 0; return `<span class="an-chg ${up === goodUp ? 'good' : 'bad'}">${up ? '▲' : '▼'} ${Math.abs(p)}%</span>`; };
+async function vAnnual() {
+  if (anStaff() && ANR.view !== 'pub') { AND = await api('annualReport', ANR.year ? { year: ANR.year } : {}); ANR.year = AND.year; return anStaffHtml(); }
+  AND = await api('annualPublished', ANR.year ? { year: ANR.year } : {}); if (AND.year) ANR.year = AND.year;
+  return anPubHtml();
+}
+function anYearSel(years, cur, label) {
+  return `<div class="row noprint" style="gap:8px;flex-wrap:wrap"><label class="lb" style="margin:0">${label || 'ปี'}</label><select id="an_y" onchange="ANR.year=+this.value;ANR.budget=false;show('annual')" style="flex:1;min-width:140px">${years.map(y => `<option value="${y}" ${+y === +cur ? 'selected' : ''}>พ.ศ. ${be(y)} (ม.ค.–ธ.ค. ${y})</option>`).join('')}</select></div>`;
+}
+const anTools = () => `<div class="row noprint" style="gap:8px;flex-wrap:wrap"><button class="btn sec" style="flex:1" onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button><button class="btn sec" style="flex:1" onclick="anSlides()">📽️ ฉายในที่ประชุม</button></div>`;
+function anStaffHtml() {
+  const d = AND, r = d.report, pub = d.published, pa = d.pending_annual, pb = d.pending_budget;
+  const st = pub ? `<div class="note">✅ เผยแพร่ให้ลูกบ้านแล้ว ${esc(dt(pub.at))} · อนุมัติโดย ${pub.approvals.map(a => esc(a.name)).join(', ')} · รหัสตรวจสอบ <code>${esc(pub.hash)}</code>
+      <br><small>ตัวเลขด้านล่างเป็น <b>ตัวเลขสด</b> ถ้าแก้ข้อมูลหลังเผยแพร่ ฉบับลูกบ้านจะไม่เปลี่ยน ต้องขอเผยแพร่ใหม่</small></div>`
+    : `<div class="note warn">ยังไม่เผยแพร่ให้ลูกบ้าน · ลูกบ้านเห็นได้หลังกรรมการอนุมัติครบ และนิติฯ กดดำเนินการที่หน้างานนิติฯ</div>`;
+  const pend = [pa ? `🗳️ คำขอเผยแพร่: ${pa.status === 'approved' ? 'อนุมัติครบแล้ว รอนิติฯ ดำเนินการ' : `รออนุมัติ (${pa.approvals} ท่าน)`}` : '', pb ? `🗳️ คำขอตั้งงบประมาณ: ${pb.status === 'approved' ? 'อนุมัติครบแล้ว รอนิติฯ ดำเนินการ' : `รออนุมัติ (${pb.approvals} ท่าน)`}` : ''].filter(Boolean);
+  const can = MODE === 'committee' || MODE === 'sys';
+  return `<div class="card noprint"><b>📊 รายงานประจำปี (ฉบับกรรมการ/นิติฯ)</b>${anYearSel(d.years, d.year)}
+    ${st}${pend.map(x => `<div class="mut">${x}</div>`).join('')}
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:6px">
+      ${can && !pa ? `<button class="btn" style="flex:1" onclick="anRequestPublish()">ขออนุมัติเผยแพร่</button>` : ''}
+      ${can && !pb ? `<button class="btn sec" style="flex:1" onclick="ANR.budget=!ANR.budget;show('annual')">${ANR.budget ? 'ปิดหน้างบประมาณ' : (r.budget ? 'ขอแก้งบประมาณ' : 'ตั้งงบประมาณ')}</button>` : ''}
+      <button class="btn sec" style="flex:1" onclick="ANR.view='pub';show('annual')">ดูแบบที่ลูกบ้านเห็น</button></div>
+    ${anTools()}</div>${ANR.budget ? anBudgetHtml() : ''}` + anBody(r, { staff: true });
+}
+function anPubHtml() {
+  const d = AND, back = anStaff() ? `<button class="btn sec noprint" onclick="ANR.view='live';show('annual')">← กลับไปฉบับกรรมการ (ตัวเลขสด)</button>` : '';
+  if (!d.report) return back + `<div class="card"><b>📊 รายงานประจำปี</b><div class="mut">ยังไม่มีรายงานที่กรรมการอนุมัติเผยแพร่ เมื่อเผยแพร่แล้วจะแจ้งในกระดิ่ง 🔔</div></div>`;
+  return back + `<div class="card noprint"><b>📊 รายงานประจำปี</b>${d.years.length > 1 ? anYearSel(d.years, d.year) : ''}
+    <div class="mut">กรรมการอนุมัติ ${d.approvals.map(a => esc(a.name)).join(', ')} · เผยแพร่ ${esc(dt(d.published_at))}</div>${anTools()}</div>`
+    + anBody(d.report, { staff: false, hash: d.hash, at: d.published_at, approvals: d.approvals });
+}
+/* ---------- เนื้อหารายงาน (ใช้ทั้งหน้าจอ พิมพ์ และสไลด์) ---------- */
+function anSections(r, o) {
+  const out = r.expense.total + r.expense.refund, pv = r.prev, S = [];
+  const title = `รายงานประจำปี พ.ศ. ${be(r.year)}`, sub = `${esc(r.village || 'VillaKunalai 3')} · ${r.houses} หลังคาเรือน · ม.ค.–ธ.ค. ${r.year}${r.partial ? ` · <b>ข้อมูลถึง ${esc(dthai(r.asof))}</b> (ยังไม่ครบปี)` : ''}`;
+  // 1) ตัวเลขหลัก
+  S.push({ t: 'สรุปภาพรวม', h: `<div class="card hero an-hero"><small>${title}</small><div class="an-sub">${sub}</div>
+    <div class="an-kpi">
+      <div><small>รายรับทั้งปี</small><b>${baht(r.income.total)}</b>${pv ? chgTxt(r.income.total, pv.income, true) : ''}</div>
+      <div><small>รายจ่ายทั้งปี</small><b>${baht(out)}</b>${pv ? chgTxt(out, pv.expense, false) : ''}</div>
+      <div><small>เงินคงเหลือ${r.partial ? ' ณ วันนี้' : 'สิ้นปี'}</small><b>${baht(r.closing)}</b>${pv ? chgTxt(r.closing, pv.closing, true) : ''}</div>
+      <div><small>เก็บค่าส่วนกลางได้</small><b>${r.billed.pct === null ? '-' : r.billed.pct + '%'}</b><span class="an-chg">${r.billed.paid_houses}/${r.billed.houses} บ้านจ่ายครบ</span></div>
+    </div>${pv ? `<small>▲▼ เทียบกับปี พ.ศ. ${be(pv.year)}</small>` : ''}</div>` });
+  // 2) งบรับ-จ่าย
+  S.push({ t: 'งบรับ-จ่าย', h: `<div class="card"><b>💰 งบรับ-จ่าย</b><table class="an-tb">
+    <tr><td>ยอดยกมาต้นปี (1 ม.ค. ${r.year})</td><td>${baht(r.opening)}</td></tr>
+    <tr><td>➕ ค่าส่วนกลาง</td><td class="pos">${baht(r.income.dues)}</td></tr>
+    <tr><td>➕ คำร้อง (บัตร/สติกเกอร์)</td><td class="pos">${baht(r.income.other)}</td></tr>
+    <tr><td>➖ รายจ่ายส่วนกลาง</td><td class="neg">${baht(r.expense.total)}</td></tr>
+    ${r.expense.refund ? `<tr><td>➖ คืนเงินเครดิตให้บ้าน</td><td class="neg">${baht(r.expense.refund)}</td></tr>` : ''}
+    <tr class="tot"><td>คงเหลือ${r.partial ? ' ณ ' + esc(dthai(r.asof)) : 'ยกไปปีหน้า'}</td><td>${baht(r.closing)}</td></tr></table>
+    <small class="mut">รายรับนับวันที่ตรวจสลิปผ่าน (เงินเข้าบัญชีจริง) · รายจ่ายนับวันที่โอนจ่ายจริง · ไม่รวมรายการที่รออนุมัติ</small>
+    <div class="an-avg">เฉลี่ยรายจ่ายส่วนกลาง <b>${baht(r.per_house_month)}</b> บาท ต่อหลัง ต่อเดือน</div></div>` });
+  // 3) รายเดือน
+  S.push({ t: 'รายรับ-รายจ่ายรายเดือน', h: `<div class="card"><b>📈 รายรับ-รายจ่ายรายเดือน</b>
+    <div class="an-leg"><span><i style="background:var(--vin)"></i>รายรับ</span><span><i style="background:var(--vex)"></i>รายจ่าย</span></div>
+    ${anBarsSvg(r)}<div class="an-tip" id="an_tip_m">แตะที่แท่งเพื่อดูตัวเลขของเดือนนั้น</div>
+    <b style="display:block;margin-top:10px">เงินคงเหลือสิ้นเดือน</b>${anLineSvg(r)}<div class="an-tip" id="an_tip_b">แตะที่จุดเพื่อดูยอดคงเหลือ</div>
+    <details class="noslide"><summary>ดูเป็นตาราง</summary><div style="overflow-x:auto"><table class="an-tb sm"><tr><th>เดือน</th><th>รายรับ</th><th>รายจ่าย</th><th>คงเหลือ</th></tr>
+    ${r.months.filter(m => !m.future).map(m => `<tr><td>${m.label}</td><td>${baht(m.dues + m.other)}</td><td>${baht(m.expense + m.refund)}</td><td>${baht(m.balance)}</td></tr>`).join('')}</table></div></details></div>` });
+  // 4) รายจ่ายแยกหมวด (+ งบประมาณ)
+  const B = r.budget, bmap = {}; (B ? B.expense : []).forEach(x => bmap[x.category] = x);
+  const rowsC = B ? B.expense.map(x => ({ category: x.category, amount: x.actual, budget: x.budget, pct: x.pct })) : r.cats.map(c => ({ category: c.category, amount: c.amount }));
+  const mx = Math.max(1, ...rowsC.map(x => Math.max(x.amount, x.budget || 0)));
+  S.push({ t: 'รายจ่ายแยกหมวด', h: `<div class="card"><b>🧾 รายจ่ายแยกหมวด</b>${B ? `<div class="an-leg"><span><i style="background:var(--vex)"></i>จ่ายจริง</span><span><i class="tick"></i>งบประมาณ</span></div>` : ''}
+    ${rowsC.length ? rowsC.map(x => `<div class="an-hb"><div class="row"><span>${esc(x.category)}</span><b>${baht(x.amount)}</b></div>
+      <div class="an-track"><div class="an-fill" style="width:${x.amount / mx * 100}%"></div>${x.budget ? `<i class="an-mark" style="left:${x.budget / mx * 100}%"></i>` : ''}</div>
+      <small class="mut">${out ? Math.round(x.amount / Math.max(1, r.expense.total) * 100) + '% ของรายจ่าย' : ''}${x.budget ? ` · งบ ${baht(x.budget)} · ใช้ไป ${x.pct}%${x.pct > 100 ? ' ⚠️ เกินงบ' : ''}` : ''}${pv && pv.cats[x.category] !== undefined ? ` · ปีก่อน ${baht(pv.cats[x.category])}` : ''}</small></div>`).join('') : '<div class="mut">ยังไม่มีรายจ่ายในปีนี้</div>'}</div>` });
+  // 5) งบประมาณเทียบจริง
+  if (B) S.push({ t: 'เทียบงบประมาณ', h: `<div class="card"><b>🎯 เทียบกับงบประมาณที่อนุมัติ</b><table class="an-tb sm"><tr><th>หมวด</th><th>งบ</th><th>จริง</th><th>%</th></tr>
+    <tr class="sec"><td colspan="4">รายรับ</td></tr>${B.income.map(x => `<tr><td>${esc(x.category)}</td><td>${baht(x.budget)}</td><td>${baht(x.actual)}</td><td>${x.pct ?? '-'}%</td></tr>`).join('')}
+    <tr class="sec"><td colspan="4">รายจ่าย</td></tr>${B.expense.map(x => `<tr><td>${esc(x.category)}</td><td>${baht(x.budget)}</td><td>${baht(x.actual)}</td><td>${x.pct === null ? 'นอกงบ' : x.pct + '%'}${x.pct > 100 ? ' ⚠️' : ''}</td></tr>`).join('')}
+    <tr class="tot"><td>รวมรายจ่าย</td><td>${baht(B.total_out)}</td><td>${baht(r.expense.total)}</td><td>${B.total_out ? Math.round(r.expense.total / B.total_out * 1000) / 10 + '%' : '-'}</td></tr></table>
+    <small class="mut">งบประมาณอนุมัติเมื่อ ${esc(dt(B.at))}${r.partial ? ' · ปีนี้ยังไม่ครบ 12 เดือน ตัวเลขจริงจะเพิ่มขึ้นอีก' : ''}</small></div>` });
+  // 6) การเก็บค่าส่วนกลาง / ค้างชำระ
+  const A = r.arrears, showH = o.staff || A.show_houses;
+  S.push({ t: 'การเก็บค่าส่วนกลาง', h: `<div class="card"><b>🏠 การเก็บค่าส่วนกลางปีนี้</b>
+    <div class="an-track big"><div class="an-fill in" style="width:${r.billed.amount ? Math.min(100, r.billed.collected / r.billed.amount * 100) : 0}%"></div></div>
+    <div class="row"><span>เก็บได้ ${baht(r.billed.collected)} จาก ${baht(r.billed.amount)} บาท</span><b>${r.billed.pct ?? '-'}%</b></div>
+    ${r.billed.not_due ? `<small class="mut">ยังไม่ถึงกำหนดชำระ ${baht(r.billed.not_due)} บาท (ไม่นับเป็นค้าง)</small>` : ''}
+    <div class="an-avg">ค้างชำระ ณ ${esc(dthai(r.asof))}: <b>${A.count}</b> หลัง รวม <b>${baht(A.amount)}</b> บาท</div>
+    ${A.houses.length && showH ? `<table class="an-tb sm"><tr><th>บ้าน</th>${o.staff ? '<th>ปีนี้</th><th>ก่อนหน้า</th>' : ''}<th>รวม</th></tr>${A.houses.map(x => `<tr><td>${esc(x.house_no)}${o.staff && x.owner_name ? ` <small class="mut">${esc(x.owner_name)}</small>` : ''}</td>${o.staff ? `<td>${baht(x.year)}</td><td>${baht(x.older)}</td>` : ''}<td>${baht(x.total)}</td></tr>`).join('')}</table>` : ''}
+    ${o.staff ? `<small class="mut noprint">ฉบับลูกบ้าน: ${AND.show_houses ? 'แสดงเลขบ้าน (ไม่มีชื่อ)' : 'แสดงเฉพาะจำนวนบ้านและยอดรวม'} · เปลี่ยนได้ที่ ตั้งค่า → "รายงานประจำปีฉบับลูกบ้าน แสดงเลขบ้าน" (ต้องอนุมัติ ควรมีมติที่ประชุม)</small>` : ''}</div>` });
+  // 7) ผลงาน
+  const W = r.work, tk = W.tickets, mt = W.meetings, fi = W.finance;
+  S.push({ t: 'ผลงานกรรมการและนิติฯ', h: `<div class="card"><b>🛠️ ผลงานกรรมการและนิติบุคคล</b><div class="an-work">
+    <div><b>🔧 แจ้งซ่อม/ร้องเรียน</b><span class="big">${tk.total}</span><small>เรื่อง (ซ่อม ${tk.repair} · ร้องเรียน ${tk.complaint})</small><small>ดำเนินการเสร็จ ${tk.done} · ยังเปิดอยู่ ${tk.open}${tk.rejected ? ' · ยกเลิก ' + tk.rejected : ''}</small>${tk.avg_days !== null ? `<small>เฉลี่ย <b>${tk.avg_days}</b> วันต่อเรื่อง</small>` : ''}</div>
+    <div><b>📅 การประชุมและมติ</b><span class="big">${mt.total}</span><small>ครั้ง (ประชุมใหญ่ ${mt.general} · กรรมการ ${mt.committee})</small><small>มติที่ประชุม ${mt.resolutions} ข้อ</small><small>วาระโหวตในแอป ${mt.agendas}${mt.vote_pct !== null ? ` · ร่วมโหวตเฉลี่ย ${mt.vote_pct}% ของบ้าน` : ''}</small></div>
+    <div><b>💳 การเงินและการอนุมัติ</b><span class="big">${fi.payments}</span><small>รายการรับชำระที่ตรวจแล้ว · ใบเสร็จ ${fi.receipts} ใบ</small>${fi.verify_hours !== null ? `<small>ตรวจสลิปเฉลี่ย <b>${fi.verify_hours}</b> ชม.</small>` : ''}<small>ขอเบิกจ่าย ${fi.exp_requests} · จ่ายแล้ว ${fi.exp_paid}${fi.exp_rejected ? ' · ไม่อนุมัติ ' + fi.exp_rejected : ''}</small><small>เปลี่ยนนโยบาย/ตั้งค่าที่อนุมัติ ${fi.policy_changes} เรื่อง</small></div>
+    </div>${tk.total ? `<b style="display:block;margin-top:8px">เรื่องแจ้งซ่อม/ร้องเรียนรายเดือน</b>${anCountSvg(tk.by_month)}` : ''}</div>` });
+  // 8) เทียบปีก่อน
+  if (pv) S.push({ t: 'เทียบกับปีก่อน', h: `<div class="card"><b>↔️ เทียบกับปี พ.ศ. ${be(pv.year)}</b><table class="an-tb sm"><tr><th></th><th>${be(pv.year)}</th><th>${be(r.year)}</th><th>เปลี่ยน</th></tr>
+    <tr><td>รายรับ</td><td>${baht(pv.income)}</td><td>${baht(r.income.total)}</td><td>${chgTxt(r.income.total, pv.income, true) || '-'}</td></tr>
+    <tr><td>รายจ่าย</td><td>${baht(pv.expense)}</td><td>${baht(out)}</td><td>${chgTxt(out, pv.expense, false) || '-'}</td></tr>
+    <tr><td>คงเหลือ</td><td>${baht(pv.closing)}</td><td>${baht(r.closing)}</td><td>${chgTxt(r.closing, pv.closing, true) || '-'}</td></tr></table>
+    ${r.partial ? '<small class="mut">ปีนี้ยังไม่ครบปี การเทียบจึงยังไม่สมบูรณ์</small>' : ''}</div>` });
+  // หมายเหตุท้ายรายงาน
+  S.push({ t: 'หมายเหตุ', foot: true, h: `<div class="card an-foot"><b>หมายเหตุ</b><ul>
+    <li>ตัวเลขจากระบบบริหารหมู่บ้าน ${o.staff ? '(ตัวเลขสด ณ ' + esc(dthai(r.asof)) + ')' : 'ที่กรรมการอนุมัติเผยแพร่'} <b>ยังไม่ใช่งบการเงินที่ผู้สอบบัญชีรับรอง</b></li>
+    <li>รายรับนับตามวันที่ตรวจสลิปผ่าน · "ยอดที่ควรได้" คิดจากใบแจ้งหนี้ที่ครอบคลุมเดือนในปีนี้ (แพ็กเกจหลายเดือนเฉลี่ยตามเดือน)</li>
+    <li>ไม่แสดงชื่อเจ้าของบ้านในฉบับลูกบ้าน (PDPA)</li>
+    ${o.hash ? `<li>รหัสตรวจสอบตัวเลข <code>${esc(o.hash)}</code> · อนุมัติโดย ${o.approvals.map(a => esc(a.name)).join(', ')} · เผยแพร่ ${esc(dt(o.at))}</li>` : ''}</ul></div>` });
+  return S;
+}
+function anBody(r, o) { ANR.last = { r, o }; return `<div class="an-print-head">${esc(r.village || '')} · รายงานประจำปี พ.ศ. ${be(r.year)}</div>` + anSections(r, o).map(s => s.h).join(''); }
+const dthai = d => { const s = String(d || ''); return s.length >= 10 ? `${+s.slice(8, 10)} ${['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][+s.slice(5, 7) - 1]} ${+s.slice(0, 4) + 543}` : s; };
+/* ---------- กราฟ SVG ---------- */
+const AN_W = 340;
+function anAxis(mx, h, top, left, w, off) {
+  const step = anNice(mx / 3), top2 = Math.max(step, Math.ceil(mx / step - 1e-9) * step), lines = []; for (let v = 0; v <= top2 + 1e-9; v += step) lines.push(v);
+  return { step, max: lines[lines.length - 1] || 1, svg: lines.map(v => { const y = top + h - v / (lines[lines.length - 1] || 1) * h; return `<line x1="${left}" x2="${left + w}" y1="${y}" y2="${y}" class="an-grid"/><text x="${left - 4}" y="${y + 3}" text-anchor="end" class="an-ax">${bahtS(v + (off || 0))}</text>`; }).join('') };
+}
+function anNice(x) { if (x <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(x))), f = x / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
+function anBarsSvg(r) {
+  const M = r.months, L = 40, T = 8, H = 130, W = AN_W - L - 4, gw = W / 12, bw = Math.max(4, (gw - 6) / 2);
+  const mx = Math.max(1, ...M.map(m => Math.max(m.dues + m.other, m.expense + m.refund)));
+  const ax = anAxis(mx, H, T, L, W), sc = v => v / ax.max * H;
+  const bar = (x, v, c) => { const h = sc(v); if (h <= 0) return ''; const rr = Math.min(4, bw / 2, h); return `<path d="M${x},${T + H} v${-(h - rr)} a${rr},${rr} 0 0 1 ${rr},${-rr} h${bw - 2 * rr} a${rr},${rr} 0 0 1 ${rr},${rr} v${h - rr} z" fill="var(${c})"/>`; };
+  return `<svg viewBox="0 0 ${AN_W} ${T + H + 20}" class="an-svg" role="img" aria-label="กราฟรายรับรายจ่ายรายเดือน">${ax.svg}
+    ${M.map((m, i) => { const x = L + i * gw + 2, inc = m.dues + m.other, ex = m.expense + m.refund;
+      return `<g class="an-g${m.future ? ' fut' : ''}" onclick="anTipM(${i})" onmouseenter="anTipM(${i})">${bar(x, inc, '--vin')}${bar(x + bw + 2, ex, '--vex')}
+        <rect x="${L + i * gw}" y="${T}" width="${gw}" height="${H}" fill="transparent"/><text x="${L + i * gw + gw / 2}" y="${T + H + 14}" text-anchor="middle" class="an-ax">${m.label}</text></g>`; }).join('')}
+    <line x1="${L}" x2="${L + W}" y1="${T + H}" y2="${T + H}" class="an-base"/></svg>`;
+}
+function anLineSvg(r) {
+  const M = r.months.filter(m => !m.future), L = 40, T = 10, H = 100, W = AN_W - L - 10, gw = W / 12;
+  if (!M.length) return '<div class="mut">ยังไม่มีข้อมูล</div>';
+  const vals = [r.opening].concat(M.map(m => m.balance)), lo = Math.min(0, ...vals), hi = Math.max(1, ...vals);
+  const ax = anAxis(hi - lo, H, T, L, W, lo), y = v => T + H - (v - lo) / ax.max * H, x = i => L + i * gw + gw / 2;
+  const pts = M.map((m, i) => `${x(i)},${y(m.balance)}`).join(' ');
+  return `<svg viewBox="0 0 ${AN_W} ${T + H + 20}" class="an-svg" role="img" aria-label="กราฟเงินคงเหลือสิ้นเดือน">${ax.svg}
+    <polyline points="${pts}" fill="none" stroke="var(--vbal)" stroke-width="2" stroke-linejoin="round"/>
+    ${M.map((m, i) => `<g onclick="anTipB(${i})" onmouseenter="anTipB(${i})"><circle cx="${x(i)}" cy="${y(m.balance)}" r="4" fill="var(--vbal)" stroke="var(--card)" stroke-width="2"/><rect x="${x(i) - gw / 2}" y="${T}" width="${gw}" height="${H}" fill="transparent"/></g>`).join('')}
+    ${r.months.map((m, i) => `<text x="${x(i)}" y="${T + H + 14}" text-anchor="middle" class="an-ax">${m.label}</text>`).join('')}
+    <text x="${x(M.length - 1)}" y="${y(M[M.length - 1].balance) - 8}" text-anchor="end" class="an-lbl">${bahtS(M[M.length - 1].balance)}</text></svg>`;
+}
+function anCountSvg(c) {
+  const L = 22, T = 6, H = 50, W = AN_W - L - 4, gw = W / 12, mx = Math.max(1, ...c), bw = Math.max(6, gw - 8);
+  return `<svg viewBox="0 0 ${AN_W} ${T + H + 18}" class="an-svg" role="img" aria-label="จำนวนเรื่องแจ้งซ่อมรายเดือน">${c.map((v, i) => { const h = v / mx * H, x = L + i * gw + (gw - bw) / 2;
+    return `${h ? `<rect x="${x}" y="${T + H - h}" width="${bw}" height="${h}" rx="3" fill="var(--vin)"><title>${TH_M[i]}: ${v} เรื่อง</title></rect>` : ''}${v ? `<text x="${x + bw / 2}" y="${T + H - h - 2}" text-anchor="middle" class="an-ax">${v}</text>` : ''}<text x="${x + bw / 2}" y="${T + H + 13}" text-anchor="middle" class="an-ax">${TH_M[i]}</text>`; }).join('')}
+    <line x1="${L}" x2="${L + W}" y1="${T + H}" y2="${T + H}" class="an-base"/></svg>`;
+}
+function anTipM(i) {
+  const m = ANR.last.r.months[i], el = document.querySelectorAll('#an_tip_m'); if (!m) return;
+  el.forEach(e => e.innerHTML = m.future ? `${m.label}: ยังไม่ถึงเดือนนี้` : `<b>${m.label} ${ANR.last.r.year}</b> · <span class="sw in"></span>รับ ${baht(m.dues + m.other)} · <span class="sw ex"></span>จ่าย ${baht(m.expense + m.refund)} · คงเหลือ ${baht(m.balance)}`);
+}
+function anTipB(i) { const m = ANR.last.r.months[i]; document.querySelectorAll('#an_tip_b').forEach(e => e.innerHTML = `<b>สิ้น ${m.label} ${ANR.last.r.year}</b> · คงเหลือ ${baht(m.balance)} บาท`); }
+/* ---------- ตั้งงบประมาณ (ส่งขออนุมัติ) ---------- */
+function anBudgetHtml() {
+  const d = AND, cur = {}; d.budget_lines.forEach(x => cur[x.kind + '|' + x.category] = x.amount);
+  const pa = d.prev_actual, prevIn = { [d.income_cats[0]]: pa.dues, [d.income_cats[1]]: pa.other };
+  const cats = [...new Set(d.cats.concat(d.budget_lines.filter(x => x.kind === 'out').map(x => x.category)))];
+  const row = (k, c, hint, i) => `<div class="row" style="gap:8px"><span style="flex:1">${esc(c)}<br><small class="mut">ปีก่อนจริง ${baht(hint || 0)}</small></span>
+    <input id="bg_${k}_${i}" data-k="${k}" data-c="${esc(c)}" data-prev="${hint || 0}" type="number" min="0" step="100" inputmode="decimal" style="width:130px" value="${cur[k + '|' + c] ?? ''}" placeholder="0"></div>`;
+  return `<div class="card noprint"><b>🎯 งบประมาณประจำปี พ.ศ. ${be(d.year)}</b><div class="mut">ใส่ยอดตามที่ที่ประชุมใหญ่อนุมัติ หมวดที่เว้นว่างไม่นับ · ส่งแล้วต้องกรรมการอนุมัติตามเงื่อนไขการอนุมัติ แล้วนิติฯ ดำเนินการ</div>
+    <button class="btn sec" onclick="anBudgetPrev()">ใช้ตัวเลขจริงปีก่อนเป็นค่าตั้งต้น</button>
+    <label class="lb">รายรับ</label>${d.income_cats.map((c, i) => row('in', c, prevIn[c], i)).join('')}
+    <label class="lb">รายจ่าย</label>${cats.map((c, i) => row('out', c, pa.cats[c], i)).join('')}
+    <label class="lb">อ้างอิงมติ/เหตุผล</label><input id="bg_reason" maxlength="300" placeholder="เช่น มติประชุมใหญ่สามัญ ครั้งที่ 1/${be(d.year)} วาระที่ 4">
+    <button class="btn" onclick="anBudgetSend()">ส่งขออนุมัติงบประมาณ</button></div>`;
+}
+function anBudgetPrev() { document.querySelectorAll('[id^="bg_in_"],[id^="bg_out_"]').forEach(e => { if (!e.value && +e.dataset.prev) e.value = Math.round(+e.dataset.prev); }); }
+function anBudgetSend() {
+  const lines = [...document.querySelectorAll('[id^="bg_in_"],[id^="bg_out_"]')].filter(e => +e.value > 0).map(e => ({ kind: e.dataset.k, category: e.dataset.c, amount: +e.value }));
+  if (!lines.length) return alert('ใส่จำนวนเงินอย่างน้อย 1 หมวด');
+  if (!val('bg_reason')) return alert('กรุณาระบุมติหรือเหตุผล');
+  ANR.budget = false;
+  act('requestChange', { kind: 'budget', year: AND.year, lines, reason: val('bg_reason') }, 'ส่งขออนุมัติงบประมาณแล้ว ไปที่แท็บ "รออนุมัติ"');
+}
+function anRequestPublish() {
+  const r = AND.report;
+  const why = prompt(`ขออนุมัติเผยแพร่รายงานปี พ.ศ. ${be(r.year)} ให้ลูกบ้าน\nระบบจะล็อกตัวเลข ณ ตอนนี้ (รับ ${baht(r.income.total)} · จ่าย ${baht(r.expense.total + r.expense.refund)} · คงเหลือ ${baht(r.closing)})${r.partial ? '\n⚠️ ปีนี้ยังไม่ครบปี' : ''}\n\nเหตุผล/อ้างอิง:`, `สรุปเสนอที่ประชุมใหญ่ประจำปี ${be(r.year)}`);
+  if (!why) return;
+  act('requestChange', { kind: 'annual', year: r.year, reason: why }, 'ส่งขออนุมัติแล้ว เมื่อกรรมการอนุมัติครบ นิติฯ กดดำเนินการที่หน้างานนิติฯ ลูกบ้านจึงจะเห็น');
+}
+/* ---------- ฉายในที่ประชุม (เต็มจอ ทีละหน้า) ---------- */
+let ANS = { i: 0, list: [] };
+function anSlides() {
+  const L = ANR.last; if (!L) return;
+  ANS = { i: 0, list: anSections(L.r, L.o) };
+  let el = document.getElementById('an_slides');
+  if (!el) { el = document.createElement('div'); el.id = 'an_slides'; document.body.appendChild(el); }
+  el.style.display = 'flex'; anSlideDraw();
+  try { el.requestFullscreen && el.requestFullscreen().catch(() => {}); } catch (e) {}
+  document.addEventListener('keydown', anSlideKey);
+}
+function anSlideDraw() {
+  const el = document.getElementById('an_slides'), s = ANS.list[ANS.i], n = ANS.list.length, r = ANR.last.r;
+  el.innerHTML = `<div class="an-sl-top"><span>${esc(r.village || '')} · รายงานประจำปี พ.ศ. ${be(r.year)}</span><span>${ANS.i + 1}/${n}</span></div>
+    <div class="an-sl-body"><h2>${esc(s.t)}</h2>${s.h}</div>
+    <div class="an-sl-nav"><button onclick="anSlideGo(-1)" ${ANS.i ? '' : 'disabled'}>‹ ก่อนหน้า</button><button onclick="anSlideClose()">✕ ปิด</button><button onclick="anSlideGo(1)" ${ANS.i < n - 1 ? '' : 'disabled'}>ถัดไป ›</button></div>`;
+}
+function anSlideGo(d) { ANS.i = Math.max(0, Math.min(ANS.list.length - 1, ANS.i + d)); anSlideDraw(); }
+function anSlideKey(e) { if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') anSlideGo(1); else if (e.key === 'ArrowLeft' || e.key === 'PageUp') anSlideGo(-1); else if (e.key === 'Escape') anSlideClose(); }
+function anSlideClose() { const el = document.getElementById('an_slides'); if (el) el.style.display = 'none'; document.removeEventListener('keydown', anSlideKey); try { document.fullscreenElement && document.exitFullscreen(); } catch (e) {} }
+
 /* ================= คลังความรู้ / ผู้ติดต่อ ================= */
 const KB_CATS = ['ป้อม รปภ.', 'บริษัท รปภ.', 'สำนักงานที่ดิน', 'อบต./เก็บขยะ', 'แม่บ้าน', 'ธนาคาร', 'บริษัทไม้กั้น', 'รถกระเช้า/เปลี่ยนหลอดไฟ', 'เบอร์ฉุกเฉิน/ท้องถิ่น', 'อื่นๆ'];
 let KBL = [], KBQ = '', KBC = '';
@@ -13560,7 +13788,7 @@ async function kbSave(id) {
   catch (e) { if (e.message !== '__cancel') alert('ไม่สำเร็จ: ' + e.message); } finally { BUSY = false; }
 }
 function kbDel(id) { if (!confirm('ลบรายการนี้ถาวร?')) return; closeModal(); act('removeContact', { contact_id: id }, 'ลบแล้ว'); }
-const toolTiles = () => `<div class="grid2">${[['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']].map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
+const toolTiles = () => `<div class="grid2">${[['annual', '📊', 'รายงานประจำปี'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']].map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 
 
 async function releasesCard() {
@@ -13619,7 +13847,7 @@ async function vReports() {
   const cut = await arrearsCard('บ้านค้างชำระเกินเกณฑ์ — แจ้งตัดบัตรแล้ว');
   const r = await api('reports'), d = r.dashboard, mx = Math.max(1, ...d.months.flatMap(m => [m.income, m.expense])), q = r.line, qp = Math.min(100, Math.round(q.used / Math.max(1, q.quota) * 100));
   const P = r.pending;
-  return cut + `<div class="card hero"><small>เงินคงเหลือ (ตัวเลขสด)</small><h1>${baht(d.balance)}</h1><div class="chips"><span>รออนุมัติ ${P.expense + P.adjust + P.credit + P.minutes + P.change}</span><span>งานค้างของนิติฯ ${r.tasks_open}</span><span>รถอยู่ในหมู่บ้าน ${r.visits_inside}</span></div></div>
+  return cut + `<div class="card tile" onclick="show('annual')" style="display:flex;gap:12px;align-items:center;text-align:left"><div style="font-size:30px">📊</div><div><b>รายงานประจำปี (ม.ค.–ธ.ค.)</b><div class="mut">กราฟรายรับ-รายจ่าย งบประมาณ ผลงาน · พิมพ์ PDF / ฉายในที่ประชุม · ขอเผยแพร่ให้ลูกบ้าน</div></div></div><div class="card hero"><small>เงินคงเหลือ (ตัวเลขสด)</small><h1>${baht(d.balance)}</h1><div class="chips"><span>รออนุมัติ ${P.expense + P.adjust + P.credit + P.minutes + P.change}</span><span>งานค้างของนิติฯ ${r.tasks_open}</span><span>รถอยู่ในหมู่บ้าน ${r.visits_inside}</span></div></div>
   <div class="card"><div class="grid3"><div class="paid"><b>${d.collection.paid}</b>จ่ายแล้ว</div><div class="open"><b>${d.collection.total - d.collection.paid}</b>ยังไม่ครบ</div><div class="late"><b>${d.arrears.houses}</b>ค้างจ่าย</div></div><small class="mut">ค่าส่วนกลางเดือน ${esc(d.period)} • ค้างจ่ายรวม ${baht(d.arrears.amount)} บาท</small></div>
   <div class="card"><b>รายรับ-รายจ่าย 6 เดือน</b><div class="bars">${d.months.map(m => `<div title="${m.month}"><i style="height:${m.income / mx * 100}%"></i><i class="e" style="height:${m.expense / mx * 100}%"></i></div>`).join('')}</div><div class="bars lab">${d.months.map(m => `<span>${esc(m.month.slice(5))}</span>`).join('')}</div><small class="mut">เขียว = รายรับ แดง = รายจ่าย</small></div>
   <div class="card"><b>เงินสดย่อยเดือนนี้</b><div class="row"><span>${baht(d.petty)}${r.petty_cap ? ' / ' + baht(r.petty_cap) : ''} บาท</span></div></div>
@@ -13749,7 +13977,7 @@ async function vBank() {
 function loadBankFile() { const f = $('#bk_file').files[0]; if (!f) return; const fr = new FileReader(); fr.onload = () => { $('#bk_text').value = fr.result; }; fr.readAsText(f, 'utf-8'); }
 
 function vOmore() {
-  const items = [['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['linetopics', '📨', 'การแจ้งเตือน (ในแอป/LINE)'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
+  const items = [['annual', '📊', 'รายงานประจำปี'], ['opening', '📥', 'รับมอบงาน / ข้อมูลยกมา'], ['archive', '🗄️', 'ข้อมูลเก็บถาวร'], ['tickets', '🔧', 'งานซ่อม/ร้องเรียน'], ['meetings', '📅', 'การประชุม'], ['votes', '🗳️', 'โหวต/สำรวจ'], ['admin', '⚙️', 'ประกาศ/ผู้ใช้/ตั้งค่า'], ['linetopics', '📨', 'การแจ้งเตือน (ในแอป/LINE)'], ['bank', '🏦', 'นำเข้าสเตตเมนต์'], ['parcels', '📦', 'พัสดุ'], ['kb', '📖', 'คลังความรู้/ผู้ติดต่อ'], ['matrix', '📋', 'เงื่อนไขการอนุมัติ'], ['help', '❓', 'ศูนย์ช่วยเหลือ']];
   return `<div class="grid2">${items.filter(i => tabOk(i[0])).map(([k, ic, t]) => `<div class="card tile" onclick="show('${k}')"><div style="font-size:30px">${ic}</div><b>${t}</b></div>`).join('')}</div>`;
 }
 
@@ -14054,6 +14282,7 @@ const HELP = {
   features: { a: 'adm', t: 'เปิด/ปิดฟีเจอร์', w: 'เปิดหรือปิดระบบย่อยได้ 6 ตัว', s: ['ติ๊กเปิด/ปิด แล้วกดบันทึก', 'ปิดแล้วข้อมูลไม่หาย เปิดใหม่ได้', 'ระบบบันทึกและแจ้งกรรมการทุกครั้ง'], k: [] },
   notifs: { a: 'all', t: 'การแจ้งเตือน', w: 'รวมทุกเรื่องที่ระบบแจ้งถึงคุณ (กดกระดิ่ง 🔔 มุมขวาบน) แม้เรื่องนั้นไม่ได้ส่ง LINE', s: ['ตัวเลขแดงบนกระดิ่ง = เรื่องใหม่ที่ยังไม่ได้เปิดดู', 'กด "เปิด…" เพื่อไปหน้าที่เกี่ยวข้อง เช่น ชำระเงิน รถเข้า-ออก ใบเสร็จ', 'เห็นเฉพาะแจ้งเตือนของคุณเอง', 'ระบบลบรายการเก่ากว่ากำหนด (เริ่มต้น 90 วัน) อัตโนมัติ'], k: [] },
   linetopics: { a: 'off', t: 'การแจ้งเตือน (ในแอป / LINE)', w: 'เลือกทีละเรื่องว่าแจ้งในศูนย์แจ้งเตือนของแอป และ/หรือส่ง LINE เพื่อประหยัดโควตาข้อความฟรีของ LINE OA', s: ['ช่อง "ในแอป" = บันทึกในกระดิ่ง 🔔 ของผู้รับ (ไม่ใช้โควตา) · ช่อง "LINE" = ส่งข้อความ LINE', 'แนะนำ: เปิดในแอปทุกเรื่อง แล้วปิด LINE เรื่องที่ไม่เร่งด่วน', 'ทุกผู้รับ 1 คน นับ 1 ข้อความ เช่น ประกาศถึงทุกบ้าน ≈ 57 ข้อความ', 'ติ๊กเปิด/ปิดทีละเรื่อง หรือกดชุดสำเร็จรูป แล้วกดบันทึก', 'ดูตัวเลข "เดือนนี้" ว่าเรื่องใดใช้โควตามาก', 'เรื่องที่มี 🔒 ปิดไม่ได้ (นโยบาย/ความปลอดภัย)', 'ปิดแล้วข้อมูลยังอยู่ในแอปครบ แค่ไม่ส่ง LINE'], k: [['โควตา', 'จำนวนข้อความ LINE ฟรีต่อเดือนของบัญชี LINE OA (ตั้งที่ LINE_MONTHLY_QUOTA)'], ['ระดับความสำคัญ', 'เมื่อโควตาใกล้เต็ม เรื่องสำคัญยังส่งได้ถึง 100% เรื่องอื่นหยุดที่ 90%']] },
+  annual: { a: 'res', t: 'รายงานประจำปี', w: 'สรุปรายรับ รายจ่าย เงินคงเหลือ งบประมาณ และผลงานกรรมการ/นิติฯ ของปี ม.ค.–ธ.ค. เป็นกราฟและตาราง', s: ['เลือกปี (พ.ศ.) ที่ต้องการดู', 'แตะที่แท่งกราฟเพื่อดูตัวเลขของแต่ละเดือน หรือกด "ดูเป็นตาราง"', 'กด "พิมพ์ / บันทึก PDF" เพื่อแจกในที่ประชุม หรือ "ฉายในที่ประชุม" เพื่อเปิดทีละหน้าเต็มจอ (ปุ่มลูกศรซ้าย/ขวา)', 'กรรมการ: ตั้งงบประมาณ และกด "ขออนุมัติเผยแพร่" ระบบล็อกตัวเลข ณ ตอนนั้น เมื่ออนุมัติครบ นิติฯ กดดำเนินการที่หน้างานนิติฯ ลูกบ้านจึงเห็น'], k: [['ตัวเลขสด vs ฉบับเผยแพร่', 'กรรมการ/นิติฯ เห็นตัวเลขสด ลูกบ้านเห็นเฉพาะฉบับที่อนุมัติแล้ว แก้ข้อมูลทีหลังฉบับเผยแพร่ไม่เปลี่ยน'], ['ค้างชำระ', 'ฉบับลูกบ้านไม่มีชื่อเจ้าของบ้าน เลขบ้านแสดงเมื่อเปิดการตั้งค่าที่ผ่านการอนุมัติแล้วเท่านั้น'], ['ยังไม่ใช่งบที่ผู้สอบบัญชีรับรอง', 'ใช้สรุปในที่ประชุม งบการเงินทางการต้องให้ผู้สอบบัญชีตรวจ']] },
   archive: { a: 'com', t: 'ข้อมูลเก็บถาวร', w: 'ดูรถเข้า-ออกและบันทึกการใช้งานที่เก่ากว่า 90 วัน ซึ่งระบบย้ายออกจากชีตหลักให้อัตโนมัติทุกวันที่ 1 เพื่อให้แอปเร็ว', s: ['เลือกประเภท ปี ช่วงวันที่ หรือพิมพ์คำค้น (ทะเบียน บ้าน ชื่อ) แล้วกดค้นหา', 'เห็นเฉพาะกรรมการ นิติฯ และผู้ดูแลระบบ ทุกครั้งที่เปิดดูมีบันทึกว่าใครดู', 'ไม่มีรูปในข้อมูลเก็บถาวร (ลบถาวรตามระยะเก็บรูป PDPA แล้ว)', 'นิติฯ กด "เก็บถาวรตอนนี้" ได้ถ้าไม่อยากรอวันที่ 1'], k: [] },
   adminlog: { a: 'adm', t: 'ประวัติผู้ดูแลระบบ', w: 'บันทึกทุกการกระทำที่ข้ามการอนุมัติ', s: ['กรรมการตรวจย้อนหลังได้'], k: [] }
 };
@@ -14093,7 +14322,7 @@ function helpFilter() { const q = val('hl_q').trim().toLowerCase(); document.que
 
 const VIEWS = { home: vHome, pay: vPay, gate: vGate, more: vMore, house: vHouse, tickets: vTickets, meetings: vMeetings, votes: vVotes, requests: vRequests, parcels: vParcels,
   inbox: vInbox, reports: vReports, policy: vPolicy, roster: vRoster, tasks: vTasks, verify: vVerify, finance: vFinance, expenses: vExpenses, omore: vOmore, admin: vAdmin, bank: vBank,
-  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, archive: vArchive, linetopics: vLineTopics, notifs: vNotifs, help: vHelp };
+  ggate: vGuardGate, gguests: vGuests, sys: vSys, users: vUsers, adminlog: vAdminLog, opening: vOpening, cctv: vCctv, features: vFeatures, kb: vKb, matrix: vMatrix, archive: vArchive, linetopics: vLineTopics, notifs: vNotifs, help: vHelp, annual: vAnnual };
 // ลิงก์จากข้อความ LINE: ?receipt=<pay_id> เปิดใบเสร็จ · ?go=pay ไปหน้าชำระเงิน
 async function openDeepLink() {
   let q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
